@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="iOS,CocoaPods," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在开发过程中，经常会使用到第三框架，我们通过一个pod install命令，很方便的就将第三方框架加到我们自己的项目中。如果我们也想将自己写的组件或库开源出去，让别人也可以通过pod install命令安装自己的框架该怎么做呢？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何发布自己的开源框架到CocoaPods">
+<meta property="og:url" content="https://hujewelz.github.io/ck9grdo0n001jeyyeaxw286n3/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="在开发过程中，经常会使用到第三框架，我们通过一个pod install命令，很方便的就将第三方框架加到我们自己的项目中。如果我们也想将自己写的组件或库开源出去，让别人也可以通过pod install命令安装自己的框架该怎么做呢？">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1351863-5f185444531af1d0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1351863-98aca18e60fac44a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1351863-c8e31c301e9c2c59.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1351863-51c1e65c0c2a5a9a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1351863-641b06a41444a0dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1351863-70f2bc73825180bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1351863-9f93e6c957de080f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2016-02-14T00:52:00.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="CocoaPods">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1351863-5f185444531af1d0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hujewelz.github.io/ck9grdo0n001jeyyeaxw286n3/"/>
+
+
+
+
+
+  <title>如何发布自己的开源框架到CocoaPods | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jewelz`s Home Page</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS工程师一枚，热爱前端技术</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/ck9grdo0n001jeyyeaxw286n3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何发布自己的开源框架到CocoaPods</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-02-14T08:52:00+08:00">
+                2016-02-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/ck9grdo0n001jeyyeaxw286n3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="ck9grdo0n001jeyyeaxw286n3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在开发过程中，经常会使用到第三框架，我们通过一个<code>pod install</code>命令，很方便的就将第三方框架加到我们自己的项目中。<br>如果我们也想将自己写的组件或库开源出去，让别人也可以通过<code>pod install</code>命令安装自己的框架该怎么做呢？</p>
+<a id="more"></a>
+<p>下面，我就教大家一步一步的将自己的pods发布到<code>CocoaPods</code> 中。如果你现在对<code>CocoaPods</code>还不太了解，推荐你看一看这篇文章：<a href="http://blog.devtang.com/2014/05/25/use-cocoapod-to-manage-ios-lib-dependency/" target="_blank" rel="noopener">用CocoaPods做iOS程序的依赖管理</a></p>
+<h2 id="创建自己项目的Podspec描述文件"><a href="#创建自己项目的Podspec描述文件" class="headerlink" title="创建自己项目的Podspec描述文件"></a>创建自己项目的Podspec描述文件</h2><p>下面我会通过一个名为<code>HUPhotoBrowser</code>的项目来讲解一下整个过程。<br>项目发布到<code>github</code>后，需要打上<code>tag</code>。之后我们在工程根目录中初始化一个Podspec文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod spec create HUPhotoBrowser</span><br></pre></td></tr></table></figure>
+<p>该命令将在本目录产生一个名为<code>HUPhotoBrowser.podspec</code>文件。用编辑器打开该文件，里面已经有非常丰富的说明文档。下面介绍如何声明第三方库的代码目录和资源目录，还有该第三方库所依赖ios核心框架和第三方库。这是我的podspec文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Pod::Spec.new do |s|</span><br><span class="line">  s.name         &#x3D; &quot;HUPhotoBrowser&quot;</span><br><span class="line">  s.version      &#x3D; &quot;0.0.2&quot;</span><br><span class="line">  s.summary      &#x3D; &quot;photo browser for ios.&quot;</span><br><span class="line">  s.homepage     &#x3D; &quot;https:&#x2F;&#x2F;github.com&#x2F;hujewelz&#x2F;HUPhotoBrowser&quot;</span><br><span class="line">  s.license      &#x3D; &quot;MIT&quot;</span><br><span class="line">  s.author             &#x3D; &#123; &quot;Jewelz Hu&quot; &#x3D;&gt; &quot;hujewelz@163.com&quot; &#125;</span><br><span class="line">  s.platform     &#x3D; :ios, &quot;7.0&quot;</span><br><span class="line">  s.source       &#x3D; &#123; :git &#x3D;&gt; &quot;https:&#x2F;&#x2F;github.com&#x2F;hujewelz&#x2F;HUPhotoBrowser.git&quot;, :tag &#x3D;&gt; &quot;0.0.2&quot; &#125;</span><br><span class="line">  s.source_files  &#x3D; &quot;HUPhotoBrowser&quot;, &quot;HUPhotoBrowser&#x2F;**&#x2F;*.&#123;h,m&#125;&quot;</span><br><span class="line">   s.framework  &#x3D; &quot;UIKit&quot;</span><br><span class="line">  # s.frameworks &#x3D; &quot;SomeFramework&quot;, &quot;AnotherFramework&quot;</span><br></pre></td></tr></table></figure>
+<p><code>s.name</code>是我们库的名称，<code>s.version</code>是库原代码版本号，<code>s.summary</code>是对我们库的一个简单的介绍，<code>s.homepage</code>声明库的主页，<code>s.license</code>是所采用的授权版本，<code>s.author</code>是库的作者。<code>s.platform</code>是我们库所支持的软件平台，这在我们最后提交进行编译 时有用。<code>s.source</code>声明原代码的地址。我这里是托管在github上,所以这里将地址copy过来就行了。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-5f185444531af1d0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-02-26 下午3.02.58.png"><br>对于很多第三方库而言，在发布的时候都会打上一个<code>tag</code>，如版本0.0.1就会打上一个名为<code>0.0.1</code>的<code>tag</code>,你也可以选择一个最新的<code>commit</code>来作为该库0.0.1版的代码, 那么最终source就是这样了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;:git &#x3D;&gt; &quot;https:&#x2F;&#x2F;github.com&#x2F;hujewelz&#x2F;HUPhotoBrowser.git&quot;, :commit &#x3D;&gt; &#39;65584b0e0b08e01f83e66d487180c164b5182409&#39;&#125;</span><br></pre></td></tr></table></figure>
+<p>我这里还是使用的tag，所以我这里就是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; :git &#x3D;&gt; &quot;https:&#x2F;&#x2F;github.com&#x2F;hujewelz&#x2F;HUPhotoBrowser.git&quot;, :tag &#x3D;&gt; &quot;0.0.2&quot; &#125;</span><br></pre></td></tr></table></figure>
+<p>以后我们的库有新版本时，我们可以修改相应的<code>version</code>和<code>source</code>。<br><code>s.source_files</code>声明了我们库的源代码的位置，所以这个地方不能填错了。<br>先看一下我的目录结构：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-98aca18e60fac44a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-02-26 下午3.15.07.png"><br>所以工程根目录下的<code>HUPhotoBrowse</code>文件夹才是库的原代码目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s.source_files  &#x3D; &quot;HUPhotoBrowser&quot;, &quot;HUPhotoBrowser&#x2F;**&#x2F;*.&#123;h,m&#125;&quot;</span><br></pre></td></tr></table></figure>
+<p>目录的层级关系一定要跟代码库的保持一致。这里前一部分可以不用的，因为我这里后一部分的<code>HUPhotoBrowser/**</code>与前面是一致的，这个指定的目录下的文件都会进行编译。如果该目录下还有一些资源文件（如图片等），这些文件并不需要进行编译。可以使用<code>s.resourcs</code>声明。<code>*.{h,m}</code>是一个类似正则表达式的字符串，表示匹配所有以<code>.h</code>和<code>.m</code>为扩展名的文件。<br><code>s.framework</code>声明了所依赖的核心库，我这里只用到了<code>UIKit</code>,所以是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s.framework  &#x3D; &quot;UIKit&quot;</span><br></pre></td></tr></table></figure>
+<p>如果你的项目中依赖多个库，可以使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s.frameworks &#x3D; &quot;SomeFramework&quot;, &quot;AnotherFramework&quot;</span><br></pre></td></tr></table></figure>
+<p>当然，我们开发的库中也可能还依赖第三方库，例如<code>JSONKit</code>，那么，就可以做如下声明:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s.dependency &quot;JSONKit&quot;, &quot;~&gt; 1.4&quot;</span><br></pre></td></tr></table></figure>
+<p>如果有多个需要填写多个<code>s.dependency</code>。<br>编辑完<code>podspec</code>文件后，需要验证一下这个文件是否可用，如果有任何WARNING或者ERROR都是不可以的，它就不能被添加到Spec Repo中，不过xcode的WARNING是可以存在的，验证需要执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod spec lint PodName.podspec</span><br></pre></td></tr></table></figure>
+<p>当看到<code>HUPhotoBrowser passed validation.</code>时，说明验证通过了。在检测你的podspec时候，如果直接用pod spec lint xxx.podspec的话，出现错误它只会直接一句红色的话<code>The spec did not pass validation, due to 1 error.</code>告诉你的有多少个error和warning，而不会具体的指出你的错误出在哪里，这时候你可以在这句指令后面加上参数–verbose 这样就会告诉你具体的错误信息。这样根据它提示你的错误信息去解决就可以了。</p>
+<p>编辑好<code>podspec</code>文件后就可以将该<code>podspec</code>文件保存到本机的<code>~/.cocoapods/repos/master/Specs</code>目录中仅供自己使用，也可以将其提交到CocoaPods/Specs代码库中。下面我们先将其保存到本机中：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-c8e31c301e9c2c59.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-02-26 下午3.44.31.png"><br>下面可以看一下是否可以通过搜索找到该库:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-51c1e65c0c2a5a9a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-02-26 下午3.48.06.png"><br>同样在需要依赖于<code>HUPhotoBrowser</code>这个库的项目，可以将下列添加到项目的<code>Podfile</code>文件中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod &#39;HUPhotoBrowser&#39;, &#39;~0.0.2&#39;</span><br></pre></td></tr></table></figure>
+<p>保存文件，并用<code>pod install</code>安装<code>HUPhotoBrowser</code>库。</p>
+<p>通过以上步骤创建Pod库还只能供自己使用，下面会继续讲解如何将其提交到CocoaPods/Specs代码库中，让其他人也可以通过<code>pod install</code>安装我们的开源库。</p>
+<h2 id="CocoaPods-Trunk发布自己的Pods"><a href="#CocoaPods-Trunk发布自己的Pods" class="headerlink" title="CocoaPods Trunk发布自己的Pods"></a>CocoaPods Trunk发布自己的Pods</h2><p>在cocoapods使用了trunk之后，<code>CocoaPods</code> 需要0.33以上版本，用 <code>pod --version</code>查看版本，如果版本低，需要更新。</p>
+<h3 id="注册Trunk"><a href="#注册Trunk" class="headerlink" title="注册Trunk"></a>注册Trunk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod trunk register orta@cocoapods.org &#39;Orta Therox&#39; --description&#x3D;&#39;macbook air&#39;</span><br></pre></td></tr></table></figure>
+<p>大家在注册时需要替换成自己的邮箱和用户名，一切顺利的话就会受到一份邮件，点击邮件中的链接后验证一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod trunk me</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-641b06a41444a0dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-02-26 下午4.05.42.png"><br>当然，如果你的pod是由多人维护的，你也可以添加其他维护者:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod trunk add-owner ARAnalytics kyle@cocoapods.org</span><br></pre></td></tr></table></figure>
+<p>上面的工作完成之后，我们就可以开始 <code>trunk push</code>了。</p>
+<h3 id="Trunk-push"><a href="#Trunk-push" class="headerlink" title="Trunk push"></a>Trunk push</h3><p><code>pod trunk push</code> 命令会首先验证你本地的<code>podspec</code>文件(是否有错误)，之后会上传<code>spec</code>文件到<code>trunk</code>，最后会将你上传的<code>podspec</code>文件转换为需要的<code>json</code>文件。在工程根目录(包含有.podspec)下执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod trunk push</span><br></pre></td></tr></table></figure>
+<p>如果在<code>trunk push</code>过程中报错了，仔细查看一下错误信息。我当初就是使用了<code>podspec</code>文件中描述的版本所没有的API，之后修改<code>podspec</code>文件中<code>s.platform = :ios, &quot;7.0&quot;</code>就可以了。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-70f2bc73825180bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-02-26 下午4.12.59.png"><br>如果你能看的上面的结果说明上传成功了。我们也可以在本地的<code>~/.cocoapods/repos/master/Specs</code>目录下看到转换之后的<code>json</code>文件,</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-9f93e6c957de080f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-02-26 下午4.16.56.png"><br>至此我们整个制作自己的开源库的过程就完成了，以后有新版本只需要修改工程根目录下的<code>podspec</code>文件就行了，然后重新执行<code>pod trunk push</code>命令。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最后对这个过程做个总结：</p>
+<ol>
+<li>开源库发布之后，需要打上<code>tag</code></li>
+<li>进入到项目根目录下，创建<code>podspec</code>文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod spec create PodName</span><br></pre></td></tr></table></figure></li>
+<li>编辑<code>podspec</code>文件中的相关信息，有两个比较重要的地方<code>s.source</code>和<code>s.source_files</code>,可以验证是否有误：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod spec lint PodName.podspec</span><br></pre></td></tr></table></figure></li>
+<li>注册pod trunk<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod trunk register orta@cocoapods.org &#39;Orta Therox&#39; --description&#x3D;&#39;macbook air&#39;</span><br></pre></td></tr></table></figure></li>
+<li>发布到pod trunk<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod trunk push [NAME.podspec]</span><br></pre></td></tr></table></figure>
+该命令在包含有<code>.podspec</code>文件的目录下执行</li>
+<li>更新pod库<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod setup</span><br></pre></td></tr></table></figure>
+如果<code>pod trunk push</code>成功后无法<code>pod search</code>到自己的库，可执行该命令。</li>
+</ol>
+<h2 id="最后的最后"><a href="#最后的最后" class="headerlink" title="最后的最后"></a>最后的最后</h2><p>哈哈。好吧，我承认其实我是来打广告的。例子中的<a href="https://github.com/hujewelz/HUPhotoBrowser" target="_blank" rel="noopener"><strong>HUPhotoBrowser</strong></a>是我开源的一个图片浏览器的库，使用起来非常简单，一行代码就以实现图片浏览功能，支持本地和网络图片。希望大家可以支持一下，欢迎大家star。如果有什么问题的话可以直接issue我。最后，希望能跟大家共同进步。项目地址：<a href="https://github.com/hujewelz/HUPhotoBrowser" target="_blank" rel="noopener">HUPhotoBrowser</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/CocoaPods/" rel="tag"># CocoaPods</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/ck9grdnzz000keyye5v2p3stc/" rel="next" title="iOS渲染原理">
+                <i class="fa fa-chevron-left"></i> iOS渲染原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/ck9grdnzu000ceyyedsfxdty1/" rel="prev" title="Swift构造器">
+                Swift构造器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Jewelz Hu" />
+            
+              <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+              <p class="site-description motion-element" itemprop="description">Stay hungry, Stay foolish.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hujewelz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hujewelz@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建自己项目的Podspec描述文件"><span class="nav-number">1.</span> <span class="nav-text">创建自己项目的Podspec描述文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CocoaPods-Trunk发布自己的Pods"><span class="nav-number">2.</span> <span class="nav-text">CocoaPods Trunk发布自己的Pods</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册Trunk"><span class="nav-number">2.1.</span> <span class="nav-text">注册Trunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Trunk-push"><span class="nav-number">2.2.</span> <span class="nav-text">Trunk push</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">3.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后的最后"><span class="nav-number">4.</span> <span class="nav-text">最后的最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://Jewelz.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://hujewelz.github.io/ck9grdo0n001jeyyeaxw286n3/';
+          this.page.identifier = 'ck9grdo0n001jeyyeaxw286n3/';
+          this.page.title = '如何发布自己的开源框架到CocoaPods';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Jewelz.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
