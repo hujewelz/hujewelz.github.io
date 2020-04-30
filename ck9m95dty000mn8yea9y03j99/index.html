@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Xcode," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="xcodebuild 用于构建 Xcode 项目中包含的一个或多个target ，或者构建一个包含在 Xcode 工作区或 Xcode 项目的 scheme">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Xcodebuild的使用">
+<meta property="og:url" content="https://hujewelz.github.io/ck9m95dty000mn8yea9y03j99/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="xcodebuild 用于构建 Xcode 项目中包含的一个或多个target ，或者构建一个包含在 Xcode 工作区或 Xcode 项目的 scheme">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-01-25T10:00:00.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="Xcode">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hujewelz.github.io/ck9m95dty000mn8yea9y03j99/"/>
+
+
+
+
+
+  <title>Xcodebuild的使用 | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jewelz`s Home Page</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS工程师一枚，热爱前端技术</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/ck9m95dty000mn8yea9y03j99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Xcodebuild的使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-25T18:00:00+08:00">
+                2017-01-25
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-04-25T16:08:23+08:00">
+                2020-04-25
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/ck9m95dty000mn8yea9y03j99/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="ck9m95dty000mn8yea9y03j99/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>xcodebuild</strong> 用于构建 Xcode 项目中包含的一个或多个<strong>target</strong> ，或者构建一个包含在 Xcode 工作区或 Xcode 项目的 <strong>scheme</strong></p>
+<a id="more"></a>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">xcodebuild [-project projectname] [-target targetname ...] </span><br><span class="line">           [-configuration 	configurationname]</span><br><span class="line">           [-sdk [sdkfullpath | sdkname]] [buildaction ...] </span><br><span class="line">           [setting&#x3D;value ...] [-userdefault&#x3D;value ...]</span><br><span class="line">           </span><br><span class="line">xcodebuild [-project projectname] -scheme schemename </span><br><span class="line">           [-destination destinationspecifier]</span><br><span class="line">           [-destination-timeout value] [-configuration configurationname]</span><br><span class="line">           [-sdk [sdkfullpath | sdkname]] [buildaction ...] </span><br><span class="line">           [setting&#x3D;value ...] [-userdefault&#x3D;value ...]</span><br><span class="line">           </span><br><span class="line">xcodebuild -workspace workspacename -scheme schemename </span><br><span class="line">           [-destination destinationspecifier]</span><br><span class="line">           [-destination-timeout value] [-configuration configurationname]</span><br><span class="line">           [-sdk [sdkfullpath | sdkname]] [buildaction ...] </span><br><span class="line">           [setting&#x3D;value ...] [-userdefault&#x3D;value ...]</span><br><span class="line">           </span><br><span class="line">xcodebuild -version [-sdk [sdkfullpath | sdkname]] [infoitem]</span><br><span class="line">xcodebuild -showsdks</span><br><span class="line">xcodebuild -list [-project projectname | -workspace workspacename]</span><br><span class="line"></span><br><span class="line">xcodebuild -exportArchive -exportFormat format </span><br><span class="line">           -archivePath xcarchivepath </span><br><span class="line">           -exportPath destinationpath </span><br><span class="line">           [-exportProvisioningProfile profilename] </span><br><span class="line">           [-exportSigningIdentity identityname] </span><br><span class="line">           [-exportInstallerIdentity identityname]</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>要构建一个Xcode项目，请从包含项目的目录运行 <strong>xcodebuild</strong>（即包含 projectname.xcodeproj 的目录）。如果你在这目录中有多个项目，需要使用 <strong>-project</strong> 来指明应该构建哪个项目。默认情况下， <strong>xcodebuild</strong> 会使用默认的构建配置构建项目中列出的第一个 target。 target 的顺序是项目的一个属性，对于项目的所有用户都是一样的。</p>
+<p>要构建 Xcode 工作区，你必须同时传递 <strong>-workspace</strong> 和 <strong>-scheme</strong> 选项来定义构建。<strong>scheme</strong> 的参数将控制构建哪些 target 以及它们是如何构建的。不过你仍然可以将其他选项传递给 <strong>xcodebuild</strong> 来覆盖该 scheme 的一些参数。</p>
+<p>还有几个参数可以显示有关已安装的Xcode版本或本地目录中项目或工作区的信息，但不启动构建。包括 <strong>-version</strong>, <strong>-showsdks</strong> 和 <strong>-usage</strong>。</p>
+<h4 id="选项-options"><a href="#选项-options" class="headerlink" title="选项(options)"></a>选项(options)</h4><ul>
+<li><p><strong>-project</strong> projectname<br>  构建由 projectname 指定的项目。如果在同一个目录下有多个项目文件，该选项是必需的。</p>
+</li>
+<li><p><strong>-target</strong> targetname<br>  构建由 targetname 指定的目标。</p>
+</li>
+<li><p><strong>-alltargets</strong><br>  构建指定项目中的所有目标</p>
+</li>
+<li><p><strong>-workspace</strong> workspacename<br>  构建由workspacename指定的工作空间。</p>
+</li>
+<li><p><strong>-scheme</strong> schemename<br>  构建由 schemename 指定的方案。如果构建一个 workspace ，则为必需。</p>
+</li>
+<li><p><strong>-destination</strong> destinationspecifier<br>  使用由 destinationpecifier 描述的目标设备。默认为与选定scheme兼容的 destination。</p>
+</li>
+<li><p><strong>-destination-timeout</strong> timeout<br>  在搜索目标设备时使用的超时时间。默认值是30秒。</p>
+</li>
+<li><p><strong>-configuration</strong> configurationname<br>  在构建每个 target 时使用由 configurationname 指定的构建配置。</p>
+</li>
+<li><p><strong>-arch</strong> architecture<br>  构建每个 target 时使用的 architecture。</p>
+</li>
+<li><p><strong>-sdk</strong> [<sdkfullpath> | <sdkname>]<br>  使用适合于该 SDK 的构建工具，针对指定的 SDK 构建 Xcode 项目或工作区。参数可以是 SDK 的绝对路径，也可以是 SDK 的名称。</p>
+</li>
+<li><p><strong>-showsdks</strong><br>  列出 Xcode 中所有可用的 SDK，包括适合与 <code>-sdk</code> 一起使用的规范名称。不会启动构建。</p>
+</li>
+<li><p><strong>-list</strong><br>  列出项目中的所有 target 和配置，或工作区中的 scheme。不会启动构建。</p>
+</li>
+<li><p><strong>-derivedDataPath</strong> path<br>  在执行构建操作时覆盖用于 derived data 的文件夹。</p>
+</li>
+<li><p><strong>-resultBundlePath</strong> path<br>  将包绑定到指定的路径，并在其中的方案上执行构建操作。</p>
+</li>
+<li><p><strong>-exportArchive</strong><br>  指定应导出归档。 需要<code>-exportFormat</code>，<code>-archivePath</code>和<code>-exportPath</code>。 不能与构建操作一起使用。</p>
+</li>
+<li><p><strong>-exportFormat</strong> format<br>  指定归档应该导出到的格式。有效的格式是IPA（iOS），PKG（Mac）和APP。 如果未指定xcodebuild 将尝试自动检测格式为IPA或PKG。</p>
+</li>
+<li><p><strong>-archivePath</strong> xcarchivepath<br>  指定归档操作生成的归档的路径，或者指定归档在<code>-exportArchive</code>时被导出。</p>
+</li>
+<li><p><strong>-exportPath</strong> destinationpath<br>  指定导出产品的目的路径，包括导出文件的名称。</p>
+</li>
+<li><p><strong>-exportProvisioningProfile</strong> profilename<br>  指定导出归档时使用的 provisioning profile 文件。</p>
+</li>
+<li><p><strong>-exportSigningIdentity</strong> identityname<br>  指定导出归档时使用的应用程序签名标识。如果可能的话，这可以从<code>-exportProvisioningProfile</code>中推断出来。</p>
+</li>
+<li><p><strong>-exportInstallerIdentity</strong> identityname<br>  指定导出归档时使用的安装程序签名标识。、也可以从<code>-exportSigningIdentity</code>或<code>-exportProvisioningProfile</code>中推断出来。</p>
+</li>
+<li><p><strong>-exportWithOriginalSigningIdentity</strong><br>  指定在导出文件时使用的用于创建归档的签名标识。</p>
+</li>
+</ul>
+<h5 id="buildaction-…"><a href="#buildaction-…" class="headerlink" title="buildaction …"></a>buildaction …</h5><p>指定要在 target 上执行的构建操作（或多个操作）:</p>
+<table>
+<thead>
+<tr>
+<th>action</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>build</td>
+<td>在构建根目录（SYMROOT）中构建目标。这是默认的构建操作。</td>
+</tr>
+<tr>
+<td>analyze</td>
+<td>从构建根目录（SYMROOT）构建和分析target或scheme。需要指定一个scheme。</td>
+</tr>
+<tr>
+<td>archive</td>
+<td>从构建根目录（SYMROOT）归档一个scheme。需要指定一个scheme。</td>
+</tr>
+<tr>
+<td>test</td>
+<td>从构建根目录（SYMROOT）测试一个scheme。这需要指定一个scheme和一个目的地。</td>
+</tr>
+<tr>
+<td>installsrc</td>
+<td>将项目源复制到源根目录（SRCROOT）。</td>
+</tr>
+<tr>
+<td>install</td>
+<td>构建target并将其安装到 DSTROOT 中的目标安装目录中。</td>
+</tr>
+<tr>
+<td>clean</td>
+<td>从构建根目录（SYMROOT）中删除构建产品和中间文件。</td>
+</tr>
+</tbody></table>
+<h5 id="Destinations"><a href="#Destinations" class="headerlink" title="Destinations"></a>Destinations</h5><p><strong>-destination</strong>选项采用描述设备（或多个设备）作为目的地的目标说明符作为其参数。目标说明符是由一组逗号分隔的键值对组成的单个参数。 可以多次指定<strong>-destination</strong>选项，以使<strong>xcodebuild</strong>在多个目标上执行指定的操作。</p>
+<p>目标说明符可能包含平台密钥以指定其中一个受支持的目标平台。 应根据您选择的设备的平台提供附加的键</p>
+<p>某些设备可能需要一些时间才能查找。 <strong>-destination-timeout</strong> 选项可用于指定在设备被认为不可用之前等待的时间。默认为30秒。</p>
+<p>目前，xcodebuild支持这些平台：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">OS X             本地 Mac，在Xcode界面中称为My Mac，支持以下内容: </span><br><span class="line">                 arch 要使用的体系结构，x86_64（默认）或者i386。</span><br><span class="line">                 </span><br><span class="line">iOS              iOS 设备，支持以下内容：</span><br><span class="line">                 name 使用的设备的名称</span><br><span class="line">                 id   在Xcode Organizer中“设备”选项卡中的设备的标识符。</span><br><span class="line">                 </span><br><span class="line">iOS Simulator    iOS 模拟器，支持以下内容: </span><br><span class="line">                 name 在 Xcode 的界面中提供的模拟器的全名。</span><br><span class="line">                 OS   要模拟的iOS版本（如6._）或最新字符串（默认值），以指示该版本Xcode   </span><br><span class="line">                 支持的最新iOS版本。</span><br></pre></td></tr></table></figure>
+<p>e.g.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme -destination <span class="string">'platform=OS X,arch=x86_64'</span> build</span></span><br></pre></td></tr></table></figure>
+
+
+<h5 id="导出归档"><a href="#导出归档" class="headerlink" title="导出归档"></a>导出归档</h5><p><strong>-exportArchive</strong> 选项指定 <strong>xcodebuild</strong> 应该导出由 <strong>-archivePath</strong> 指定的归档并转换为 <strong>-exportFormat</strong> 指定的格式。导出的产品将放置在由 <strong>-exportPath</strong> 指定的路径中。 导出归档时重新签名是可选的。 配置文件(Provisioning Profile)可以由 <strong>-exportProvisioningProfile</strong> 指定。在某些情况下，应该在导出期间使用的应用程序签名标识可以从配置文件中确定。对于不可能的情况（包括在导出产品中没有嵌入配置文件的情况），可以使用 <strong>-exportSigningIdentity</strong> 指定应用程序签名标识。将 Mac 归档文件导出为 PKG 时，可以使用安装程序签名标识对导出的包进行签名。 这可以从应用程序签名标识中推断出来（例如，如果为应用程序签名标识指定了“Developer ID Application”，则将自动推断“Developer ID Installer”），也可以使用<strong>-exportInstallerIdentity</strong>明确指定它。</p>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild clean install</span></span><br></pre></td></tr></table></figure>
+<p>清理构建目录; 然后在 <strong>xcodebuild</strong> 启动的目录中构建并安装 Xcode 项目中的第一个target。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -target MyTarget OBJROOT=/Build/MyProj/Obj.root SYMROOT=/Build/MyProj/Sym.root</span></span><br></pre></td></tr></table></figure>
+<p>在 <strong>xcodebuild</strong> 开始的目录中的 Xcode 项目中构建 MyTarget，将中间文件放入<code>/Build/MyProj/Obj.root</code>目录中，并将构建的产品放入<code>/Build/MyProj/Sym.root</code>目录中。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -sdk macosx10.6</span></span><br></pre></td></tr></table></figure>
+<p>在 Mac OS X 10.6 SDK 中启动 <strong>xcodebuild</strong> 的目录中生成 Xcode 项目。可以使用<strong>-showsdks</strong>选项查看所有可用SDK的名称。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme</span></span><br></pre></td></tr></table></figure>
+<p>在 Xcode 工作区 MyWorkspace.xcworkspace 中构建方案 MyScheme。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme archive</span></span><br></pre></td></tr></table></figure>
+<p>在 Xcode 工作区 MyWorkspace.xcworkspace 中归档方案 MyScheme。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme -destination <span class="string">'platform=OS X,arch=x86_64'</span> <span class="built_in">test</span></span></span><br></pre></td></tr></table></figure>
+<p>在 Xcode 工作区 MyWorkspace.xcworkspace 中使用Xcode中描述为’platform=OS X,arch=x86_64’的目标测试 MyScheme 中的方案。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme -destination <span class="string">'platform=iOS Simulator,name=iPhone'</span> -destination <span class="string">'platform=iOS,name=My iPad'</span> <span class="built_in">test</span></span></span><br></pre></td></tr></table></figure>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme -destination generic/platform=iOS build</span></span><br></pre></td></tr></table></figure>
+<p>使用通用 iOS 设备在 Xcode 工作区 MyWorkspace.xcworkspace 中构建方案 MyScheme。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -exportArchive -exportFormat IPA -archivePath MyMobileApp.xcarchive -exportPath MyMobileApp.ipa -exportProvisioningProfile <span class="string">'MyMobileApp Distribution Profile'</span></span></span><br></pre></td></tr></table></figure>
+<p>使用 “MyMobileApp Distribution Profile” 配置文件将归档 MyMobileApp.xcarchive 作为 IPA 文件导出到MyMobileApp.ipa目录中。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -exportArchive -exportFormat APP -archivePath MyMacApp.xcarchive -exportPath MyMacApp.pkg -exportSigningIdentity <span class="string">'Developer ID Application: My Team'</span></span></span><br></pre></td></tr></table></figure>
+<p>使用 “Developer ID Installer：My Team” 签名将 MyMacApp.xcarchive 作为 PKG 文件导出到MyMacApp.pkg目录中。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Xcode/" rel="tag"># Xcode</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/ck9m95duh001gn8yedy52gffp/" rel="next" title="快速搭建基于HLS和RTMP的视频推流">
+                <i class="fa fa-chevron-left"></i> 快速搭建基于HLS和RTMP的视频推流
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/ck9m95du70013n8ye5qu36wz1/" rel="prev" title="入坑Webpack">
+                入坑Webpack <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Jewelz Hu" />
+            
+              <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+              <p class="site-description motion-element" itemprop="description">Stay hungry, Stay foolish.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hujewelz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hujewelz@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用"><span class="nav-number">1.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选项-options"><span class="nav-number">2.</span> <span class="nav-text">选项(options)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#buildaction-…"><span class="nav-number">2.1.</span> <span class="nav-text">buildaction …</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Destinations"><span class="nav-number">2.2.</span> <span class="nav-text">Destinations</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#导出归档"><span class="nav-number">2.3.</span> <span class="nav-text">导出归档</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子"><span class="nav-number">3.</span> <span class="nav-text">例子</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://Jewelz.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://hujewelz.github.io/ck9m95dty000mn8yea9y03j99/';
+          this.page.identifier = 'ck9m95dty000mn8yea9y03j99/';
+          this.page.title = 'Xcodebuild的使用';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Jewelz.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

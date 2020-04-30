@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Swift,Reactive programing," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="2017年又快过去了，忙了一年感觉没啥收获，感觉是不是应该写点啥，想了好久没想出要写什么。下半年因为工作的原因，狗狗也没养了，吉他上也积满了灰尘，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 Swift 写一个响应式编程库">
+<meta property="og:url" content="https://hujewelz.github.io/ck9m95dus0025n8ye1mctd8gt/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="2017年又快过去了，忙了一年感觉没啥收获，感觉是不是应该写点啥，想了好久没想出要写什么。下半年因为工作的原因，狗狗也没养了，吉他上也积满了灰尘，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-12-02T09:18:21.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="Swift">
+<meta property="article:tag" content="Reactive programing">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hujewelz.github.io/ck9m95dus0025n8ye1mctd8gt/"/>
+
+
+
+
+
+  <title>用 Swift 写一个响应式编程库 | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jewelz`s Home Page</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS工程师一枚，热爱前端技术</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/ck9m95dus0025n8ye1mctd8gt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">用 Swift 写一个响应式编程库</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-02T17:18:21+08:00">
+                2017-12-02
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-04-25T16:08:23+08:00">
+                2020-04-25
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/ck9m95dus0025n8ye1mctd8gt/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="ck9m95dus0025n8ye1mctd8gt/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>2017年又快过去了，忙了一年感觉没啥收获，感觉是不是应该写点啥，想了好久没想出要写什么。下半年因为工作的原因，狗狗也没养了，吉他上也积满了灰尘，</p>
+<a id="more"></a>
+
+<p>兴致勃勃的学习素描，到现在也没画出了啥😂，博客也很久没更新了。想想感觉更新一下博客吧。</p>
+<p>整个2017年我完全使用 Swift 进行开发了。使用 Swift 进行开发是一个很愉快的体验，我已经完全不想再去碰 OC 了。最近想做一个响应式编程的库，所以就把它拿来分享一下。</p>
+<h2 id="Reactive-Programing"><a href="#Reactive-Programing" class="headerlink" title="Reactive Programing"></a>Reactive Programing</h2><p>说到响应式编程，ReactiveCocoa 和 RxSwift 可以说是目前 iOS 开发中最优秀的第三方开源库了。今天咱们不聊 ReactiveCocoa 和 RxSwif，咱们自己来写一个响应式编程库。如果你对观察者模式很熟悉的话，那么响应式编程就很容易理解了。</p>
+<blockquote>
+<p>响应式编程是一种面向数据流和变化传播的编程范式。</p>
+</blockquote>
+<p>比如用户输入、单击事件、变量值等都可以看做一个流，你可以观察这个流，并基于这个流做一些操作。“监听”流的行为叫做订阅。响应式就是基于这种想法。</p>
+<p> 废话不多说，撸起袖子开干。</p>
+<p>我们以一个获取用户信息的网络请求为例：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fetchUser</span><span class="params">(with id: Int, completion: @escaping <span class="params">(<span class="params">(User)</span></span></span></span> -&gt; <span class="type">Void</span>)) &#123;</span><br><span class="line">     <span class="type">DispatchQueue</span>.main.asyncAfter(deadline: <span class="type">DispatchTime</span>.now()+<span class="number">2</span>) &#123;</span><br><span class="line">         <span class="keyword">let</span> user = <span class="type">User</span>(name: <span class="string">"jewelz"</span>)</span><br><span class="line">         completion(user)</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面是我们通常的做法，在请求方法里传入一个回调函数，在回调里拿到结果。在响应式里面，我们监听请求，当请求完成时，观察者得到更新。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fetchUser</span><span class="params">(with id: Int)</span></span> -&gt; <span class="type">Signal</span>&lt;<span class="type">User</span>&gt; &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发送网络请求就可以这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fetchUser(with: <span class="string">"12345"</span>).subscribe(&#123;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在完成 Signal 之前， 需要定义订阅后返回的数据结构，这里我只关心成功和失败两种状态的数据，所以可以这样写:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Result</span>&lt;<span class="title">Value</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> success(<span class="type">Value</span>)</span><br><span class="line">    <span class="keyword">case</span> error(<span class="type">Error</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在可以开始实现我们的 Signal 了:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Signal</span>&lt;<span class="title">Value</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">fileprivate</span> <span class="keyword">typealias</span> <span class="type">Subscriber</span> = (<span class="type">Result</span>&lt;<span class="type">Value</span>&gt;) -&gt; <span class="type">Void</span></span><br><span class="line">  	<span class="keyword">fileprivate</span> <span class="keyword">var</span> subscribers: [<span class="type">Subscriber</span>] = []</span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">send</span><span class="params">(<span class="number">_</span> result: Result&lt;Value&gt;)</span></span> &#123;</span><br><span class="line">        <span class="keyword">for</span> subscriber <span class="keyword">in</span> subscribers &#123;</span><br><span class="line">            subscriber(result)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">subscribe</span><span class="params">(<span class="number">_</span> subscriber: @escaping <span class="params">(Result&lt;Value&gt;)</span></span></span> -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">        subscribers.append(subscriber)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写个小例子测试一下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> signal = <span class="type">Signal</span>&lt;<span class="type">Int</span>&gt;()</span><br><span class="line">signal.subscribe &#123; result <span class="keyword">in</span></span><br><span class="line">    <span class="built_in">print</span>(result)</span><br><span class="line">&#125;</span><br><span class="line">signal.send(.success(<span class="number">100</span>))</span><br><span class="line">signal.send(.success(<span class="number">200</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// Print</span></span><br><span class="line">success(<span class="number">100</span>)</span><br><span class="line">success(<span class="number">200</span>)</span><br></pre></td></tr></table></figure>
+
+<p>我们的 Signal 已经可以正常工作了，不过还有很多改进的空间，我们可以使用一个工厂方法来创建一个 Signal, 同时将 <code>send</code>变为私有的：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">empty</span><span class="params">()</span></span> -&gt; ((<span class="type">Result</span>&lt;<span class="type">Value</span>&gt;) -&gt; <span class="type">Void</span>, <span class="type">Signal</span>&lt;<span class="type">Value</span>&gt;) &#123;</span><br><span class="line">     <span class="keyword">let</span> signal = <span class="type">Signal</span>&lt;<span class="type">Value</span>&gt;()</span><br><span class="line">     <span class="keyword">return</span> (signal.send, signal)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fileprivate</span> <span class="function"><span class="keyword">func</span> <span class="title">send</span><span class="params">(<span class="number">_</span> result: Result&lt;Value&gt;)</span></span> &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们需要这样使用 Signal 了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> (sink, signal) = <span class="type">Signal</span>&lt;<span class="type">Int</span>&gt;.empty()</span><br><span class="line">signal.subscribe &#123; result <span class="keyword">in</span></span><br><span class="line">    <span class="built_in">print</span>(result)</span><br><span class="line">&#125;</span><br><span class="line">sink(.success(<span class="number">100</span>))</span><br><span class="line">sink(.success(<span class="number">200</span>))</span><br></pre></td></tr></table></figure>
+
+<p>接着我们可以给 UITextField 绑定一个 Signal，只需要在 Extension 中给 UITextField添加一个计算属性  ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">extension UITextField &#123;</span><br><span class="line">    var signal: Signal&lt;String&gt; &#123;</span><br><span class="line">        let (sink, signal) &#x3D; Signal&lt;String&gt;.empty()</span><br><span class="line">        let observer &#x3D; KeyValueObserver&lt;String&gt;(object: self, keyPath: #keyPath(text)) &#123; str in</span><br><span class="line">            sink(.success(str))</span><br><span class="line">        &#125;</span><br><span class="line">        signal.objects.append(observer)</span><br><span class="line">        return signal</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中的 <code>observer</code> 是一个局部变量，在 <code>signal</code>调用完后，就会被销毁，所以需要在 Signal 中保存该对象，可以给 Signal 添加一个数组，用来保存需要延长生命周期的对象。 KeyValueObserver 是对 KVO 的简单封装，其实现如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">KeyValueObserver</span>&lt;<span class="title">T</span>&gt;: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">let</span> object: <span class="type">NSObject</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">let</span> keyPath: <span class="type">String</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">let</span> callback: (<span class="type">T</span>) -&gt; <span class="type">Void</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(object: <span class="type">NSObject</span>, keyPath: <span class="type">String</span>, callback: @escaping (<span class="type">T</span>) -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.object = object</span><br><span class="line">        <span class="keyword">self</span>.keyPath = keyPath</span><br><span class="line">        <span class="keyword">self</span>.callback = callback</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">        object.addObserver(<span class="keyword">self</span>, forKeyPath: keyPath, options: [.new], context: <span class="literal">nil</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">observeValue</span><span class="params">(forKeyPath keyPath: String?, of object: <span class="keyword">Any</span>?, change: [NSKeyValueChangeKey : <span class="keyword">Any</span>]?, context: UnsafeMutableRawPointer?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> keyPath = keyPath, keyPath == <span class="keyword">self</span>.keyPath, <span class="keyword">let</span> value = change?[.newKey] <span class="keyword">as</span>? <span class="type">T</span> <span class="keyword">else</span> &#123; <span class="keyword">return</span> &#125;</span><br><span class="line">      </span><br><span class="line">        callback(value)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">deinit</span> &#123;</span><br><span class="line">        object.removeObserver(<span class="keyword">self</span>, forKeyPath: keyPath)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在就可以使用<code>textField.signal.subscribe({})</code> 来观察 UITextField 内容的改变了。</p>
+<p> 在 Playground 写个 VC 测试一下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">VC</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> textField =  <span class="type">UITextField</span>()</span><br><span class="line">    <span class="keyword">var</span> signal: <span class="type">Signal</span>&lt;<span class="type">String</span>&gt;?</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">        signal = textField.signal</span><br><span class="line">        signal?.subscribe(&#123; result <span class="keyword">in</span></span><br><span class="line">            <span class="built_in">print</span>(result)</span><br><span class="line">        &#125;)</span><br><span class="line">        textField.text = <span class="string">"1234567"</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">deinit</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Removing vc"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> vc: <span class="type">VC?</span> = <span class="type">VC</span>()</span><br><span class="line">vc?.viewDidLoad()</span><br><span class="line">vc = <span class="literal">nil</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Print</span></span><br><span class="line">success(<span class="string">"1234567"</span>)</span><br><span class="line"><span class="type">Removing</span> vc</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Reference-Cycles"><a href="#Reference-Cycles" class="headerlink" title="Reference Cycles"></a>Reference Cycles</h2><p>我在上面的 Signal 中，添加了 <code>deinit</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">deinit</span> &#123;</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">"Removing Signal"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后发现 Signal 的析构方法并没有执行，也就是说上面的代码中出现了循环引用，其实仔细分析上面 UITextField 的拓展中 <code>signal</code>的实现就能发现问题出在哪儿了。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> observer = <span class="type">KeyValueObserver</span>&lt;<span class="type">String</span>&gt;(object: <span class="keyword">self</span>, keyPath: #keyPath(text)) &#123; str <span class="keyword">in</span></span><br><span class="line">    sink(.success(str))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>KeyValueObserver</code> 的回调中，调用了 <code>sink()</code>方法，而 <code>sink</code> 方法其实就是 <code>signal.send(_:)</code>方法，这里在闭包中捕获了<code>signal</code> 变量，于是就形成了循环引用。这里只要使用 <code>weak</code> 就能解决。修改下的代码是这样的：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">empty</span><span class="params">()</span></span> -&gt; ((<span class="type">Result</span>&lt;<span class="type">Value</span>&gt;) -&gt; <span class="type">Void</span>, <span class="type">Signal</span>&lt;<span class="type">Value</span>&gt;) &#123;</span><br><span class="line">     <span class="keyword">let</span> signal = <span class="type">Signal</span>&lt;<span class="type">Value</span>&gt;()</span><br><span class="line">     <span class="keyword">return</span> (&#123;[<span class="keyword">weak</span> signal] value <span class="keyword">in</span> signal?.send(value)&#125;, signal)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次运行， Signal 的析构方法就能执行了。</p>
+<p>上面就实现了一个简单的响应式编程的库了。不过这里还存在很多问题，比如我们应该在适当的时机移除观察者，现在我们的观察者被添加在 <code>subscribers</code> 数组中，这样就不知道该移除哪一个观察者，所以我们将数字替换成字典，用 UUID   作为 key :</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fileprivate</span> <span class="keyword">typealias</span> <span class="type">Token</span> = <span class="type">UUID</span></span><br><span class="line"><span class="keyword">fileprivate</span> <span class="keyword">var</span> subscribers: [<span class="type">Token</span>: <span class="type">Subscriber</span>] = [:]</span><br></pre></td></tr></table></figure>
+
+<p>我们可以模仿 RxSwift 中的 Disposable 用来移除观察者，实现代码如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Disposable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">let</span> dispose: () -&gt; <span class="type">Void</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">create</span><span class="params">(<span class="number">_</span> dispose: @escaping <span class="params">()</span></span></span> -&gt; <span class="type">Void</span>) -&gt; <span class="type">Disposable</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">Disposable</span>(dispose)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="number">_</span> dispose: @escaping () -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.dispose = dispose</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">deinit</span> &#123;</span><br><span class="line">        dispose()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原来的 <code>subscribe(_:)</code> 返回一个 Disposable 就可以了:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">subscribe</span><span class="params">(<span class="number">_</span> subscriber: @escaping <span class="params">(Result&lt;Value&gt;)</span></span></span> -&gt; <span class="type">Void</span>) -&gt; <span class="type">Disposable</span> &#123;</span><br><span class="line">     <span class="keyword">let</span> token = <span class="type">UUID</span>()</span><br><span class="line">     subscribers[token] = subscriber</span><br><span class="line">      <span class="keyword">return</span> <span class="type">Disposable</span>.create &#123;</span><br><span class="line">          <span class="keyword">self</span>.subscribers[token] = <span class="literal">nil</span></span><br><span class="line">      &#125;   </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样我们只要在适当的时机销毁 Disposable 就可以移除观察者了。</p>
+<p>作为一个响应式编程库都会有 <code>map</code>, <code>flatMap</code>, <code>filter</code>, <code>reduce</code> 等方法，所以我们的库也不能少，我们可以简单的实现几个。</p>
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><p>map 比较简单，就是将一个 <em>返回值为包装值的函数</em> 作用于一个<strong>包装(Wrapped)值</strong>的过程， 这里的包装值可以理解为可以包含其他值的一种结构，例如 Swift 中的数组，可选类型都是包装值。它们都有重载的 <code>map</code>, <code>flatMap</code>等函数。以数组为例，我们经常这样使用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> images = [<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>].<span class="built_in">map</span>&#123; <span class="type">UIImage</span>(named: $<span class="number">0</span>) &#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在来实现我们的 map 函数：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">map</span>&lt;T&gt;<span class="params">(<span class="number">_</span> transform: @escaping <span class="params">(Value)</span></span></span> -&gt; <span class="type">T</span>) -&gt; <span class="type">Signal</span>&lt;<span class="type">T</span>&gt; &#123;</span><br><span class="line">     <span class="keyword">let</span> (sink, signal) = <span class="type">Signal</span>&lt;<span class="type">T</span>&gt;.empty()</span><br><span class="line">     <span class="keyword">let</span> dispose = subscribe &#123; (result) <span class="keyword">in</span></span><br><span class="line">          sink(result.<span class="built_in">map</span>(transform))</span><br><span class="line">      &#125;</span><br><span class="line">      signal.objects.append(dispose)</span><br><span class="line">      <span class="keyword">return</span> signal</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我同时给 Result 也实现了 map 函数:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Result</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">map</span>&lt;T&gt;<span class="params">(<span class="number">_</span> transform: @escaping <span class="params">(Value)</span></span></span> -&gt; <span class="type">T</span>) -&gt; <span class="type">Result</span>&lt;<span class="type">T</span>&gt; &#123;</span><br><span class="line">        <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> .success(<span class="keyword">let</span> value):</span><br><span class="line">            <span class="keyword">return</span> .success(transform(value))</span><br><span class="line">        <span class="keyword">case</span> .error(<span class="keyword">let</span> error):</span><br><span class="line">            <span class="keyword">return</span> .error(error)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Test</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> (sink, intSignal) = <span class="type">Signal</span>&lt;<span class="type">Int</span>&gt;.empty()</span><br><span class="line">intSignal</span><br><span class="line">    .<span class="built_in">map</span>&#123; <span class="type">String</span>($<span class="number">0</span>)&#125;</span><br><span class="line">    .subscribe &#123;  result <span class="keyword">in</span></span><br><span class="line">        <span class="built_in">print</span>(result)</span><br><span class="line">&#125;</span><br><span class="line">sink(.success(<span class="number">100</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// Print success("100")</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h2><p>flatMap 和 map 很相似，但也有一些不同，以可选型为例，Swif t是这样定义 map 和 flatMap 的：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">map</span>&lt;U&gt;<span class="params">(<span class="number">_</span> transform: <span class="params">(Wrapped)</span></span></span> <span class="keyword">throws</span> -&gt; <span class="type">U</span>) <span class="keyword">rethrows</span> -&gt; <span class="type">U?</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">flatMap</span>&lt;U&gt;<span class="params">(<span class="number">_</span> transform: <span class="params">(Wrapped)</span></span></span> <span class="keyword">throws</span> -&gt; <span class="type">U?</span>) <span class="keyword">rethrows</span> -&gt; <span class="type">U?</span></span><br></pre></td></tr></table></figure>
+
+<p> flatMap 和 map 的不同主要体现在 transform 函数的返回值不同。map 接受的函数返回值类型是 <code>U</code>类型，而 flatMap 接受的函数返回值类型是 <code>U?</code>类型。例如对于一个可选值，可以这样调用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aString: <span class="type">String?</span> = <span class="string">"￥99.9"</span></span><br><span class="line"><span class="keyword">let</span> price = aString.flatMap&#123; <span class="type">Float</span>($<span class="number">0</span>)&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Price is nil</span></span><br></pre></td></tr></table></figure>
+
+<p>我们这里 flatMap 和 Swift 中数组以及可选型中的 flatMap 保持了一致。</p>
+<p>所以我们的 flatMap 应该是这样定义：<code>flatMap&lt;T&gt;(_ transform: @escaping (Value) -&gt; Signal&lt;T&gt;) -&gt; Signal&lt;T&gt;</code> 。</p>
+<p>理解了 flatMap 和 map 的不同，实现起来也就很简单了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">flatMap</span>&lt;T&gt;<span class="params">(<span class="number">_</span> transform: @escaping <span class="params">(Value)</span></span></span> -&gt; <span class="type">Signal</span>&lt;<span class="type">T</span>&gt;) -&gt; <span class="type">Signal</span>&lt;<span class="type">T</span>&gt; &#123;</span><br><span class="line">     <span class="keyword">let</span> (sink, signal) = <span class="type">Signal</span>&lt;<span class="type">T</span>&gt;.empty()</span><br><span class="line">     <span class="keyword">var</span> _dispose: <span class="type">Disposable?</span></span><br><span class="line">     <span class="keyword">let</span> dispose = subscribe &#123; (result) <span class="keyword">in</span></span><br><span class="line">         <span class="keyword">switch</span> result &#123;</span><br><span class="line">         <span class="keyword">case</span> .success(<span class="keyword">let</span> value):</span><br><span class="line">             <span class="keyword">let</span> new = transform(value)</span><br><span class="line">             _dispose = new.subscribe(&#123; _result <span class="keyword">in</span></span><br><span class="line">                 sink(_result)</span><br><span class="line">             &#125;)</span><br><span class="line">         <span class="keyword">case</span> .error(<span class="keyword">let</span> error):</span><br><span class="line">             sink(.error(error))</span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> _dispose != <span class="literal">nil</span> &#123;</span><br><span class="line">        signal.objects.append(_dispose!)</span><br><span class="line">    &#125;</span><br><span class="line">    signal.objects.append(dispose)</span><br><span class="line">    <span class="keyword">return</span> signal</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们可以模拟一个网络请求来测试 flatMap：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">users</span><span class="params">()</span></span> -&gt; <span class="type">Signal</span>&lt;[<span class="type">User</span>]&gt; &#123;</span><br><span class="line">     <span class="keyword">let</span> (sink, signal) = <span class="type">Signal</span>&lt;[<span class="type">User</span>]&gt;.empty()</span><br><span class="line">     <span class="type">DispatchQueue</span>.main.asyncAfter(deadline: <span class="type">DispatchTime</span>.now()+<span class="number">2</span>) &#123;</span><br><span class="line">         <span class="keyword">let</span> users = <span class="type">Array</span>(<span class="number">1</span>...<span class="number">10</span>).<span class="built_in">map</span>&#123; <span class="type">User</span>(id: <span class="type">String</span>(describing: $<span class="number">0</span>)) &#125;</span><br><span class="line">         sink(.success(users))</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> signal</span><br><span class="line"> &#125;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">userDetail</span><span class="params">(with id: String)</span></span> -&gt; <span class="type">Signal</span>&lt;<span class="type">User</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> (sink, signal) = <span class="type">Signal</span>&lt;<span class="type">User</span>&gt;.empty()</span><br><span class="line">    <span class="type">DispatchQueue</span>.main.asyncAfter(deadline: <span class="type">DispatchTime</span>.now()+<span class="number">2</span>) &#123;</span><br><span class="line">        sink(.success(<span class="type">User</span>(id: id, name: <span class="string">"jewelz"</span>)))</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> signal</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> dispose = users()</span><br><span class="line">    .flatMap &#123; <span class="keyword">return</span> <span class="keyword">self</span>.userDetail(with: $<span class="number">0</span>.first!.id) &#125;</span><br><span class="line">    .subscribe &#123; result <span class="keyword">in</span></span><br><span class="line">        <span class="built_in">print</span>(result)</span><br><span class="line">&#125;</span><br><span class="line">disposes.append(dispose)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Print: success(ReactivePrograming.User(name: Optional("jewelz"), id: "1"))</span></span><br></pre></td></tr></table></figure>
+
+<p>通过使用 flatMap ，我们可以很简单的将一个 Signal 转换为另一个 Signal , 这在我们处理多个请求嵌套时就会很方便了。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>上面通过100 多行的代码就实现了一个简单的响应式编程库。不过对于一个库来说，以上的内容还远远不够。现在的 Signal 还不具有原子性，要作为一个实际可用的库，应该是线程安的。还有我们对 Disposable 的处理也不够优雅，可以模仿 RxSwift 中 DisposeBag 的做法。上面这些问题可以留给读者自己去思考了。（更多内容可以查看<a href="http://jewelz.me" target="_blank" rel="noopener">我的主页</a>）</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Swift/" rel="tag"># Swift</a>
+          
+            <a href="/tags/Reactive-programing/" rel="tag"># Reactive programing</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/ck9m95dtv000en8ye8svw87fj/" rel="next" title="iOS 应用启动流程分析-Dyld">
+                <i class="fa fa-chevron-left"></i> iOS 应用启动流程分析-Dyld
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/ck9m95dte0002n8ye7sbb3wgv/" rel="prev" title="从 Swift 中的序列到类型擦除">
+                从 Swift 中的序列到类型擦除 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Jewelz Hu" />
+            
+              <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+              <p class="site-description motion-element" itemprop="description">Stay hungry, Stay foolish.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/hujewelz" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:hujewelz@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactive-Programing"><span class="nav-number">1.</span> <span class="nav-text">Reactive Programing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference-Cycles"><span class="nav-number">2.</span> <span class="nav-text">Reference Cycles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#map"><span class="nav-number">3.</span> <span class="nav-text">map</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flatMap"><span class="nav-number">4.</span> <span class="nav-text">flatMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后"><span class="nav-number">5.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://Jewelz.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://hujewelz.github.io/ck9m95dus0025n8ye1mctd8gt/';
+          this.page.identifier = 'ck9m95dus0025n8ye1mctd8gt/';
+          this.page.title = '用 Swift 写一个响应式编程库';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Jewelz.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
