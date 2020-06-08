@@ -2384,7 +2384,7 @@
 </blockquote>
 <p>后面的主要工作就是编写 OpenGL 代码了，这里就不展开了，毕竟不是本文的重点。</p>
 <p>接着我们可以添加一个用于运行该库的可执行程序的目标。我们在 Sources 目录下添加 Sample 子目录，并添加一个 <code>main.siwft</code> 文件，并在 Package.swift 中的 <code>targets</code> 添加一个 Sample 目标：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">.target(</span><br><span class="line">	name: <span class="string">"Sample"</span>,</span><br><span class="line">  dependencies: [<span class="string">"OpenGLApp"</span>]),</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">.target(</span><br><span class="line">	  name: <span class="string">"Sample"</span>,</span><br><span class="line">    dependencies: [<span class="string">"OpenGLApp"</span>]),</span><br></pre></td></tr></table></figure>
 
 <p>我在 <code>main.siwft</code> 中调用了自己封装的 OpenGLApp 的 Swift 库：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> OpenGLApp</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> app = <span class="type">GLApp</span>(title: <span class="string">"Hello, OpenGL"</span>, width: <span class="number">600</span>, height: <span class="number">600</span>)</span><br><span class="line">app.run()</span><br></pre></td></tr></table></figure>
@@ -2404,7 +2404,8 @@
         <category>Swift</category>
       </categories>
       <tags>
-        <tag>Swift, SPM</tag>
+        <tag>Swift</tag>
+        <tag>SPM</tag>
       </tags>
   </entry>
   <entry>

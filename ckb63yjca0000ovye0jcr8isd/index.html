@@ -100,7 +100,7 @@
 
 
 
-  <meta name="keywords" content="Swift, SPM," />
+  <meta name="keywords" content="Swift,SPM," />
 
 
 
@@ -120,9 +120,10 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/swiftc/window.png">
 <meta property="article:published_time" content="2020-05-08T04:04:03.000Z">
-<meta property="article:modified_time" content="2020-06-08T07:42:05.917Z">
+<meta property="article:modified_time" content="2020-06-08T07:57:36.763Z">
 <meta property="article:author" content="Jewelz Hu">
-<meta property="article:tag" content="Swift, SPM">
+<meta property="article:tag" content="Swift">
+<meta property="article:tag" content="SPM">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/swiftc/window.png">
 
@@ -366,7 +367,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2020-06-08T15:42:05+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2020-06-08T15:57:36+08:00">
                 2020-06-08
               </time>
             
@@ -495,7 +496,7 @@
 </blockquote>
 <p>后面的主要工作就是编写 OpenGL 代码了，这里就不展开了，毕竟不是本文的重点。</p>
 <p>接着我们可以添加一个用于运行该库的可执行程序的目标。我们在 Sources 目录下添加 Sample 子目录，并添加一个 <code>main.siwft</code> 文件，并在 Package.swift 中的 <code>targets</code> 添加一个 Sample 目标：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.target(</span><br><span class="line">	name: <span class="string">"Sample"</span>,</span><br><span class="line">  dependencies: [<span class="string">"OpenGLApp"</span>]),</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.target(</span><br><span class="line">	  name: <span class="string">"Sample"</span>,</span><br><span class="line">    dependencies: [<span class="string">"OpenGLApp"</span>]),</span><br></pre></td></tr></table></figure>
 
 <p>我在 <code>main.siwft</code> 中调用了自己封装的 OpenGLApp 的 Swift 库：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> OpenGLApp</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> app = <span class="type">GLApp</span>(title: <span class="string">"Hello, OpenGL"</span>, width: <span class="number">600</span>, height: <span class="number">600</span>)</span><br><span class="line">app.run()</span><br></pre></td></tr></table></figure>
@@ -527,7 +528,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Swift-SPM/" rel="tag"># Swift, SPM</a>
+            <a href="/tags/Swift/" rel="tag"># Swift</a>
+          
+            <a href="/tags/SPM/" rel="tag"># SPM</a>
           
         </div>
       
@@ -661,7 +664,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
