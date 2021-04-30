@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hujewelz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在开始学习Webpack之前，请先确保安装了Node.js,建议安装最新版的Node.js。然后就可以使用npm安装Webpack了。你可以将Webpack安装到全局，不过我们通常会把它安装到项目依赖中。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="入坑Webpack">
+<meta property="og:url" content="https://hujewelz.github.io/cko3yok1t001iors6596y7cfx/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="在开始学习Webpack之前，请先确保安装了Node.js,建议安装最新版的Node.js。然后就可以使用npm安装Webpack了。你可以将Webpack安装到全局，不过我们通常会把它安装到项目依赖中。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-02-06T01:46:20.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="Webpack">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://hujewelz.github.io/cko3yok1t001iors6596y7cfx/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>入坑Webpack | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jewelz`s Home Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">iOS工程师一枚，热爱前端技术</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/cko3yok1t001iors6596y7cfx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="Stay hungry, Stay foolish.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          入坑Webpack
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-02-06 09:46:20" itemprop="dateCreated datePublished" datetime="2017-02-06T09:46:20+08:00">2017-02-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-25 16:08:23" itemprop="dateModified" datetime="2020-04-25T16:08:23+08:00">2020-04-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web-Dev/" itemprop="url" rel="index"><span itemprop="name">Web Dev</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在开始学习<code>Webpack</code>之前，请先确保安装了<a target="_blank" rel="noopener" href="https://nodejs.org/en/download/">Node.js</a>,建议安装最新版的Node.js。然后就可以使用npm安装Webpack了。你可以将Webpack安装到全局，不过我们通常会把它安装到项目依赖中。</p>
+<span id="more"></span>
+
+<p>现在进入项目目录，并使用<code>npm init -y</code>初始化一个默认的package.json。打开终端，键入命令:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//全局安装</span><br><span class="line">npm install webpack --g</span><br><span class="line">//安装到项目依赖中</span><br><span class="line">npm install webpack --save-dev</span><br></pre></td></tr></table></figure>
+<p>安装好Webpack依赖后，新建一个webpack.config.js文件，用来配置webpack。不过在配置webpack之前，先安装<code>webpack-dev-server</code>:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//全局安装</span><br><span class="line">npm install webpack-dev-server --g</span><br><span class="line">//安装到项目依赖中</span><br><span class="line">npm install webpack-dev-server --save-dev</span><br></pre></td></tr></table></figure>
+<h3 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a>webpack-dev-server</h3><p>它将在localhost:8080启动一个express静态资源web服务器，并且会以监听模式自动运行webpack，在浏览器打开<a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080/</a>或<a target="_blank" rel="noopener" href="http://localhost:8080/webpack-dev-server/">http://localhost:8080/webpack-dev-server/</a>可以浏览项目中的页面和编译后的资源输出，并且通过一个socket.io服务实时监听它们的变化并自动刷新页面。<br>在终端中执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">webpack-dev-server --inline --hot</span><br></pre></td></tr></table></figure>
+<p>当我们修改了模块的内容后，<code>webpack-dev-server</code>会自动执行打包(打包后的结果会缓存到内存中，所以不能在本地文件中看到打包后的文件)。</p>
+<p><code>inline</code>选项为整个页面添加了”Live Reloading”功能，而<code>hot</code>选项开启了”Hot Module Reloading”功能，这样就会尝试着重载发生变化的组件，而不是整个页面。这样就实现了修改文件，界面就会自动更新了。<br>我们可以在<code>package.json</code>中输入以下内容：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">   &quot;dev&quot;: &quot;webpack-dev-server --colors --hot --inline&quot;,</span><br><span class="line">   &quot;build&quot;: &quot;webpack --colors --watch&quot;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>这样我们只需要键入<code>npm run dev</code>命令就能执行上面的命令了。</p>
+<p>在这之前，先看看项目的结构以及一个简单的<code>webpack config</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">|——hello-webpack</span><br><span class="line">   |——src  # 项目源码</span><br><span class="line">      |——assets # 资源文件</span><br><span class="line">         |——img # 图片</span><br><span class="line">         |——css # 样式</span><br><span class="line">      |——component  # 页面组件</span><br><span class="line">      main.js  # 入口文件</span><br><span class="line">   |——static # 静态资源文件</span><br><span class="line">   index.html</span><br><span class="line">   package.json</span><br><span class="line">   webpack.config.js</span><br></pre></td></tr></table></figure>
+<p><strong>webpack config.js</strong>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="keyword">var</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">&#x27;html-webpack-plugin&#x27;</span>)</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    app: <span class="string">&#x27;./src/main.js&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(__dirname, <span class="string">&#x27;./dist&#x27;</span>),</span><br><span class="line">    publicPath: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    filename: <span class="string">&#x27;[name].js&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    extensions: [<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.jsx&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="string">&#x27;src&#x27;</span>: path.resolve(__dirname, <span class="string">&#x27;./src&#x27;</span>),</span><br><span class="line">      <span class="string">&#x27;assets&#x27;</span>: path.resolve(__dirname, <span class="string">&#x27;./src/assets&#x27;</span>),</span><br><span class="line">      <span class="string">&#x27;components&#x27;</span>: path.resolve(__dirname, <span class="string">&#x27;./src/components&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    loaders: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.js|jsx?$/</span>,</span><br><span class="line">        exclude: <span class="regexp">/node_modules/</span>,</span><br><span class="line">        loader: <span class="string">&#x27;babel&#x27;</span>,</span><br><span class="line">        query: &#123;</span><br><span class="line">          presets: [<span class="string">&#x27;es2015&#x27;</span>, <span class="string">&#x27;react&#x27;</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">        loader: <span class="string">&#x27;style!css&#x27;</span>,</span><br><span class="line">        exclude: <span class="regexp">/node_modules/</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(png|jpe?g|gif|svg)(\?.*)?$/</span>,</span><br><span class="line">        loader: <span class="string">&#x27;url&#x27;</span>,</span><br><span class="line">        query: &#123;</span><br><span class="line">          limit: <span class="number">10000</span>,</span><br><span class="line">          name: path.join(<span class="string">&#x27;static&#x27;</span>, <span class="string">&#x27;img/[name].[hash:7].[ext]&#x27;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      filename: <span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">      template: <span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">      inject: <span class="literal">true</span></span><br><span class="line">    &#125;),</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Webpack配置"><a href="#Webpack配置" class="headerlink" title="Webpack配置"></a>Webpack配置</h2><p><strong>webpack.config.js</strong>为Webpack的默认配置，我们可以为开发环境和生产环境分别做不同的配置。下面一一介绍每个配置的作用。</p>
+<h3 id="entry"><a href="#entry" class="headerlink" title="entry"></a>entry</h3><p><code>entry</code>是入口配置项，可以是<code>string</code>,<code>Array</code>或者一个<code>Object</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">entry: &#123;</span><br><span class="line">  app: <span class="string">&#x27;./src/main.js&#x27;</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entry: <span class="string">&#x27;./src/main.js&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>如果页面有多个入口可以这样写:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">entry: [<span class="string">&#x27;./src/home.js&#x27;</span>, <span class="string">&#x27;.src/profile.js&#x27;</span>]</span><br><span class="line"><span class="comment">//或</span></span><br><span class="line">entry: &#123;</span><br><span class="line">  home: <span class="string">&#x27;./src/home.js&#x27;</span>,</span><br><span class="line">  profile: <span class="string">&#x27;./src/profile.js&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="output"><a href="#output" class="headerlink" title="output"></a>output</h3><p><code>output</code>是输出配置。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">  path: path.resolve(__dirname, <span class="string">&#x27;./dist&#x27;</span>),</span><br><span class="line">  publicPath: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">  filename: <span class="string">&#x27;[name].js&#x27;</span>,</span><br><span class="line">  chunkFilename: <span class="string">&#x27;[id].[hash].js&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>path</em>是文件输出到本地的路径，<em>publicPath</em>是文件的引用路径，可用来被一些Webpack插件用来处理CSS，HTML文件中的URL，一般用于生产模式，<em>filename</em>是打包后的入口文件名，<em>chunkFilename</em>是每个模块编译后的文件名，其中[hash]是用来唯一标识文件，主要用来防止缓存。</p>
+<h5 id="path"><a href="#path" class="headerlink" title="path"></a>path</h5><p>仅仅用来告诉Webpack在哪里存放结果文件,上面例子中，最终的打包文件会放到与当前脚本文件同级目录的dist目录下。即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello-webpack</span><br><span class="line">  +dist</span><br><span class="line">  -webpack.config.js</span><br></pre></td></tr></table></figure>
+<h5 id="filename"><a href="#filename" class="headerlink" title="filename"></a>filename</h5><p>入口文件打包后的名称,<code>[name]</code>对应着入口文件的key值，例如：<code>app.js</code>,这对多入口文件是很有用的，应为入口文件可以有多个，但是filename只能有一个，所以对于上面的多入口，最后就是:<code>home.js</code>,’profile.js’，当然为了体现文件层级关系可以这么写:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename: &#39;js&#x2F;[name].js&#39;</span><br></pre></td></tr></table></figure>
+<p>最后的结果就是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">|——hello-webpack</span><br><span class="line">   |——dist</span><br><span class="line">   |——js</span><br><span class="line">       home.js</span><br><span class="line">       profile.js</span><br><span class="line">    webpack.config.js</span><br></pre></td></tr></table></figure>
+<h5 id="chunkFilename"><a href="#chunkFilename" class="headerlink" title="chunkFilename"></a>chunkFilename</h5><p>即非入口文件打包后的名称，未被列在entry中，却又需要被打包出来的文件命名配置。一般情况下是不需要这个配置的。比如我们在做异步加载模块时就需要用到了：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">&#x27;async-webpack-example&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 这个特殊的 require 语法告诉 webpack</span></span><br><span class="line">  <span class="comment">// 自动将编译后的代码分割成不同的块，</span></span><br><span class="line">  <span class="comment">// 这些块将通过 Ajax 请求自动下载。</span></span><br><span class="line">  <span class="built_in">require</span>([<span class="string">&#x27;./my-async-component&#x27;</span>], resolve)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h5 id="publicPath"><a href="#publicPath" class="headerlink" title="publicPath"></a>publicPath</h5><p>文件的引用路径，可用来被一些Webpack插件用来处理CSS，HTML文件中的URL，在开发模式下建议使用相对路径，在生产模式中，如果你的资源文件放在别的服务器上，可以使用服务器的地址。当然你也可以不用配置<code>publicPath</code>，。<br>在项目中我使用了<code>url-loader</code>加载图片，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: <span class="regexp">/\.(png|jpe?g|gif|svg)(\?.*)?$/</span>,</span><br><span class="line">    loader: <span class="string">&#x27;url&#x27;</span>,</span><br><span class="line">    query: &#123;</span><br><span class="line">      limit: <span class="number">10000</span>,</span><br><span class="line">      name: path.join(&#x27;static&#x27;, &#x27;img/[name].[hash:7].[ext]&#x27;) # 图片最终的输出路径</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>main.js</code>中使用了图片</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import Girl from &#39;assets&#x2F;img&#x2F;girl.jpg&#39;</span><br></pre></td></tr></table></figure>
+<p>那么最终浏览器访问的图片路径就是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static&#x2F;img&#x2F;girl.7672e53.jpg </span><br></pre></td></tr></table></figure>
+<p>所以可以根据开发环境和生产环境配置不同的<code>publicPath</code>。<br>在生产环境中，由于我的资源文件放在项目目录下，所以可以这样配置<code>output</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">  path: path.resolve(__dirname, <span class="string">&#x27;./dist&#x27;</span>),</span><br><span class="line">  publicPath: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">  filename: <span class="string">&#x27;js/[name].[chunkhash].js&#x27;</span>,</span><br><span class="line">  chunkFilename: <span class="string">`js/[id].[chunkhash].js`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么最终打包后的输出目录结构就是这样的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">|——dist</span><br><span class="line">   |——static</span><br><span class="line">      |——img</span><br><span class="line">         girl.7672e53.jpg</span><br><span class="line">      |——js</span><br><span class="line">         app.js</span><br><span class="line">    index.html</span><br></pre></td></tr></table></figure>
+<p>所以通过<code>static/img/girl.7672e53.jpg </code>可以访问到图片。在开发环境下，经过测试，将<code>publicPath</code>设置为’./‘界面是无法加载出来的，所以在开发环境下可以不用设置。</p>
+<h3 id="loader"><a href="#loader" class="headerlink" title="loader"></a>loader</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">    loaders: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.js|jsx?$/</span>,</span><br><span class="line">        exclude: <span class="regexp">/node_modules/</span>,</span><br><span class="line">        loader: <span class="string">&#x27;babel&#x27;</span>,</span><br><span class="line">        query: &#123;</span><br><span class="line">          presets: [<span class="string">&#x27;es2015&#x27;</span>, <span class="string">&#x27;react&#x27;</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">        loader: <span class="string">&#x27;style!css&#x27;</span>,</span><br><span class="line">        exclude: <span class="regexp">/node_modules/</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.(png|jpe?g|gif|svg)(\?.*)?$/</span>,</span><br><span class="line">        loader: <span class="string">&#x27;url&#x27;</span>,</span><br><span class="line">        query: &#123;</span><br><span class="line">          limit: <span class="number">10000</span>,</span><br><span class="line">          name: path.join(<span class="string">&#x27;static&#x27;</span>, <span class="string">&#x27;img/[name].[hash:7].[ext]&#x27;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>由于Webpack本身只能处理JavaScript 模块，如果要处理其他类型的文件，就需要使用loader 进行转换。Loader可以理解为是模块和资源的转换器，它本身是一个函数，接受源文件作为参数，返回转换的结果。不同的loader可以将各种类型的文件转换为浏览器能够接受的格式如JS，Stylesheets等等。</p>
+<p>下面一一对这些子参数进行说明：</p>
+<ul>
+<li><code>test</code>参数用来指示当前配置项针对哪些资源，当参数匹配时，就会使用相应的loader。</li>
+<li><code>exclude</code>参数用来剔除掉需要忽略的资源。</li>
+<li><code>include</code>参数用来表示本loader配置仅针对哪些目录/文件，从名称上就可以认为跟<code>exclude</code>作用相反。</li>
+<li><code>loader/loaders</code>参数，用来指示用哪个/哪些loader来处理目标资源，这俩表达的其实是一个意思，只是写法不一样，我个人喜欢将loader写成一行，多个loader间使用!分割，这种形式类似于管道的概念，例如<code>loader: &#39;css?!postcss!less&#39;</code>，可以很明显地看出，目标资源先经less-loader处理过后将结果交给postcss-loader作进一步处理，然后最后再交给css-loader。</li>
+</ul>
+<p>loader本身也是可以配置的，传入不同的参数可以实现不同的功能。以<a target="_blank" rel="noopener" href="https://github.com/webpack/url-loader">url-loader</a>为例，我们配置url-loader使小于10000字节的图片使用DataURL，大于10000字节的图片使用URL，<code>name</code>属性配置输出图片的图片名称，例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;a.png&#x27;</span>) =&gt; <span class="keyword">static</span>/a<span class="number">.3445645</span>.png</span><br></pre></td></tr></table></figure>
+<p>不同的loader配置参数不一样，具体配置参数可以去官网查看。</p>
+<h4 id="loader链"><a href="#loader链" class="headerlink" title="loader链"></a>loader链</h4><p>多个loader可以链式调用，作用于同一种文件类型。工作链的调用顺序是<em>从右向左</em>，各个loader之间使用”!”分开。<br>以处理css文件为例，我们需要<a target="_blank" rel="noopener" href="https://github.com/webpack/css-loader">css-loader</a>来处理css文件，然后使用<a target="_blank" rel="noopener" href="https://github.com/webpack/style-loader">style-loader</a>将css样式插入到html的<code>style</code>标签中。</p>
+<h3 id="plugin"><a href="#plugin" class="headerlink" title="plugin"></a>plugin</h3><p>插件可以完成更多loader不能完成的功能。<br>插件的使用一般是在webpack的配置信息plugins选项中指定。<br>loader是在打包前或打包的过程中作用于单个文件。plugin通常在打包过程结束后，作用于包或者chunk级别。</p>
+<p>以下是一些常用的插件:</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/webpack/extract-text-webpack-plugin">extract-text-webpack-plugin</a></li>
+</ol>
+<p>  ExtractTextPlugin的作用是把各个chunk加载的css代码合并成一个css文件并在页面加载的时候以<code>&lt;link&gt;</code>的形式进行加载。<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ExtractTextPlugin = <span class="built_in">require</span>(<span class="string">&#x27;extract-text-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">  loaders: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="regexp">/\.css$/</span>, </span><br><span class="line">      loader:ExtractTextPlugin.extract(<span class="string">&quot;style-loader&quot;</span>,<span class="string">&quot;css-loader&quot;</span>) &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;,</span><br><span class="line">plugins: [</span><br><span class="line">  <span class="keyword">new</span> ExtractTextPlugin(path.join(<span class="string">&#x27;static&#x27;</span>, <span class="string">&#x27;css/[name].[contenthash].css&#x27;</span>))</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：如果想要把CSS放到HTML的style标签中，可以不使用extract-text-webpack-plugin，只要用css-loader和style-loader就可以了。<br>2. <a target="_blank" rel="noopener" href="https://github.com/ampedandwired/html-webpack-plugin">html-webpack-plugin</a></p>
+</blockquote>
+<p>  html-webpack-plugin，是用来生产html的，其中filename是生产的文件路径和名称，template是使用的模板，inject是指将js放在body还是head里。为<code>true</code>会将js放到body里<br>  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">  filename: <span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">  template: <span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">  inject: <span class="literal">true</span></span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure><br>  这个插件是建议一定要安装的。<br>3. uglifyJSPlugin</p>
+<pre><code>uglifyJSPlugin是将代码进行压缩的。
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> webpack.optimize.UglifyJsPlugin(&#123;</span><br><span class="line">  compress: &#123;</span><br><span class="line">    warnings: <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</code></pre>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">4. CommonsChunkPlugin</span><br><span class="line"></span><br><span class="line">  CommonsChunkPlugin是将多个入口文件之间共享的块打包成一个独立的js文件。至此，你只需要在每个页面都加载这个公共代码的js文件，就可以既保持代码的完整性，又不会重复下载公共代码了。</span><br><span class="line">  &#96;&#96;&#96;js</span><br><span class="line">  new webpack.optimize.CommonsChunkPlugin(&#123;</span><br><span class="line">      name: &#39;vendor&#39;,</span><br><span class="line">      filename: &#39;[name].[chunkhash].js&#39;,</span><br><span class="line">      minChunks: 4</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>name</code>，给这个包含公共代码的chunk命个名（唯一标识）。</li>
+<li><code>filename</code>，如何命名打包后生产的js文件。</li>
+<li><code>minChunks</code>，公共代码的判断标准：某个js模块被多少个chunk加载了才算是公共代码。</li>
+<li><code>chunks</code>，表示需要在哪些chunk（也可以理解为webpack配置中entry的每一项）里寻找公共代码进行打包。不设置此参数则默认提取范围为所有的chunk。</li>
+</ul>
+<h3 id="resolve"><a href="#resolve" class="headerlink" title="resolve"></a>resolve</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">resolve: &#123;</span><br><span class="line">  extensions: [<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.jsx&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">  alias: &#123;</span><br><span class="line">    <span class="string">&#x27;src&#x27;</span>: path.resolve(__dirname, <span class="string">&#x27;./src&#x27;</span>),</span><br><span class="line">    <span class="string">&#x27;assets&#x27;</span>: path.resolve(__dirname, <span class="string">&#x27;./src/assets&#x27;</span>),</span><br><span class="line">    <span class="string">&#x27;components&#x27;</span>: path.resolve(__dirname, <span class="string">&#x27;./src/components&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>resolve.extensions</code>是对模块后缀名的简写，配置后，原本是<code>require(&#39;./components/app.jsx&#39;)</code> 可以简写为<code>require(&#39;./components/app&#39;)</code>。</p>
+<p><code>resolve.alias</code>是别名，配置后，比如原本是<code>require(&#39;./src/components/nav.jsx&#39;) </code>可以简写为<code>require(&#39;components/nav.jsx&#39;)</code>。</p>
+<h2 id="Webpack中的hash与chunkhash"><a href="#Webpack中的hash与chunkhash" class="headerlink" title="Webpack中的hash与chunkhash"></a>Webpack中的hash与chunkhash</h2><h3 id="hash与chunkhash"><a href="#hash与chunkhash" class="headerlink" title="hash与chunkhash"></a>hash与chunkhash</h3><p>按照官方的定义<code>hash</code>就是webpack的每一次编译(compilation)所产生的hash值，<code>chunkhash</code>从字面上理解就是每一个<code>chunk</code>的hash值。那么什么时候会产生编译以及<code>chunk</code>又是什么东西？</p>
+<h4 id="compilation"><a href="#compilation" class="headerlink" title="compilation"></a>compilation</h4><p><code>compilation</code>对象代表某个版本的资源对应的编译进程。当使用Webpack的development中间件时，每次检测到项目文件有改动就会创建一个compilation，进而能够针对改动生产全新的编译文件。以及在每次执行<code>webpack</code>命令时都会创建一个compilation。也就是说当创建了一个compilation，我们所有需要打包的文件(js,css,img,font等)都会产生相同的hash。</p>
+<p>如果在项目中我们使用hash作为编译输出文件的hash的话，像这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">entry: &#123;</span><br><span class="line">    home: <span class="string">&#x27;./src/home.js&#x27;</span>,</span><br><span class="line">    profile: <span class="string">&#x27;./src/profile.js&#x27;</span></span><br><span class="line">&#125;,</span><br><span class="line">output: &#123;</span><br><span class="line">    path: <span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">    filename: <span class="string">&#x27;js/[name].[hash].js&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么在编译后所有的文件名都会使用相同的hash值，这样带来的问题是，上面两个js文件任何一个改动都会影响另外文件的最终文件名。上线后，另外文件的浏览器缓存也全部失效。这肯定不是我们想要的结果。</p>
+<p>那么如何避免这样的问题呢？</p>
+<p>答案就是使用<code>chunkhash</code>。<br>按照上面所说，<code>chunkhash</code>是每一个<code>chunk</code>的hash值，<code>chunk</code>就是模块(webpack中一切皆模块)，<code>chunkhash</code>也就是根据模块内容计算出的hash值。所以某个文件的改动只会影响它本身的hash值，不会影响其他文件。<br>所以可以将上面的filename改为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename: <span class="string">&#x27;js/[name].[chunkhash].js&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>这样的话每个文件的hash值都不相同，上线后无改动的文件不会失去缓存。</p>
+<p>不过使用<code>chunkhash</code>也不能解决所有问题，比如打包<code>css</code>文件。</p>
+<h3 id="js与css共用相同chunkhash的解决方案"><a href="#js与css共用相同chunkhash的解决方案" class="headerlink" title="js与css共用相同chunkhash的解决方案"></a>js与css共用相同chunkhash的解决方案</h3><p>前文提到了webpack的编译理念，webpack将style视为js的一部分，所以在计算<code>chunkhash</code>时，会把所有的js代码和style代码混合在一起计算。所以，不论是修改了js代码还是css代码，整个chunk的内容都改变了，计算所得的chunkhash自然就一样了。</p>
+<p>那么如何解决这种问题呢？</p>
+<h4 id="contenthash"><a href="#contenthash" class="headerlink" title="contenthash"></a>contenthash</h4><p>webpack默认将js/style文件统统编译到一个js文件中，可以借助<a target="_blank" rel="noopener" href="https://github.com/webpack/extract-text-webpack-plugin">extract-text-webpack-plugin</a>将style文件单独编译输出。所以我们可以这样配置:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ExtractTextPlugin(<span class="string">&#x27;./dist/css/[name].[contenthash].css&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><code>contenthash</code>代表的是文本文件内容的hash值，也就是只有style文件的hash值。这样编译输出的js和css文件将会有其独立的hash值。</p>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><p>在看文章的同时，搭配<a target="_blank" rel="noopener" href="https://github.com/hujewelz/hello-webpack">示例项目</a>会更直观哦，赶紧动起手来，开始入坑Webpack吧:)。</p>
+<p>克隆后，请执行 <code>npm install</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//启动运行环境</span><br><span class="line">npm run dev </span><br><span class="line">//执行打包</span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Webpack/" rel="tag"># Webpack</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/cko3yok1l0010ors64p1kesrp/" rel="prev" title="Xcodebuild的使用">
+      <i class="fa fa-chevron-left"></i> Xcodebuild的使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/cko3yok23002eors6bskx4haq/" rel="next" title="由一道Swift面试题引发的对方法调度的思考">
+      由一道Swift面试题引发的对方法调度的思考 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-dev-server"><span class="nav-number">1.</span> <span class="nav-text">webpack-dev-server</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Webpack%E9%85%8D%E7%BD%AE"><span class="nav-number"></span> <span class="nav-text">Webpack配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#entry"><span class="nav-number">1.</span> <span class="nav-text">entry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#output"><span class="nav-number">2.</span> <span class="nav-text">output</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#path"><span class="nav-number">2.0.1.</span> <span class="nav-text">path</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#filename"><span class="nav-number">2.0.2.</span> <span class="nav-text">filename</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#chunkFilename"><span class="nav-number">2.0.3.</span> <span class="nav-text">chunkFilename</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#publicPath"><span class="nav-number">2.0.4.</span> <span class="nav-text">publicPath</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loader"><span class="nav-number">3.</span> <span class="nav-text">loader</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#loader%E9%93%BE"><span class="nav-number">3.1.</span> <span class="nav-text">loader链</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#plugin"><span class="nav-number">4.</span> <span class="nav-text">plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#resolve"><span class="nav-number">5.</span> <span class="nav-text">resolve</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Webpack%E4%B8%AD%E7%9A%84hash%E4%B8%8Echunkhash"><span class="nav-number"></span> <span class="nav-text">Webpack中的hash与chunkhash</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hash%E4%B8%8Echunkhash"><span class="nav-number">1.</span> <span class="nav-text">hash与chunkhash</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#compilation"><span class="nav-number">1.1.</span> <span class="nav-text">compilation</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#js%E4%B8%8Ecss%E5%85%B1%E7%94%A8%E7%9B%B8%E5%90%8Cchunkhash%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">js与css共用相同chunkhash的解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#contenthash"><span class="nav-number">2.1.</span> <span class="nav-text">contenthash</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="nav-number"></span> <span class="nav-text">示例代码</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jewelz Hu"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+  <div class="site-description" itemprop="description">Stay hungry, Stay foolish.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hujewelz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hujewelz" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hujewelz@gmail.com" title="E-Mail → mailto:hujewelz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/huluoboboo" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;huluoboboo" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
