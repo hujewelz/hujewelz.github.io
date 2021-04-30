@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hujewelz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Table view需要有很好的滚动性能，不然用户会在滚动过程中发现动画的瑕疵。为了保证table view平滑滚动，确保你采取了以下的措施:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="打造一个流畅的UITableView">
+<meta property="og:url" content="https://hujewelz.github.io/cko3zrgm50023h7s6cgq6fk06/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="Table view需要有很好的滚动性能，不然用户会在滚动过程中发现动画的瑕疵。为了保证table view平滑滚动，确保你采取了以下的措施:">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/tabelview/opaque.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/tabelview/yellow.png">
+<meta property="article:published_time" content="2016-06-23T01:16:16.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/tabelview/opaque.png">
+
+<link rel="canonical" href="https://hujewelz.github.io/cko3zrgm50023h7s6cgq6fk06/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>打造一个流畅的UITableView | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jewelz`s Home Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">iOS工程师一枚，热爱前端技术</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/cko3zrgm50023h7s6cgq6fk06/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="Stay hungry, Stay foolish.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          打造一个流畅的UITableView
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2016-06-23 09:16:16" itemprop="dateCreated datePublished" datetime="2016-06-23T09:16:16+08:00">2016-06-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-25 16:08:23" itemprop="dateModified" datetime="2020-04-25T16:08:23+08:00">2020-04-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Table view需要有很好的滚动性能，不然用户会在滚动过程中发现动画的瑕疵。<br>为了保证table view平滑滚动，确保你采取了以下的措施:</p>
+<span id="more"></span>
+
+<ul>
+<li>正确使用<code>reuseIdentifier</code>来重用cell</li>
+<li>尽量使所有的view opaque，包括cell自身</li>
+<li>避免图片缩放</li>
+<li>缓存行高</li>
+<li>尽量不要在<code>cellForRowAtIndexPath:</code>中设置数据，如果你需要用到它，只用一次然后缓存结果</li>
+<li>对齐像素</li>
+<li>使用<code>rowHeight</code>, <code>sectionFooterHeight</code> 和 <code>sectionHeaderHeight</code>来设定固定的高，不要请求delegate</li>
+</ul>
+<h2 id="1-正确使用-reuseIdentifier-来重用cell"><a href="#1-正确使用-reuseIdentifier-来重用cell" class="headerlink" title="1. 正确使用 reuseIdentifier 来重用cell"></a>1. 正确使用 <strong>reuseIdentifier</strong> 来重用cell</h2><p>一个开发中常见的错误就是没有给UITableViewCells， UICollectionViewCells，甚至是UITableViewHeaderFooterViews设置正确的reuseIdentifier。</p>
+<p>为了性能最优化，table view用 <code>tableView:cellForRowAtIndexPath:</code> 为rows分配cells的时候，它的数据应该重用自UITableViewCell。</p>
+<p>不使用reuseIdentifier的话，每显示一行，table view就不得不创建全新的cell。这对性能的影响可是相当大的，尤其会使app的滚动体验大打折扣。所以在使用 UITableViewCell， UICollectionViewCell，或者 UITableViewHeaderFooterView 的时候一定要使用reuseIdentifier。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath &#123;</span><br><span class="line">  static NSString *ID &#x3D; @&quot;cell&quot;;</span><br><span class="line">  TableViewCell *cell &#x3D; [tableView dequeueReusableCellWithIdentifier:ID forIndexPath:indexPath];</span><br><span class="line">  </span><br><span class="line">  return cell;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section &#123;</span><br><span class="line">  static NSString *footerViewWithIdentifie &#x3D; @&quot;footer&quot;;</span><br><span class="line">  UITableViewHeaderFooterView *footer &#x3D; [tableView dequeueReusableHeaderFooterViewWithIdentifier:footerViewWithIdentifie];</span><br><span class="line">  return footer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-尽量把views设置为不透明"><a href="#2-尽量把views设置为不透明" class="headerlink" title="2. 尽量把views设置为不透明"></a>2. 尽量把views设置为不透明</h2><p>如果你有不透明的Views，你应该设置它们的opaque属性为YES。一些没有被设置为opaque的视图，因为透明通道的存在，系统需要去计算图层堆叠后像素点的真实颜色，这就会产生是混合(blending)操作。我们可以通过模拟器的Debug\Color Blended Layers 选项来查看哪些 view 没有设置为不透明。选中’Color Blended Layers‘。然后iOS模拟器就会将全部区域显示为两种颜色：绿色和红色。绿色区域表示没有混合，但红色区域表示有混合操作。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/tabelview/opaque.png" alt="opaque"></p>
+<p>如果屏幕是静止的，那么这个opaque属性的设置与否不是一个大问题。但是，如果 view 是嵌入到 scroll view 中的，或者是复杂动画的一部分，不将设置这个属性的话肯定会影响程序的性能。所以为了程序的性能，尽可能的将view设置为不透明。</p>
+<h2 id="3-避免图片缩放"><a href="#3-避免图片缩放" class="headerlink" title="3. 避免图片缩放"></a>3. 避免图片缩放</h2><p>如果要在 <code>UIImageView</code> 中显示一个来自bundle的图片，你应保证图片的大小和 <code>UIImageView</code> 的大小相同。在运行中缩放图片是很耗费资源的，特别是 <code>UIImageView</code> 嵌套在 <code>UIScrollView</code> 中的情况下。如果不做任何处理，直接将图片丢进去，问题就大了，这意味着，GPU需要对大图进行缩放到小的区域显示，需要做像素点的sampling，这种smapling的代价很高，又需要兼顾pixel alignment。计算量会飙升。<br>如果图片是从远端服务加载的你不能控制图片大小，比如在下载前调整到合适大小的话，你可以在下载完成后，最好是用background thread，缩放一次，然后在UIImageView中使用缩放后的图片。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIImage</span> *)imageByScalingAndCroppingForSize:(<span class="built_in">CGSize</span>)targetSize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIImage</span> *sourceImage = <span class="keyword">self</span>;</span><br><span class="line">    <span class="built_in">UIImage</span> *newImage = <span class="literal">nil</span>;</span><br><span class="line">    <span class="built_in">CGSize</span> imageSize = sourceImage.size;</span><br><span class="line">    <span class="built_in">CGFloat</span> width = imageSize.width;</span><br><span class="line">    <span class="built_in">CGFloat</span> height = imageSize.height;</span><br><span class="line">    <span class="built_in">CGFloat</span> targetWidth = targetSize.width;</span><br><span class="line">    <span class="built_in">CGFloat</span> targetHeight = targetSize.height;</span><br><span class="line">    <span class="built_in">CGFloat</span> scaleFactor = <span class="number">0.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> scaledWidth = targetWidth;</span><br><span class="line">    <span class="built_in">CGFloat</span> scaledHeight = targetHeight;</span><br><span class="line">    <span class="built_in">CGPoint</span> thumbnailPoint = <span class="built_in">CGPointMake</span>(<span class="number">0.0</span>,<span class="number">0.0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">CGSizeEqualToSize</span>(imageSize, targetSize) == <span class="literal">NO</span>) &#123;</span><br><span class="line">        <span class="built_in">CGFloat</span> widthFactor = targetWidth / width;</span><br><span class="line">        <span class="built_in">CGFloat</span> heightFactor = targetHeight / height;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (widthFactor &gt; heightFactor)</span><br><span class="line">            scaleFactor = widthFactor; <span class="comment">// scale to fit height</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            scaleFactor = heightFactor; <span class="comment">// scale to fit width</span></span><br><span class="line">        scaledWidth  = width * scaleFactor;</span><br><span class="line">        scaledHeight = height * scaleFactor;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// center the image</span></span><br><span class="line">        <span class="keyword">if</span> (widthFactor &gt; heightFactor) &#123;</span><br><span class="line">            thumbnailPoint.y = (targetHeight - scaledHeight) * <span class="number">0.5</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (widthFactor &lt; heightFactor) &#123;</span><br><span class="line">            thumbnailPoint.x = (targetWidth - scaledWidth) * <span class="number">0.5</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContext</span>(targetSize); <span class="comment">// this will crop</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> thumbnailRect = <span class="built_in">CGRectZero</span>;</span><br><span class="line">    thumbnailRect.origin = thumbnailPoint;</span><br><span class="line">    thumbnailRect.size.width  = scaledWidth;</span><br><span class="line">    thumbnailRect.size.height = scaledHeight;</span><br><span class="line">    </span><br><span class="line">    [sourceImage drawInRect:thumbnailRect];</span><br><span class="line">    </span><br><span class="line">    newImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="keyword">if</span>(newImage == <span class="literal">nil</span>)</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;could not scale image&quot;</span>);</span><br><span class="line">  </span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> newImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-缓存行高"><a href="#4-缓存行高" class="headerlink" title="4. 缓存行高"></a>4. 缓存行高</h2><p>这个方法对于cell定高的UITableView来说没有意义，但如果由于某些原因需要动态高度的cell的话，这个方法可以很容易地让滑动更流畅。</p>
+<p>UITableView的delegate方法<code>tableView:heightForRowAtIndexPath:</code>会为每个cell调用一次，所以你应该非常快地返回高度值，避免做一些复杂的高度计算。所以如果你需要动态计算cell的高度的话，应该在调用这个方法之前就计算好高度，并将其缓存起来。我的习惯是在从服务器获取完数据后，在做数据模型化的时候计算内容的高度，并用属性保存起来。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123;</span><br><span class="line">  CellModel *model = <span class="keyword">self</span>.cellModels[indexPath.row];</span><br><span class="line">  <span class="keyword">return</span> model.rowHeight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果你的cell高度是固定的话，请使用<code>rowHeight</code>, <code>sectionFooterHeight</code> 和 <code>sectionHeaderHeight</code>来设定固定的高，不要请求delegate。因为<code>tableView:heightForRowAtIndexPath:</code>会为每个cell调用一次。</p>
+<h2 id="5-尽量不要在cellForRowAtIndexPath-中设置数据"><a href="#5-尽量不要在cellForRowAtIndexPath-中设置数据" class="headerlink" title="5. 尽量不要在cellForRowAtIndexPath:中设置数据"></a>5. 尽量不要在<code>cellForRowAtIndexPath:</code>中设置数据</h2><p>在UITableView的dataSource中实现的<code>tableView:cellForRowAtIndexPath:</code>方法，需要为每个cell调用一次，它应该快速执行。所以你需要尽可能快地返回重用cell实例。不要在这里去执行数据绑定，因为目前在屏幕上还没有cell。为了执行数据绑定，可以在UITableView的delegate方法<code>tableView:willDisplayCell:forRowAtIndexPath:</code>中进行。这个方法在显示cell之前会被调用。</p>
+<h2 id="6-对齐像素"><a href="#6-对齐像素" class="headerlink" title="6. 对齐像素"></a>6. 对齐像素</h2><p>在完美的世界中(我们尝试构建的)，屏幕点总是被处理成物理像素的整型坐标。但在现实生活中它可能是浮点值，例如，线段可能起始于x为0.25的地方。这时候，iOS将执行子像素渲染。</p>
+<p>这一技术在应用于特定类型的内容(如文本)时很有意义。但当我们绘制平滑直线时则没有必要。<br>如果所有的平滑线段都使用子像素渲染技术来渲染，那你会让iOS执行一些不必要的任务，从而降低FPS。</p>
+<p>什么情况下会出现这种不必要的子像素抗锯齿操作呢？最常发生的情况是通过代码计算而变成浮点值的视图坐标，或者是一些不正确的图片资源，这些图片的大小不是对齐到屏幕的物理像素上的（例如，你有一张在Retina显示屏上的大小为60X61的图片，而不是60X60的）。</p>
+<p>我们可以在iOS模拟器上运行程序，在”Debug“菜单中选中”Color Misaligned Image“。<br>这一次有两种高亮区域：品红色区域会执行子像素渲染，而黄色区域是图片大小没有对齐的情况。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/tabelview/yellow.png"></p>
+<p>所以为了避免出现上面的情况，要做到这两点：</p>
+<ul>
+<li>对所有像素相关的数据做四舍五入处理（使用ceilf, floorf和CGRectIntegral），包括点坐标，UIView的高度和宽度。</li>
+<li>跟踪你的图像资源：图片必须是像素完美的，否则在Retina屏幕上渲染时，它会做不必要的抗锯齿处理。</li>
+</ul>
+<h2 id="7-少用masksToBounds"><a href="#7-少用masksToBounds" class="headerlink" title="7. 少用masksToBounds"></a>7. 少用masksToBounds</h2><p>日常生产中app布局离不开美丽的圆角(RounderCorner)，特别是用圆角UIImageView来做数据呈现交互，但是这种柔和易于让人接受的视图效果并不仅仅是改变了一个形状那么简单，需要付出一定的性能代价。<br>相信这已经是总所周知的问题了，日常我们使用layer的两个属性，简单的两行代码就能实现圆角的呈现</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">imageView.layer.cornerRadius = <span class="number">20</span>;</span><br><span class="line">imageView.layer.masksToBounds = <span class="literal">YES</span>;</span><br></pre></td></tr></table></figure>
+
+<p>由于这样处理的渲染机制是GPU在当前屏幕缓冲区外新开辟一个渲染缓冲区进行工作，也就是离屏渲染，这会给我们带来额外的性能损耗，如果这样的圆角操作达到一定数量，会触发缓冲区和上下文的的频繁切换，这个才是最致命的，创建新的缓冲区代价都不算大，付出最大代价的是上下文切换。性能的代价会宏观地表现在用户体验上—-掉帧。</p>
+<p>如果你非得使用<code>cornerRadius</code>呢？如果你非得这做的话，那么这样也可以拯救你：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.layer.shouldRasterize = <span class="literal">YES</span>;</span><br><span class="line"><span class="keyword">self</span>.layer.rasterizationScale = [<span class="built_in">UIScreen</span> mainScreen].scale;</span><br></pre></td></tr></table></figure>
+
+<p><code>shouldRasterize = YES</code> 会使视图渲染内容被缓存起来，下次绘制的时候可以直接显示缓存，当然要在视图内容不改变的情况下。</p>
+<p>最好的方式是：预先生成圆角图片，并缓存起来。预处理圆角图片可以在后台处理，处理完毕后缓存起来，再在主线程显示，这就避免了不必要的离屏渲染了。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIImageView</span> (<span class="title">CornerRadius</span>)</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)hu_setCornerRadius:(<span class="built_in">CGFloat</span>)radius &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">dispatch_queue_t</span> bq = dispatch_queue_create(<span class="string">&quot;com.hujewelz.cornerradius&quot;</span>, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">  <span class="built_in">dispatch_async</span>(bq, ^&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="keyword">self</span>.bounds.size, <span class="literal">NO</span>, [<span class="built_in">UIScreen</span> mainScreen].scale);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIBezierPath</span> *path = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:<span class="keyword">self</span>.bounds byRoundingCorners:<span class="built_in">UIRectCornerAllCorners</span> cornerRadii:<span class="built_in">CGSizeMake</span>(radius, radius)];</span><br><span class="line">    [path addClip];</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span>.image drawInRect:<span class="keyword">self</span>.bounds];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIImage</span> *image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">   </span><br><span class="line">    <span class="built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">      <span class="keyword">self</span>.image = image;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    </span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以在iOS模拟器上运行程序，在”Debug“菜单中选中”Color Offscreen-Rendered“。<br>黄色区域表示产生了离屏渲染。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"># iOS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/cko3zrgli000mh7s6g1zdbtbm/" rel="prev" title="Swift中的rethrows">
+      <i class="fa fa-chevron-left"></i> Swift中的rethrows
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/cko3zrgmc002th7s6br9d55h8/" rel="next" title="说说iOS多线程">
+      说说iOS多线程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8-reuseIdentifier-%E6%9D%A5%E9%87%8D%E7%94%A8cell"><span class="nav-number">1.</span> <span class="nav-text">1. 正确使用 reuseIdentifier 来重用cell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%B0%BD%E9%87%8F%E6%8A%8Aviews%E8%AE%BE%E7%BD%AE%E4%B8%BA%E4%B8%8D%E9%80%8F%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">2. 尽量把views设置为不透明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%81%BF%E5%85%8D%E5%9B%BE%E7%89%87%E7%BC%A9%E6%94%BE"><span class="nav-number">3.</span> <span class="nav-text">3. 避免图片缩放</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%BC%93%E5%AD%98%E8%A1%8C%E9%AB%98"><span class="nav-number">4.</span> <span class="nav-text">4. 缓存行高</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%B0%BD%E9%87%8F%E4%B8%8D%E8%A6%81%E5%9C%A8cellForRowAtIndexPath-%E4%B8%AD%E8%AE%BE%E7%BD%AE%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">5. 尽量不要在cellForRowAtIndexPath:中设置数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%AF%B9%E9%BD%90%E5%83%8F%E7%B4%A0"><span class="nav-number">6.</span> <span class="nav-text">6. 对齐像素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%B0%91%E7%94%A8masksToBounds"><span class="nav-number">7.</span> <span class="nav-text">7. 少用masksToBounds</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jewelz Hu"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+  <div class="site-description" itemprop="description">Stay hungry, Stay foolish.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hujewelz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hujewelz" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hujewelz@gmail.com" title="E-Mail → mailto:hujewelz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/huluoboboo" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;huluoboboo" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

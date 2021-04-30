@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hujewelz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最近在看swift面试题时，其中有一道题目让我很诧异。题目是这样的： 以下代码会打印出什么？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="由一道Swift面试题引发的对方法调度的思考">
+<meta property="og:url" content="https://hujewelz.github.io/cko3zrgm8002eh7s6gynb9ap5/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="最近在看swift面试题时，其中有一道题目让我很诧异。题目是这样的： 以下代码会打印出什么？">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.raizlabs.com/dev/wp-content/uploads/sites/10/2016/12/virtual-dispatch-768x227.png">
+<meta property="og:image" content="https://www.raizlabs.com/dev/wp-content/uploads/sites/10/2016/12/message-dispatch-768x412.png">
+<meta property="og:image" content="https://www.raizlabs.com/dev/wp-content/uploads/sites/10/2016/12/Defaults-1-768x503.png">
+<meta property="article:published_time" content="2017-02-14T06:36:34.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="Swift">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.raizlabs.com/dev/wp-content/uploads/sites/10/2016/12/virtual-dispatch-768x227.png">
+
+<link rel="canonical" href="https://hujewelz.github.io/cko3zrgm8002eh7s6gynb9ap5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>由一道Swift面试题引发的对方法调度的思考 | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jewelz`s Home Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">iOS工程师一枚，热爱前端技术</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/cko3zrgm8002eh7s6gynb9ap5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="Stay hungry, Stay foolish.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          由一道Swift面试题引发的对方法调度的思考
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-02-14 14:36:34" itemprop="dateCreated datePublished" datetime="2017-02-14T14:36:34+08:00">2017-02-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-25 16:08:23" itemprop="dateModified" datetime="2020-04-25T16:08:23+08:00">2020-04-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index"><span itemprop="name">Swift</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近在看swift面试题时，其中有一道题目让我很诧异。题目是这样的：</p>
+<p>以下代码会打印出什么？</p>
+<span id="more"></span>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Pizzeria</span> </span>&#123; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makePizza</span>(<span class="keyword">_</span> <span class="params">ingredients</span>: [<span class="type">String</span>])</span></span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makeMargherita</span>()</span></span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Pizzeria</span> </span>&#123; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makeMargherita</span>()</span> &#123; </span><br><span class="line">    <span class="keyword">return</span> makePizza([<span class="string">&quot;tomato&quot;</span>, <span class="string">&quot;mozzarella&quot;</span>]) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Lombardis</span>: <span class="title">Pizzeria</span> </span>&#123; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makePizza</span>(<span class="keyword">_</span> <span class="params">ingredients</span>: [<span class="type">String</span>])</span> &#123; </span><br><span class="line">    <span class="built_in">print</span>(ingredients)</span><br><span class="line">  &#125; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makeMargherita</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> makePizza([<span class="string">&quot;tomato&quot;</span>, <span class="string">&quot;basil&quot;</span>, <span class="string">&quot;mozzarella&quot;</span>]) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> lombardis1: <span class="type">Pizzeria</span> <span class="operator">=</span> <span class="type">Lombardis</span>()</span><br><span class="line"><span class="keyword">let</span> lombardis2: <span class="type">Lombardis</span> <span class="operator">=</span> <span class="type">Lombardis</span>() </span><br><span class="line">lombardis1.makeMargherita()</span><br><span class="line">lombardis2.makeMargherita()</span><br></pre></td></tr></table></figure>
+<p>当然，即使是swift新手也会毫不犹豫的给出答案：</p>
+<p>打印两行<code>[&quot;tomato&quot;, &quot;basil&quot;, &quot;mozzarella&quot;]</code></p>
+<p>然后面试官笑了笑，将<code>Pizzeria</code>中声明的<code>makeMargherita()</code>去掉，代码变为：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Pizzeria</span> </span>&#123; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makePizza</span>(<span class="keyword">_</span> <span class="params">ingredients</span>: [<span class="type">String</span>])</span></span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Pizzeria</span> </span>&#123; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makeMargherita</span>()</span> &#123; </span><br><span class="line">    <span class="keyword">return</span> makePizza([<span class="string">&quot;tomato&quot;</span>, <span class="string">&quot;mozzarella&quot;</span>]) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Lombardis</span>: <span class="title">Pizzeria</span> </span>&#123; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makePizza</span>(<span class="keyword">_</span> <span class="params">ingredients</span>: [<span class="type">String</span>])</span> &#123; </span><br><span class="line">    <span class="built_in">print</span>(ingredients)</span><br><span class="line">  &#125; </span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">makeMargherita</span>()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> makePizza([<span class="string">&quot;tomato&quot;</span>, <span class="string">&quot;basil&quot;</span>, <span class="string">&quot;mozzarella&quot;</span>]) </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> lombardis1: <span class="type">Pizzeria</span> <span class="operator">=</span> <span class="type">Lombardis</span>()</span><br><span class="line"><span class="keyword">let</span> lombardis2: <span class="type">Lombardis</span> <span class="operator">=</span> <span class="type">Lombardis</span>() </span><br><span class="line">lombardis1.makeMargherita()</span><br><span class="line">lombardis2.makeMargherita()</span><br></pre></td></tr></table></figure>
+<p>估计有很多童鞋会跟我一样，不假思索地给出答案：打印两行<code>[&quot;tomato&quot;, &quot;basil&quot;, &quot;mozzarella&quot;]</code>。如果答案还是一样，面试官就没有删除那行代码的必要了吧。正确答案应该是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[&quot;tomato&quot;, &quot;mozzarella&quot;]</span><br><span class="line">[&quot;tomato&quot;, &quot;basil&quot;, &quot;mozzarella&quot;]</span><br></pre></td></tr></table></figure>
+<p>聪明的童鞋即使不知道正确答案，知道此处有陷阱，也会给出了正确答案。那么导致这种结果的真正原因是什么呢？答案就是<strong>方法调度(Method Dispatch)</strong></p>
+<h2 id="什么是方法调度"><a href="#什么是方法调度" class="headerlink" title="什么是方法调度"></a>什么是方法调度</h2><p>方法调度就是一个程序在调用一个方法时如何选择要执行的指令的过程。当我们每次调用一个方法时方法调度都会发生。</p>
+<p>编译型语言有三种基础的方法调度方式: 直接调度(Direct Dispatch), 函数表调度(Table Dispatch) 和 消息调度(Message Dispatch)。大部分语言支持一到两种。Java默认使用函数表调度，你可以通过使用 <code>final</code> 关键字将其变为直接调度。C++默认使用直接调度，通过 <code>virtual</code> 关键字可以改为函数表调度。Objective-C总是使用消息调度。但允许开发者使用C直接派发来获取性能的提高。Swift在这方面走在了前面，她支持全部的3种调度方式。这样的方式非常好,，不过也给很多Swift开发者带来了困扰。</p>
+<h2 id="调度类型（Types-of-Dispatch）"><a href="#调度类型（Types-of-Dispatch）" class="headerlink" title="调度类型（Types of Dispatch）"></a>调度类型（Types of Dispatch）</h2><p>调度的目的是程序告诉CPU被调用的函数在哪里，在我们深入Swift的这种行为之前，有必要了解一下方法调度的三种方式。</p>
+<p><strong>直接调度(Direct Dispatch)</strong></p>
+<p>直接调度是最快的, 不止是因为需要调用的指令集会更少, 并且编译器还能够有很大的优化空间, 例如函数内联等, 但这不在这篇博客的讨论范围。</p>
+<p>然而, 对于编程来说直接调用也是最大的局限, 而且因为缺乏动态性所以没办法支持继承。</p>
+<p><strong>函数表调度 (Table Dispatch )</strong></p>
+<p>函数表调度是编译型语言实现动态行为最常见的实现方式. 函数表使用了一个数组来存储类声明的每一个函数的指针. 大部分语言把这个称为 “virtual table”(虚函数表), Swift 里称为 “witness table”. 每一个类都会维护一个函数表, 里面记录着类所有的函数, 如果父类函数被 <code>override</code> 的话, 表里面只会保存被 <code>override</code> 之后的函数. 一个子类新添加的函数, 都会被插入到这个数组的最后. 运行时会根据这一个表去决定实际要被调用的函数.</p>
+<p>看看下面的例子：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ParentClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">method1</span>()</span> &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">method2</span>()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChildClass</span>: <span class="title">ParentClasss</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">method2</span>()</span> &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">method3</span>()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个情况下, 编译器会创建两个函数表, 一个是 <code>ParentClass</code> 的, 另一个是 <code>ChildClass</code> 的:</p>
+<p><img src="https://www.raizlabs.com/dev/wp-content/uploads/sites/10/2016/12/virtual-dispatch-768x227.png"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj <span class="operator">=</span> <span class="type">ChildClass</span>()</span><br><span class="line">obj.method2()</span><br></pre></td></tr></table></figure>
+<p>当一个方法被调用时，会经历下面几个过程：</p>
+<ol>
+<li>读取 <code>0xB00</code> 对象的调度表</li>
+<li>通过索引读取该方法的函数指针，在这里, <code>method2</code> 的索引是1(偏移量), 所以地址就是 <code>0xB00 + 1</code></li>
+<li>跳到 <code>0x222</code> (函数指针指向 0x222)</li>
+</ol>
+<p>查表是一种简单, 易实现, 而且性能可预知的方式. 然而, 这种派发方式比起直接派发还是慢一点。从字节码角度来看, 多了两次读和一次跳转, 由此带来了性能的损耗。另一个慢的原因在于编译器可能会由于函数内执行的任务导致无法优化。</p>
+<p>这种基于数组的实现, 缺陷在于函数表无法拓展。子类会在虚数函数表的最后插入新的方法, 没有位置可以让 extension 安全地插入函数。</p>
+<p><strong>消息调度 (Message Dispatch )</strong></p>
+<p>消息调度是调用函数最动态的方式。也是 Cocoa 的基石, 这样的机制催生了 <a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/KeyValueObserving/KeyValueObserving.html">KVO</a>, <a target="_blank" rel="noopener" href="https://developer.apple.com/reference/uikit/uiappearance">UIAppearence</a> 和 <a target="_blank" rel="noopener" href="https://developer.apple.com/library/content///documentation/Cocoa/Conceptual/CoreData/index.html">CoreData</a> 等功能. 这种运作方式的关键在于开发者可以在运行时改变函数的行为. 不止可以通过 <a target="_blank" rel="noopener" href="https://www.mikeash.com/pyblog/friday-qa-2010-01-29-method-replacement-for-fun-and-profit.html">swizzling</a> 来改变, 甚至可以用 <a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/38877465/are-method-swizzling-and-isa-swizzling-the-same-thing/38878119#38878119">isa-swizzling</a> 修改对象的继承关系, 可以在面向对象的基础上实现自定义调度。</p>
+<p>看下面两个类:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ParentClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">dynamic</span> <span class="function"><span class="keyword">func</span> <span class="title">method1</span>()</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">dynamic</span> <span class="function"><span class="keyword">func</span> <span class="title">method1</span>()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChildClass</span>: <span class="title">ParentClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">method2</span>()</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">dynamic</span> <span class="function"><span class="keyword">func</span> <span class="title">method3</span>()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Swift 会用树来构建这种继承关系:</p>
+<p><img src="https://www.raizlabs.com/dev/wp-content/uploads/sites/10/2016/12/message-dispatch-768x412.png"></p>
+<p>当一个消息被发送时, 运行时会顺着类的继承关系向上查找应该被调用的方法. 如果你觉得这样做效率很低, 它确实很低! 然而, 只要缓存建立了起来, 这个查找过程就会通过缓存来把性能提高到和函数表一样快. 但这只是消息机制的原理, <a target="_blank" rel="noopener" href="http://www.friday.com/bbum/2009/12/18/objc_msgsend-part-1-the-road-map/">这里有一篇文章</a>很深入的讲解了具体的技术细节.</p>
+<h2 id="Swift-的调度机制"><a href="#Swift-的调度机制" class="headerlink" title="Swift 的调度机制"></a>Swift 的调度机制</h2><p>那么，swift是如何调度的呢？这里有四个方面,来指导如何选择调度:</p>
+<ul>
+<li>方法声明的位置</li>
+<li>引用类型</li>
+<li>特定的行为</li>
+<li>显式地优化</li>
+</ul>
+<p>要说明的是Swift 并没有在文档里具体写明什么时候会使用函数表什么时候使用消息机制. 唯一的承诺是使用 <code>dynamic</code> 修饰的时候会通过 Objective-C 的运行时使用消息机制。</p>
+<p><strong>声明的位置 (Location Matters)</strong></p>
+<p>在Swift中有两个地方可以声明一个方法：类型声明的作用域内和 <code>extension</code>。根据声明类型的不同, 也会有不同的派发方式:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">mainMethod</span>()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">extensionMethod</span>()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的例子里, <code>mainMethod</code> 会使用函数表的方式, 而 <code>extensionMethod</code> 则会使用直接调度。根据声明的位置，可以总结如下：</p>
+<p><img src="https://www.raizlabs.com/dev/wp-content/uploads/sites/10/2016/12/Defaults-1-768x503.png"></p>
+<p>总结起来有这么几点:</p>
+<ul>
+<li>值类型总是会使用直接派发, 简单易懂</li>
+<li>而协议和类的 <code>extension</code> 都会使用直接调度</li>
+<li>协议和普通Swift类声明作用域里的方法都会使用函数表进行调度</li>
+<li>继承 <code>NSObject</code> 的类声明作用域里的方法都会使用函数表调度</li>
+<li>继承 <code>NSObject</code> 的类的 <code>extension</code> 会使用消息调度</li>
+</ul>
+<p><strong>引用类型 (Reference Type Matters)</strong></p>
+<p>引用的类型决定了调度的方式, 这是显而易见的, 但有一个重要的区别。 一个比较常见的疑惑, 发生在一个协议拓展和类型拓展同时实现了同一个函数的时候。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">extensionMethod</span>()</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;In Protocol extension method&quot;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> 🐱: <span class="title">Animal</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">extension</span> 🐱 </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">extensionMethod</span>()</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;喵喵&quot;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> cat <span class="operator">=</span> 🐱()</span><br><span class="line"><span class="keyword">let</span> proto: <span class="type">Animal</span> <span class="operator">=</span> cat</span><br><span class="line"></span><br><span class="line">cat.extensionMethod()</span><br><span class="line">proto.extensionMethod()</span><br></pre></td></tr></table></figure>
+<p>刚接触 Swift 的童鞋可能会认为 <code>proto.extensionMethod() </code>调用的是结构体里的实现。 但是, 引用的类型决定了调度的方式, 协议拓展里的方法会使用直接调度。如果把 <code>extensionMethod</code> 的声明移动到协议的声明位置的话, 则会使用函数表调度, 最终就会调用结构体里的实现。 并且要记得, 如果两种声明方式都使用了直接调度的话, 基于直接调度的运作方式, 我们不可能实现预想的 <code>override</code> 行为。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Swift/" rel="tag"># Swift</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/cko3zrgly001lh7s63ikj94o1/" rel="prev" title="入坑Webpack">
+      <i class="fa fa-chevron-left"></i> 入坑Webpack
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/cko3zrgm60026h7s6gu5gawku/" rel="next" title="教你如何用Swift写个json转模型的开源库">
+      教你如何用Swift写个json转模型的开源库 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%96%B9%E6%B3%95%E8%B0%83%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">什么是方法调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E7%B1%BB%E5%9E%8B%EF%BC%88Types-of-Dispatch%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">调度类型（Types of Dispatch）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swift-%E7%9A%84%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">Swift 的调度机制</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jewelz Hu"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+  <div class="site-description" itemprop="description">Stay hungry, Stay foolish.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hujewelz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hujewelz" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hujewelz@gmail.com" title="E-Mail → mailto:hujewelz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/huluoboboo" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;huluoboboo" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

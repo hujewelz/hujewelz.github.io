@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Mac 下搭建 DOSBox 汇编环境</title>
-    <url>/cko3zg8mh00015ss6b8p3f98r/</url>
+    <url>/cko3zrgl50001h7s62wzj9abx/</url>
     <content><![CDATA[<p>DOSBox 是一个创建与 MS-DOS 兼容环境的模拟器, 在 macOS 中我们需要用它来模拟 DOS 环境。</p>
 <span id="more"></span>
 
@@ -43,7 +43,7 @@
   </entry>
   <entry>
     <title>Metal 的执行模型</title>
-    <url>/cko3zg8mk00035ss688erbmkm/</url>
+    <url>/cko3zrgl80003h7s66uibel2d/</url>
     <content><![CDATA[<p>在 Metal 的架构中，<code>MTLDevice</code> 协议定义了代表单个 GPU 的接口。<code>MTLDevice</code> 协议提供了一些方法用于查询设备属性，创建其他特定于设备的对象（例如缓冲区和纹理）以及用于编码和排队渲染和要提交到 GPU 中执行的计算命令。</p>
 <span id="more"></span>
 
@@ -136,7 +136,7 @@
   </entry>
   <entry>
     <title>Run Loop</title>
-    <url>/cko3zg8mn00065ss6eoi2ahox/</url>
+    <url>/cko3zrglb0006h7s64piu98nr/</url>
     <content><![CDATA[<p>本文并不是一篇个人博客，只是对 RunLoop 知识的一个整理，方便自己查阅。</p>
 <ol>
 <li>RunLoop 的概念</li>
@@ -218,97 +218,8 @@
       </tags>
   </entry>
   <entry>
-    <title>Swift 与 C 混编的正确姿势</title>
-    <url>/cko3zg8mo00075ss664gi9c69/</url>
-    <content><![CDATA[<p>自从笔者第一次尝试 Swift 到现在已经过去 5 年多了，从Swift 的第一个版本到现在的 Swift 5.2，Swift 语言发生了天翻地覆的变化。 Swift 生态也已经很完善，日常开发中用到的各种库基本都支持了 Swift。那些现在还在纠结要不要使用 Swift 的同学可以看看<a href="https://mp.weixin.qq.com/s/N6ToEkN9c-2_rIvkv4o9hA">这篇文章</a> ，文章中提到的几个问题几乎涵盖了 OC 与 Swift 混编时会遇到的一些问题，文章中都给出了相应的解决方案。</p>
-<p>Swift 和 Objective-C 以及 C、C++（Swift 不能直接调用 C++，必须通过 OC进行调用） 混编的阻力非常小。它可以自动桥接 objective-C 的类型，甚至可以桥接很多 C 的类型。这就可以让我们在原有库的基础上，使用 Swift 开发出简洁易用的 API。Swift 和 Objective-C 混编的文章不少，在这篇文章中，我们将学习如何让 C 与 Swift 进行交互。</p>
-<span id="more"></span>
-
-<h2 id="Bridging-Header"><a href="#Bridging-Header" class="headerlink" title="Bridging Header"></a>Bridging Header</h2><p>当我们在一个 Swift 项目中添加 C 源文件时，Xcode 会询问是否添加 Objective-C 桥接头文件，这跟我们在 Swift 项目中添加 OC 文件一样。接着我们只需要在 Bridging Header 中添加需要暴露给 Swift 代码的头文件：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;test.h&quot;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>在 <code>test.h</code> 中声明了一个 <code>hello</code> 函数：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> test_h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> test_h</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* test_h */</span></span></span><br></pre></td></tr></table></figure>
-
-<p>然后在 <code>tesh.c</code> 中实现了它：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;test.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>现在我们就可以在 Swift 代码中调用 <code>hello()</code> 了。</p>
-<h2 id="Swift-Package-Manager"><a href="#Swift-Package-Manager" class="headerlink" title="Swift Package Manager"></a>Swift Package Manager</h2><p>上面使用 Bridging header 的方式主要适用于 C 源代码跟 Swift 代码处于同一个 App target 下，对于那些独立的 Swift Framework 就不适用了，在这种情况下就需要使用 Swift 包管理器（<a href="https://swift.org/package-manager/">Swift Package Manager</a> , 下文简称SPM）了。从 Swift 3.0 开始我们就可以使用 SPM 来构建 C 语言的目标 （target）了。</p>
-<p>下面我们将用 Swift 封装一个易用的 OpenGL 程序库。通过这个例子，我们基本上可以掌握如何在一个 Swif 库中与 C 进行交互了。</p>
-<h3 id="设置-SPM"><a href="#设置-SPM" class="headerlink" title="设置 SPM"></a>设置 SPM</h3><p>为导入 C 程序库设置一个 Swift 包管理器项目并不是什么难事，不过还是有不少的步骤要完成。</p>
-<p>现在让我们开始创建一个新的 SPM 项目吧。切换要保存代码的目录，执行下面的命令创建一个 SPM 包：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir OpenGLApp</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> OpenGLApp</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> swift package init --<span class="built_in">type</span> library</span></span><br></pre></td></tr></table></figure>
-<p>我们通过 <code>swift package init --type library</code> 命令创建了一个名为 OpenGLApp 的 Swift 库。我们可以打开 Package.swift 文件看看里面的内容（删除了无关内容）：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// swift-tools-version:5.2</span></span><br><span class="line"><span class="comment">// The swift-tools-version declares the minimum version of Swift required to build this package.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> PackageDescription</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> package <span class="operator">=</span> <span class="type">Package</span>(</span><br><span class="line">    name: <span class="string">&quot;OpenGLAPP&quot;</span>,</span><br><span class="line">  	products: [</span><br><span class="line">        .library(name: <span class="string">&quot;OpenGLApp&quot;</span>, targets: [<span class="string">&quot;OpenGLApp&quot;</span>])</span><br><span class="line">    ],</span><br><span class="line">    dependencies: [],</span><br><span class="line">    targets: [</span><br><span class="line">        .target(</span><br><span class="line">            name: <span class="string">&quot;OpenGLApp&quot;</span>,</span><br><span class="line">            dependencies: [],</span><br><span class="line">    ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>为了完成一个可以运行的 OpenGL 程序，我们需要依赖 <strong><a href="https://www.glfw.org/">GLFW</a></strong> 和 <strong><a href="http://glew.sourceforge.net/">GLEW</a></strong> 这两个 C 语言库。GLFW 给我们提供了一个窗口和上下文用来渲染，这样我们就不用去书写操作系统相关代码了。GLEW 提供了用于确定其 OpenGL 扩展支持在目标平台上高效的运行时间的机制。 </p>
-<h3 id="将-C-程序库导出为模块"><a href="#将-C-程序库导出为模块" class="headerlink" title="将 C 程序库导出为模块"></a>将 C 程序库导出为模块</h3><p>由于 GLFW 和 GLEW 都是由 C 编写的库，所以我们先要解决如何让 Swift 找到这些 C 语言库，这样，才能在 Swift 调用它们。在 C 里，可以通过  <code>#include</code> 一个或多个库的头文件的方式来访问它们。但是 Swift 无法直接处理 C 的头文件，它依赖的是**模块 (Module)**。为了让一个用 C 和 Objective-C 编写的库对 Swift 编译器可见，它们必须安照 <a href="https://clang.llvm.org/docs/Modules.html">Clang Module</a> 的格式提供一份模块地图 (Module map)。它的主要作用就是列出构成模块的头文件。</p>
-<p>因为 GLFW 和 GLEW 并没有提供模块地图，所以我们需要在 SPM 里定义一个专门生成模块地图的目标。它的作用就是把以上的 C 语言库封装成模块，这样就可以在另一个 Swift 模块中调用它们了。</p>
-<p>首先，我们需要安装 glew 和 glfw，如果是 macOS 系统可以使用 <a href="https://brew.sh/">homebrew</a> 来安装。其他的系统就使用相关的包管理器安装就可以了。</p>
-<p>接着打开 Package.swift， 在 <code>targets</code> 中增加如下内容：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> <span class="operator">...</span></span><br><span class="line">targets: [</span><br><span class="line">    <span class="operator">....</span></span><br><span class="line">    .systemLibrary(</span><br><span class="line">        name: <span class="string">&quot;Cglew&quot;</span>,</span><br><span class="line">        pkgConfig: <span class="string">&quot;glew&quot;</span>,</span><br><span class="line">        providers: [</span><br><span class="line">            .brew([<span class="string">&quot;glew&quot;</span>])</span><br><span class="line">        ]),</span><br><span class="line">    .systemLibrary(</span><br><span class="line">        name: <span class="string">&quot;Cglfw&quot;</span>,</span><br><span class="line">        pkgConfig: <span class="string">&quot;glfw3&quot;</span>,</span><br><span class="line">        providers: [</span><br><span class="line">            .brew([<span class="string">&quot;glfw&quot;</span>])</span><br><span class="line">        ]),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>在上面的 Package.swift 中，我们新添加了两个系统程序库目标（system library target）。所谓的系统程序库目标是指那些由系统级别的包管理器安装的程序库，例如我们使用 homebrew 安装的一些程序库。<em>Sample</em> 目标是最终的可执行程序，<em>OpenGLApp</em> 是我们将要使用 Swift 封装的 OpenGL 库，<em>Cglew</em> 和 <em>Cglfw</em> 两个系统程序目标就是我们制作的可以在 Swift 中调用的模块。 </p>
-<p>在系统程序库目标中 <code>pkConfig</code> 和 <code>providers</code> 两个参数需要说明一下：</p>
-<ul>
-<li><em>providers</em> 指令是可选的，在目标库没有被安装时，它为 SPM 提供了用于安装库的方式的提示。 </li>
-<li><em>pkConfig</em> 指定了<a href="https://zh.wikipedia.org/wiki/Pkg-config">pk g-config</a> 文件的名称，Swift 包管理器可以通过它找到要导入的库的头文件和库搜索路径。pkConfig 的名称我们可以在库的安装路径的 <code>lib/pkconfig/xxx.pc</code> 中找到，以我电脑中安装的 glew 为例，它的位置是 <code>/usr/local/Cellar/glew/2.1.0/lib/pkgconfig/glew.pc</code>，所以上面 pkConfig 中设置的就是 <code>glew</code>。</li>
-</ul>
-<p>接下来我们需要在 Sources 目录下为系统程序库目标创建一个保存文件的目录，该目录名称必须跟上面 Package.swift 中定义的目标的 <code>name</code> 属性一致。这里我以 Cglfw  为例：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> Sources &amp;&amp; mkdir Cglfw</span></span><br></pre></td></tr></table></figure>
-
-<p>在 Cglfw 目录中添加一个 <code>glfw.h</code> 文件，并添加如下内容：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;GLFW/glfw3.h&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>接着添加一个 <code>module.modulemap</code> 文件，它应该是下面的样子：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module Cglfw [system] &#123;</span><br><span class="line">    header &quot;glfw.h&quot;</span><br><span class="line">    export *</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们添加 glfw.h （名称可以自己定义）文件的目的是绕过模块地图中必须包含绝对路径的限制，否则的话，我们就必须在 modulemap 文件中的 <code>header</code> 中指定 glfw3.h 头文件的绝对路径，在我的电脑上就是 <code>/usr/local/Cellar/glfw/3.3.2/include/GLFW/glfw3.h</code>，这样就将 GLFW 的路径硬编码到模块地图中了。使用了我们添加的 glfw.h 文件，SPM 就会从 pkg-config 文件中读取正确的头文件搜索路径，并将它添加到编译器的调用中。</p>
-<p>我们可以按照同样的方式将 GLEW 导出为模块，这里我就不演示了。上面是将安装在系统中的 C 程序库导出为模块，不过有些情况下我们只有 C 程序库的源代码，这个时候我们仍然可以使用 SPM 将 C 程序源码导出为模块。</p>
-<p><strong>C 源码导出为模块</strong></p>
-<p>将 C 源代码导出为模块也非常简单，其实也是编写模块地图的过程，不过这个过程我们可以借助 SPM 自动帮我们完成。</p>
-<p>我们可以从<a href="https://sourceforge.net/projects/glew/">这里</a>下载 GLEW 的源码。跟上面的步骤一样，在 Sources 目录下创建一个 Cglew 子目录，并将解压后的 GLEW 源代码中 include 和 src 目录拷贝到 Cglew 目录下。然后我们在 Package.swift 中添加如下内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.target(name: &quot;Cglew&quot;)</span><br></pre></td></tr></table></figure>
-
-<p>在上面的过程中我们并没有编写模块地图，并不是说通过这种方式不需要模块地图，而是 SPM 自动帮我们完成的。我们将需要暴露给外部的头文件放到 include 目录下，编译时 SPM 就会自动生成模块地图。当然我们也可以通过 <code>publicHeadersPath</code> 参数来指定需要暴露给外部头文件的路径。</p>
-<p>接着我们可以来完成 OpenGLApp 这个目标了。在 OpenGLApp 目录中添加一个 <code>GLApp.swift</code> 文件。现在，我们就可以在 Swift 文件中使用 <code>import Cglew</code> , <code>import Cglfw</code>，并调用 GLFW 和 GLEW 中提供的 API 了。有一点不要忘记，我们需要在 Package.swift 文件中 OpenGLApp 这个目标的 <code>dependencies</code> 添加我们都依赖：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">.target(</span><br><span class="line">    name: <span class="string">&quot;OpenGLApp&quot;</span>,</span><br><span class="line">    dependencies: [<span class="string">&quot;Cglfw&quot;</span>, <span class="string">&quot;Cglew&quot;</span>],</span><br><span class="line">    linkerSettings: [</span><br><span class="line">        .linkedFramework(<span class="string">&quot;OpenGL&quot;</span>)</span><br><span class="line">    ]),</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>为了方便在 Xcode 中编写并调试程序，可以使用 <code>swift package generate-xcodeproj</code> 命令来生成一个 Xcode 工程。</p>
-</blockquote>
-<blockquote>
-<p>在通过 <code>import Cglew</code> 引入 Cglew 模块并构建项目，你会发现 Xcode 报了大量错，这个时候可以在  Cglew 目标中的 <code>glew.h</code> 文件最上面添加 <code>#define GLEW_NO_GLU</code>。</p>
-</blockquote>
-<p>后面的主要工作就是编写 OpenGL 代码了，这里就不展开了，毕竟不是本文的重点。</p>
-<p>接着我们可以添加一个用于运行该库的可执行程序的目标。我们在 Sources 目录下添加 Sample 子目录，并添加一个 <code>main.siwft</code> 文件，并在 Package.swift 中的 <code>targets</code> 添加一个 Sample 目标：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">.target(</span><br><span class="line">	  name: <span class="string">&quot;Sample&quot;</span>,</span><br><span class="line">    dependencies: [<span class="string">&quot;OpenGLApp&quot;</span>]),</span><br></pre></td></tr></table></figure>
-
-<p>我在 <code>main.siwft</code> 中调用了自己封装的 OpenGLApp 的 Swift 库：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> OpenGLApp</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> app <span class="operator">=</span> <span class="type">GLApp</span>(title: <span class="string">&quot;Hello, OpenGL&quot;</span>, width: <span class="number">600</span>, height: <span class="number">600</span>)</span><br><span class="line">app.run()</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>SPM 会将包含有 main.swift 文件的目标作为可执行文件目标。所以我们在用 SPM 开发库时，库文件中不要有 main.swift 文件，否则的话，SPM 会将该目标作为可执行文件而不是一个库，这样就无法正确地和其他库或可执行文件进行链接了。</p>
-</blockquote>
-<p>如果我们继续在终端中执行 <code>swift run</code> 命令，这时 SPM 就会构建并执行这个应用程序（你可以从<a href="https://gist.github.com/hujewelz/a3b45373726f9c406f23421cb5853edc">这里</a> 找到着色器的代码，<a href="https://gist.github.com/hujewelz/bab7120348da8d568da5ff95bd376185">这里</a>找到初始化顶点数据的代码）。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/swiftc/window.png" alt="Hello,window"></p>
-<p>下面是完整的 Package.swift：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// swift-tools-version:5.2</span></span><br><span class="line"><span class="comment">// The swift-tools-version declares the minimum version of Swift required to build this package.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> PackageDescription</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> package <span class="operator">=</span> <span class="type">Package</span>(</span><br><span class="line">    name: <span class="string">&quot;GLAPP&quot;</span>,</span><br><span class="line">    products: [</span><br><span class="line">        .library(name: <span class="string">&quot;OpenGLApp&quot;</span>, targets: [<span class="string">&quot;OpenGLApp&quot;</span>])</span><br><span class="line">    ],</span><br><span class="line">    dependencies: [],</span><br><span class="line">    targets: [</span><br><span class="line">        .target(</span><br><span class="line">            name: <span class="string">&quot;Sample&quot;</span>,</span><br><span class="line">            dependencies: [<span class="string">&quot;OpenGLApp&quot;</span>]),</span><br><span class="line">        .target(</span><br><span class="line">            name: <span class="string">&quot;OpenGLApp&quot;</span>,</span><br><span class="line">            dependencies: [<span class="string">&quot;Cglew&quot;</span>, <span class="string">&quot;Cglfw&quot;</span>],</span><br><span class="line">            linkerSettings: [</span><br><span class="line">                .linkedFramework(<span class="string">&quot;OpenGL&quot;</span>)</span><br><span class="line">            ]),</span><br><span class="line">        .systemLibrary(</span><br><span class="line">            name: <span class="string">&quot;Cglew&quot;</span>,</span><br><span class="line">            pkgConfig: <span class="string">&quot;glew&quot;</span>,</span><br><span class="line">            providers: [</span><br><span class="line">                .brew([<span class="string">&quot;glew&quot;</span>])</span><br><span class="line">            ]),</span><br><span class="line">        .systemLibrary(</span><br><span class="line">            name: <span class="string">&quot;Cglfw&quot;</span>,</span><br><span class="line">            pkgConfig: <span class="string">&quot;glfw3&quot;</span>,</span><br><span class="line">            providers: [</span><br><span class="line">                .brew([<span class="string">&quot;glfw&quot;</span>])</span><br><span class="line">            ]),</span><br><span class="line">    ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>总结一下，要想让 Swift 模块能调用 C 程序，只需要将 C 程序代码导出为模块即可。而导出模块只需要按照<a href="https://clang.llvm.org/docs/Modules.html">Clang Module</a> 的格式提供一份模块地图。</p>
-<h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><p>在 Swift 代码中使用 C 程序代码其实是一件很简单的事情，比起用 Swift 重写一个已经存在的 C 程序库，为什么不直接在 Swift 中使用它们呢。当然在实际使用过程中也肯定会遇到一些问题，比如 C 中的指针，回调函数等等，不过这些并不是什么大的问题，不知道如何使用只是表明我们对 Swift 某些地方还不熟悉。</p>
-]]></content>
-      <categories>
-        <category>Swift</category>
-      </categories>
-      <tags>
-        <tag>Swift</tag>
-        <tag>SPM</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Swift Package Manager</title>
-    <url>/cko3zg8mp00085ss6ews3ehlo/</url>
+    <url>/cko3zrglc0007h7s637gngkhs/</url>
     <content><![CDATA[<p>Swift Package Manager 是用于管理 Swift 代码分发的工具。它与 Swift 构建系统集成在一起，可以自动执行依赖项的下载，编译和链接过程。</p>
 <span id="more"></span>
 
@@ -396,93 +307,97 @@
       </tags>
   </entry>
   <entry>
-    <title>从 Swift 中的序列到类型擦除</title>
-    <url>/cko3zg8mq000c5ss6f74r8lad/</url>
-    <content><![CDATA[<p>如果有这样的一个需求，我希望能像数组一样，用 for 循环遍历一个类或结构体中的所有属性。要实现这样的需求，我们需要让自定义的类型遵守 Sequence 协议。</p>
+    <title>Swift 与 C 混编的正确姿势</title>
+    <url>/cko3zrgld0008h7s62xtb8l07/</url>
+    <content><![CDATA[<p>自从笔者第一次尝试 Swift 到现在已经过去 5 年多了，从Swift 的第一个版本到现在的 Swift 5.2，Swift 语言发生了天翻地覆的变化。 Swift 生态也已经很完善，日常开发中用到的各种库基本都支持了 Swift。那些现在还在纠结要不要使用 Swift 的同学可以看看<a href="https://mp.weixin.qq.com/s/N6ToEkN9c-2_rIvkv4o9hA">这篇文章</a> ，文章中提到的几个问题几乎涵盖了 OC 与 Swift 混编时会遇到的一些问题，文章中都给出了相应的解决方案。</p>
+<p>Swift 和 Objective-C 以及 C、C++（Swift 不能直接调用 C++，必须通过 OC进行调用） 混编的阻力非常小。它可以自动桥接 objective-C 的类型，甚至可以桥接很多 C 的类型。这就可以让我们在原有库的基础上，使用 Swift 开发出简洁易用的 API。Swift 和 Objective-C 混编的文章不少，在这篇文章中，我们将学习如何让 C 与 Swift 进行交互。</p>
 <span id="more"></span>
 
-<p>如果有这样的一个需求，我希望能像数组一样，用 for 循环遍历一个类或结构体中的所有属性。就像下面这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> persion <span class="operator">=</span> <span class="type">Persion</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> persion &#123;</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Bridging-Header"><a href="#Bridging-Header" class="headerlink" title="Bridging Header"></a>Bridging Header</h2><p>当我们在一个 Swift 项目中添加 C 源文件时，Xcode 会询问是否添加 Objective-C 桥接头文件，这跟我们在 Swift 项目中添加 OC 文件一样。接着我们只需要在 Bridging Header 中添加需要暴露给 Swift 代码的头文件：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;test.h&quot;</span></span></span><br></pre></td></tr></table></figure>
 
-<p>要实现这样的需求，我们需要让自定义的类型遵守 Sequence 协议。</p>
-<h2 id="序列"><a href="#序列" class="headerlink" title="序列"></a>序列</h2><p>Sequence 协议是集合类型结构中的基础。一个序列 (sequence) 代表的是一系列具有相同类型的值，你可以对这些值进行迭代。Sequence 协议提供了许多强大的功能，满足该协议的类型都可以直接使用这些功能。上面这样步进式的迭代元素的能力看起来十分简单，但它却是 Sequence 可以提供这些强大功能的基础。</p>
-<p>满足 Sequence 协议的要求十分简单，你需要做的所有事情就是提供一个返回迭代器 (iterator) 的 <code>makeIterator() </code> 方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Iterator</span> : <span class="type">IteratorProtocol</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; <span class="keyword">Self</span>.<span class="type">Iterator</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>test.h</code> 中声明了一个 <code>hello</code> 函数：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> test_h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> test_h</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* test_h */</span></span></span><br></pre></td></tr></table></figure>
 
-<p>在 Sequence 协议有个关联类型 Iterator，而且它必须遵守 IteratorProtocol 协议。从这里我们可以看出 Sequence 是一个可以创建迭代器协议的类型。所以在搞清楚它的步进式的迭代元素能力之前，有必要了解一下迭代器是什么。</p>
-<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><p>序列通过创建一个迭代器来提供对元素的访问。迭代器每次产生一个序列的值，并且当遍历序列时对遍历状态进行管理。在 IteratorProtocol 协议中唯一的一个方法是 next()，这个方法需要在每次被调用时返回序列中的下一个值。当序列被耗尽时，next() 应该返回 nil，不然迭代器就会一直工作下去，直到资源被耗尽为止。</p>
-<p>IteratorProtocol 的定义非常简单：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Element</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="keyword">Self</span>.<span class="type">Element</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在 <code>tesh.c</code> 中实现了它：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;test.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>关联类型 Element 指定了迭代器产生的值的类型。这里<code>next()</code> 被标记了 mutating，表明了迭代器是可以存在可变的状态的。这里的 mutating 也不是必须的，如果你的迭代器返回的值并没有改变迭代器本身，那么没有 mutating 也是没有任何问题的。 不过几乎所有有意义的迭代器都会要求可变状态，这样它们才能够管理在序列中的当前位置。</p>
-<p>对 Sequence 和 IteratorProtocol 有了基础了解后，要实现开头提到的需求就很简单了。比如我想迭代输出一个 Person 实例的所有属性，我们可以这样做：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Persion</span>: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">var</span> email: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; <span class="type">MyIterator</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">MyIterator</span>(obj: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们就可以在 Swift 代码中调用 <code>hello()</code> 了。</p>
+<h2 id="Swift-Package-Manager"><a href="#Swift-Package-Manager" class="headerlink" title="Swift Package Manager"></a>Swift Package Manager</h2><p>上面使用 Bridging header 的方式主要适用于 C 源代码跟 Swift 代码处于同一个 App target 下，对于那些独立的 Swift Framework 就不适用了，在这种情况下就需要使用 Swift 包管理器（<a href="https://swift.org/package-manager/">Swift Package Manager</a> , 下文简称SPM）了。从 Swift 3.0 开始我们就可以使用 SPM 来构建 C 语言的目标 （target）了。</p>
+<p>下面我们将用 Swift 封装一个易用的 OpenGL 程序库。通过这个例子，我们基本上可以掌握如何在一个 Swif 库中与 C 进行交互了。</p>
+<h3 id="设置-SPM"><a href="#设置-SPM" class="headerlink" title="设置 SPM"></a>设置 SPM</h3><p>为导入 C 程序库设置一个 Swift 包管理器项目并不是什么难事，不过还是有不少的步骤要完成。</p>
+<p>现在让我们开始创建一个新的 SPM 项目吧。切换要保存代码的目录，执行下面的命令创建一个 SPM 包：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir OpenGLApp</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> OpenGLApp</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> swift package init --<span class="built_in">type</span> library</span></span><br></pre></td></tr></table></figure>
+<p>我们通过 <code>swift package init --type library</code> 命令创建了一个名为 OpenGLApp 的 Swift 库。我们可以打开 Package.swift 文件看看里面的内容（删除了无关内容）：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// swift-tools-version:5.2</span></span><br><span class="line"><span class="comment">// The swift-tools-version declares the minimum version of Swift required to build this package.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> PackageDescription</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> package <span class="operator">=</span> <span class="type">Package</span>(</span><br><span class="line">    name: <span class="string">&quot;OpenGLAPP&quot;</span>,</span><br><span class="line">  	products: [</span><br><span class="line">        .library(name: <span class="string">&quot;OpenGLApp&quot;</span>, targets: [<span class="string">&quot;OpenGLApp&quot;</span>])</span><br><span class="line">    ],</span><br><span class="line">    dependencies: [],</span><br><span class="line">    targets: [</span><br><span class="line">        .target(</span><br><span class="line">            name: <span class="string">&quot;OpenGLApp&quot;</span>,</span><br><span class="line">            dependencies: [],</span><br><span class="line">    ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
-<p>Persion 遵守了 Sequence 协议，并返回了一个自定义的迭代器。迭代器的实现也很简单：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyIterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> children: <span class="type">Mirror</span>.<span class="type">Children</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>(<span class="params">obj</span>: <span class="type">Persion</span>)</span> &#123;</span><br><span class="line">        children <span class="operator">=</span> <span class="type">Mirror</span>(reflecting: obj).children</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">String</span>? &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> child <span class="operator">=</span> children.popFirst() <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;<span class="subst">\(child.label.wrapped)</span> is <span class="subst">\(child.value)</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了完成一个可以运行的 OpenGL 程序，我们需要依赖 <strong><a href="https://www.glfw.org/">GLFW</a></strong> 和 <strong><a href="http://glew.sourceforge.net/">GLEW</a></strong> 这两个 C 语言库。GLFW 给我们提供了一个窗口和上下文用来渲染，这样我们就不用去书写操作系统相关代码了。GLEW 提供了用于确定其 OpenGL 扩展支持在目标平台上高效的运行时间的机制。 </p>
+<h3 id="将-C-程序库导出为模块"><a href="#将-C-程序库导出为模块" class="headerlink" title="将 C 程序库导出为模块"></a>将 C 程序库导出为模块</h3><p>由于 GLFW 和 GLEW 都是由 C 编写的库，所以我们先要解决如何让 Swift 找到这些 C 语言库，这样，才能在 Swift 调用它们。在 C 里，可以通过  <code>#include</code> 一个或多个库的头文件的方式来访问它们。但是 Swift 无法直接处理 C 的头文件，它依赖的是**模块 (Module)**。为了让一个用 C 和 Objective-C 编写的库对 Swift 编译器可见，它们必须安照 <a href="https://clang.llvm.org/docs/Modules.html">Clang Module</a> 的格式提供一份模块地图 (Module map)。它的主要作用就是列出构成模块的头文件。</p>
+<p>因为 GLFW 和 GLEW 并没有提供模块地图，所以我们需要在 SPM 里定义一个专门生成模块地图的目标。它的作用就是把以上的 C 语言库封装成模块，这样就可以在另一个 Swift 模块中调用它们了。</p>
+<p>首先，我们需要安装 glew 和 glfw，如果是 macOS 系统可以使用 <a href="https://brew.sh/">homebrew</a> 来安装。其他的系统就使用相关的包管理器安装就可以了。</p>
+<p>接着打开 Package.swift， 在 <code>targets</code> 中增加如下内容：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> <span class="operator">...</span></span><br><span class="line">targets: [</span><br><span class="line">    <span class="operator">....</span></span><br><span class="line">    .systemLibrary(</span><br><span class="line">        name: <span class="string">&quot;Cglew&quot;</span>,</span><br><span class="line">        pkgConfig: <span class="string">&quot;glew&quot;</span>,</span><br><span class="line">        providers: [</span><br><span class="line">            .brew([<span class="string">&quot;glew&quot;</span>])</span><br><span class="line">        ]),</span><br><span class="line">    .systemLibrary(</span><br><span class="line">        name: <span class="string">&quot;Cglfw&quot;</span>,</span><br><span class="line">        pkgConfig: <span class="string">&quot;glfw3&quot;</span>,</span><br><span class="line">        providers: [</span><br><span class="line">            .brew([<span class="string">&quot;glfw&quot;</span>])</span><br><span class="line">        ]),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
-<p>迭代器中的 <code>children</code> 是 <code>AnyCollection&lt;Mirror.Child&gt;</code>  的集合类型，每次迭代返回一个值后，更新 <code>children</code> 这个状态，这样我们的迭代器就可以持续的输出正确的值了，直到输出完 <code>children</code> 中的所有值。</p>
-<p>现在可以使用 for 循环输出 Persion 中所有的属性值了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> <span class="type">Persion</span>.author &#123;</span><br><span class="line">    <span class="built_in">print</span>(item)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">// age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br></pre></td></tr></table></figure>
+<p>在上面的 Package.swift 中，我们新添加了两个系统程序库目标（system library target）。所谓的系统程序库目标是指那些由系统级别的包管理器安装的程序库，例如我们使用 homebrew 安装的一些程序库。<em>Sample</em> 目标是最终的可执行程序，<em>OpenGLApp</em> 是我们将要使用 Swift 封装的 OpenGL 库，<em>Cglew</em> 和 <em>Cglfw</em> 两个系统程序目标就是我们制作的可以在 Swift 中调用的模块。 </p>
+<p>在系统程序库目标中 <code>pkConfig</code> 和 <code>providers</code> 两个参数需要说明一下：</p>
+<ul>
+<li><em>providers</em> 指令是可选的，在目标库没有被安装时，它为 SPM 提供了用于安装库的方式的提示。 </li>
+<li><em>pkConfig</em> 指定了<a href="https://zh.wikipedia.org/wiki/Pkg-config">pk g-config</a> 文件的名称，Swift 包管理器可以通过它找到要导入的库的头文件和库搜索路径。pkConfig 的名称我们可以在库的安装路径的 <code>lib/pkconfig/xxx.pc</code> 中找到，以我电脑中安装的 glew 为例，它的位置是 <code>/usr/local/Cellar/glew/2.1.0/lib/pkgconfig/glew.pc</code>，所以上面 pkConfig 中设置的就是 <code>glew</code>。</li>
+</ul>
+<p>接下来我们需要在 Sources 目录下为系统程序库目标创建一个保存文件的目录，该目录名称必须跟上面 Package.swift 中定义的目标的 <code>name</code> 属性一致。这里我以 Cglfw  为例：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> Sources &amp;&amp; mkdir Cglfw</span></span><br></pre></td></tr></table></figure>
 
-<p>如果现在有另外一个结构体或类也需要迭代输出所以属性呢？，这很好办，让我们的结构体遵守 Sequence 协议，并返回一个我们自定义的迭代器就可以了。这种拷贝代码的方式确实能满足需求，但是如果我们利用协议拓展就能写出更易于维护的代码，类似下面这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_Iterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> children: <span class="type">Mirror</span>.<span class="type">Children</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>(<span class="params">obj</span>: <span class="keyword">Any</span>)</span> &#123;</span><br><span class="line">        children <span class="operator">=</span> <span class="type">Mirror</span>(reflecting: obj).children</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">String</span>? &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> child <span class="operator">=</span> children.popFirst() <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;<span class="subst">\(child.label.wrapped)</span> is <span class="subst">\(child.value)</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Sequencible</span>: <span class="title">Sequence</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Sequencible</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _Iterator &#123;</span><br><span class="line">        <span class="keyword">return</span> _Iterator(obj: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 Cglfw 目录中添加一个 <code>glfw.h</code> 文件，并添加如下内容：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;GLFW/glfw3.h&gt;</span></span></span><br></pre></td></tr></table></figure>
 
-<p>这里我定义了一个继承 Sequence 的空协议，是为了不影响 Sequence 的默认行为。现在只要我们自定义的类或结构体遵守 Sequencible 就能使用 for 循环输出其所有属性值了。就像下面这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Demo</span>: <span class="title">Sequencible</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name <span class="operator">=</span> <span class="string">&quot;Sequence&quot;</span></span><br><span class="line">    <span class="keyword">var</span> author <span class="operator">=</span> <span class="type">Persion</span>.author</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="表示相同序列的类型"><a href="#表示相同序列的类型" class="headerlink" title="表示相同序列的类型"></a>表示相同序列的类型</h2><p>现在需求又变了，我想将所有遵守了 Sequencible 协议的任何序列存到一个数组中，然后 for 循环遍历数组中的元素，因为数组中的元素都遵守了 Sequencible 协议，所以又可以使用 for 循环输出其所有属性，就像下面这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> obj <span class="keyword">in</span> array &#123;</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> obj &#123;</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接着添加一个 <code>module.modulemap</code> 文件，它应该是下面的样子：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module Cglfw [system] &#123;</span><br><span class="line">    header &quot;glfw.h&quot;</span><br><span class="line">    export *</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>那么这里的 array 应该定义成什么类型呢？定义成 [Any] 类型肯定是不行的，这样的话在循环中得将 item 强转为 Sequencible，那么是否可以定义成  [Sequencible] 类型呢？答案是否定的。当这样定义时编辑器会报出这样的错误：</p>
+<p>我们添加 glfw.h （名称可以自己定义）文件的目的是绕过模块地图中必须包含绝对路径的限制，否则的话，我们就必须在 modulemap 文件中的 <code>header</code> 中指定 glfw3.h 头文件的绝对路径，在我的电脑上就是 <code>/usr/local/Cellar/glfw/3.3.2/include/GLFW/glfw3.h</code>，这样就将 GLFW 的路径硬编码到模块地图中了。使用了我们添加的 glfw.h 文件，SPM 就会从 pkg-config 文件中读取正确的头文件搜索路径，并将它添加到编译器的调用中。</p>
+<p>我们可以按照同样的方式将 GLEW 导出为模块，这里我就不演示了。上面是将安装在系统中的 C 程序库导出为模块，不过有些情况下我们只有 C 程序库的源代码，这个时候我们仍然可以使用 SPM 将 C 程序源码导出为模块。</p>
+<p><strong>C 源码导出为模块</strong></p>
+<p>将 C 源代码导出为模块也非常简单，其实也是编写模块地图的过程，不过这个过程我们可以借助 SPM 自动帮我们完成。</p>
+<p>我们可以从<a href="https://sourceforge.net/projects/glew/">这里</a>下载 GLEW 的源码。跟上面的步骤一样，在 Sources 目录下创建一个 Cglew 子目录，并将解压后的 GLEW 源代码中 include 和 src 目录拷贝到 Cglew 目录下。然后我们在 Package.swift 中添加如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.target(name: &quot;Cglew&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>在上面的过程中我们并没有编写模块地图，并不是说通过这种方式不需要模块地图，而是 SPM 自动帮我们完成的。我们将需要暴露给外部的头文件放到 include 目录下，编译时 SPM 就会自动生成模块地图。当然我们也可以通过 <code>publicHeadersPath</code> 参数来指定需要暴露给外部头文件的路径。</p>
+<p>接着我们可以来完成 OpenGLApp 这个目标了。在 OpenGLApp 目录中添加一个 <code>GLApp.swift</code> 文件。现在，我们就可以在 Swift 文件中使用 <code>import Cglew</code> , <code>import Cglfw</code>，并调用 GLFW 和 GLEW 中提供的 API 了。有一点不要忘记，我们需要在 Package.swift 文件中 OpenGLApp 这个目标的 <code>dependencies</code> 添加我们都依赖：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">.target(</span><br><span class="line">    name: <span class="string">&quot;OpenGLApp&quot;</span>,</span><br><span class="line">    dependencies: [<span class="string">&quot;Cglfw&quot;</span>, <span class="string">&quot;Cglew&quot;</span>],</span><br><span class="line">    linkerSettings: [</span><br><span class="line">        .linkedFramework(<span class="string">&quot;OpenGL&quot;</span>)</span><br><span class="line">    ]),</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>Protocol ‘Sequencible’ can only be used as a generic constraint because it has Self or associated type requirements</p>
+<p>为了方便在 Xcode 中编写并调试程序，可以使用 <code>swift package generate-xcodeproj</code> 命令来生成一个 Xcode 工程。</p>
 </blockquote>
-<p>熟悉 Swift 协议的同学应该对这个报错比较熟了。就是说含有 Self 或者关联类型的协议，只能被当作泛型约束使用。所以像下面这样定义我们的 array 是行不通的。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> sequencibleStore: [<span class="type">Sequencible</span>] <span class="operator">=</span> [<span class="type">Persion</span>.author, <span class="type">Demo</span>()]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在通过 <code>import Cglew</code> 引入 Cglew 模块并构建项目，你会发现 Xcode 报了大量错，这个时候可以在  Cglew 目标中的 <code>glew.h</code> 文件最上面添加 <code>#define GLEW_NO_GLU</code>。</p>
+</blockquote>
+<p>后面的主要工作就是编写 OpenGL 代码了，这里就不展开了，毕竟不是本文的重点。</p>
+<p>接着我们可以添加一个用于运行该库的可执行程序的目标。我们在 Sources 目录下添加 Sample 子目录，并添加一个 <code>main.siwft</code> 文件，并在 Package.swift 中的 <code>targets</code> 添加一个 Sample 目标：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">.target(</span><br><span class="line">	  name: <span class="string">&quot;Sample&quot;</span>,</span><br><span class="line">    dependencies: [<span class="string">&quot;OpenGLApp&quot;</span>]),</span><br></pre></td></tr></table></figure>
 
-<p>如果有这样一个类型，可以隐藏 Sequencible 这个具体的类型不就解决这个问题了吗？这种将指定类型移除的过程，就被称为类型擦除。</p>
-<h2 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h2><p>回想一下  Sequence 协议的内容，我们只要通过 <code>makeIterator()</code> 返回一个迭代器就可以了。那么我们可以实现一个封装类(结构体也是一样的)，里面用一个属性存储了迭代器的实现，然后在 <code>makeIterator()</code> 方法中通过存储的这个属性构造一个迭代器。类似这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> _AnyIterator(iteratorImpl)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我在 <code>main.siwft</code> 中调用了自己封装的 OpenGLApp 的 Swift 库：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> OpenGLApp</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> app <span class="operator">=</span> <span class="type">GLApp</span>(title: <span class="string">&quot;Hello, OpenGL&quot;</span>, width: <span class="number">600</span>, height: <span class="number">600</span>)</span><br><span class="line">app.run()</span><br></pre></td></tr></table></figure>
 
-<p>我们的这个封装可以这样定义：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnySequence</span>&lt;<span class="title">Element</span>&gt;: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> iteratorImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>SPM 会将包含有 main.swift 文件的目标作为可执行文件目标。所以我们在用 SPM 开发库时，库文件中不要有 main.swift 文件，否则的话，SPM 会将该目标作为可执行文件而不是一个库，这样就无法正确地和其他库或可执行文件进行链接了。</p>
+</blockquote>
+<p>如果我们继续在终端中执行 <code>swift run</code> 命令，这时 SPM 就会构建并执行这个应用程序（你可以从<a href="https://gist.github.com/hujewelz/a3b45373726f9c406f23421cb5853edc">这里</a> 找到着色器的代码，<a href="https://gist.github.com/hujewelz/bab7120348da8d568da5ff95bd376185">这里</a>找到初始化顶点数据的代码）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/swiftc/window.png" alt="Hello,window"></p>
+<p>下面是完整的 Package.swift：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// swift-tools-version:5.2</span></span><br><span class="line"><span class="comment">// The swift-tools-version declares the minimum version of Swift required to build this package.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> PackageDescription</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> package <span class="operator">=</span> <span class="type">Package</span>(</span><br><span class="line">    name: <span class="string">&quot;GLAPP&quot;</span>,</span><br><span class="line">    products: [</span><br><span class="line">        .library(name: <span class="string">&quot;OpenGLApp&quot;</span>, targets: [<span class="string">&quot;OpenGLApp&quot;</span>])</span><br><span class="line">    ],</span><br><span class="line">    dependencies: [],</span><br><span class="line">    targets: [</span><br><span class="line">        .target(</span><br><span class="line">            name: <span class="string">&quot;Sample&quot;</span>,</span><br><span class="line">            dependencies: [<span class="string">&quot;OpenGLApp&quot;</span>]),</span><br><span class="line">        .target(</span><br><span class="line">            name: <span class="string">&quot;OpenGLApp&quot;</span>,</span><br><span class="line">            dependencies: [<span class="string">&quot;Cglew&quot;</span>, <span class="string">&quot;Cglfw&quot;</span>],</span><br><span class="line">            linkerSettings: [</span><br><span class="line">                .linkedFramework(<span class="string">&quot;OpenGL&quot;</span>)</span><br><span class="line">            ]),</span><br><span class="line">        .systemLibrary(</span><br><span class="line">            name: <span class="string">&quot;Cglew&quot;</span>,</span><br><span class="line">            pkgConfig: <span class="string">&quot;glew&quot;</span>,</span><br><span class="line">            providers: [</span><br><span class="line">                .brew([<span class="string">&quot;glew&quot;</span>])</span><br><span class="line">            ]),</span><br><span class="line">        .systemLibrary(</span><br><span class="line">            name: <span class="string">&quot;Cglfw&quot;</span>,</span><br><span class="line">            pkgConfig: <span class="string">&quot;glfw3&quot;</span>,</span><br><span class="line">            providers: [</span><br><span class="line">                .brew([<span class="string">&quot;glfw&quot;</span>])</span><br><span class="line">            ]),</span><br><span class="line">    ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
-<p>对于刚刚上面的那个数组就可以这样初始化了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> sequencibleStore: [_AnySequence<span class="operator">&lt;</span><span class="type">String</span><span class="operator">&gt;</span>] <span class="operator">=</span> [_AnySequence(<span class="type">Persion</span>.author), _AnySequence(<span class="type">Demo</span>())]</span><br></pre></td></tr></table></figure>
-
-<p>这里的 _AnySequence 就将具体的 Sequence 类型隐藏了，调用者只知道数组中的元素是一个可以迭代输出字符串类型的序列。</p>
-<p>现在我们可以一步步来实现上面的 _AnyIterator 和 _AnySequence。_AnyIterator 的实现跟上面提到的 _AnySequence 的思路一致。我们不直接存储迭代器，而是让封装类存储迭代器的 next 函数。要做到这一点，我们必须首先将 iterator 参数复制到一个变量中，这样我们就可以调用它的 next 方法了。下面是具体实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnyIterator</span>&lt;<span class="title">Element</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> nextImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">_AnyIterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">init</span>&lt;<span class="type">I</span>&gt;(<span class="keyword">_</span> <span class="params">iterator</span>: <span class="type">I</span>)</span> <span class="keyword">where</span> <span class="type">Element</span> <span class="operator">==</span> <span class="type">I</span>.<span class="type">Element</span>, <span class="type">I</span>: <span class="type">IteratorProtocol</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> mutatedIterator <span class="operator">=</span> iterator</span><br><span class="line">        nextImpl <span class="operator">=</span> &#123; mutatedIterator.next() &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">return</span> nextImpl()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>现在，在 _AnyIterator 中，迭代器的具体类型（比如上面用到的_Iterator）只有在创建实例的时候被指定。在那之后具体的类型就被隐藏了起来。我们可以使用任意类型的迭代器来创建 _AnyIterator 实例：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> iterator <span class="operator">=</span> _AnyIterator(_Iterator(obj: <span class="type">Persion</span>.author))</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">let</span> item <span class="operator">=</span> iterator.next() &#123;</span><br><span class="line">    <span class="built_in">print</span>(item)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">// age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br></pre></td></tr></table></figure>
-
-<p>我们希望外面传入一个闭包也能创建一个 _AnyIterator，现在我们添加下面的代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">init</span>(<span class="keyword">_</span> <span class="params">impl</span>: <span class="keyword">@escaping</span> () -&gt; <span class="type">Element</span>?)</span> &#123;</span><br><span class="line">    nextImpl <span class="operator">=</span> impl</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>添加这个初始化方法其实为了方便后面实现  _AnySequence 用的。上面说过 _AnySequence 有个属性存储了迭代器的实现，所以我们的 _AnyIterator 能通过一个闭包来初始化。</p>
-<p>_AnyIterator 实现完后就可以来实现我们的 _AnySequence 了。我这里直接给出代码，同学们可以自己去实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnySequence</span>&lt;<span class="title">Element</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">Iterator</span> <span class="operator">=</span> _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> iteratorImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">_AnySequence</span>: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">init</span>&lt;<span class="type">S</span>&gt;(<span class="keyword">_</span> <span class="params">base</span>: <span class="type">S</span>)</span> <span class="keyword">where</span> <span class="type">Element</span> <span class="operator">==</span> <span class="type">S</span>.<span class="type">Iterator</span>.<span class="type">Element</span>, <span class="type">S</span>: <span class="type">Sequence</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> iterator <span class="operator">=</span> base.makeIterator()</span><br><span class="line">        iteratorImpl <span class="operator">=</span> &#123;</span><br><span class="line">            iterator.next()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> _AnyIterator(iteratorImpl)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> _AnySequence 的指定构造器也被定义为泛型，接受一个遵循 Sequence 协议的任何序列作为参数，并且规定了这个序列的迭代器的 next() 的返回类型要跟我们定义的这个泛型结构的 Element 类型要一致。这里的这个泛型约束其实就是我们实现类型擦除的魔法所在了。它将具体的序列的类型隐藏了起来，只要序列中的值都是相同的类型就可以当做同一种类型来使用。就像下面的例子中的 array 就可以描述为 “元素类型是 String 的任意序列的集合”。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> array <span class="operator">=</span> [_AnySequence(<span class="type">Persion</span>.author), _AnySequence(<span class="type">Demo</span>())]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> obj <span class="keyword">in</span> array &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;+-------------------------+&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> obj &#123;</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">//  age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br><span class="line"><span class="comment">// +-------------------------+</span></span><br><span class="line"><span class="comment">// name is Sequence</span></span><br><span class="line"><span class="comment">// author is Persion(name: &quot;jewelz&quot;, age: 23, email: &quot;hujewelz@gmail.com&quot;)</span></span><br></pre></td></tr></table></figure>
-
-<p>得益于 Swift 的类型推断，这里的 array 可以不用显式地指明其类型，点击 option 键，你会发现它是 <code>[_AnySequence&lt;String&gt;]</code> 类型。也就是说只有其元素是 String 的任意序列都可以作为数组的元素。这就跟我们平时使用类似 “一个 Int 类型的数组” 的语义是一致的了。如果要向数组中插入一个新元素，可以这样创建一个序列：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> s <span class="operator">=</span> _AnySequence &#123; () -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">String</span><span class="operator">&gt;</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> _AnyIterator &#123; () -&gt; <span class="type">String</span>? <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">return</span> arc4random() <span class="operator">%</span> <span class="number">10</span> <span class="operator">==</span> <span class="number">5</span> <span class="operator">?</span> <span class="literal">nil</span> : <span class="type">String</span>(<span class="type">Int</span>(arc4random() <span class="operator">%</span> <span class="number">10</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">array.append(s)</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码中通过一个闭包初始化了一个 _AnySequence，这里我就不给出自己的实现，同学们可以自己动手实现一下。</p>
-<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>在标准库中，其实已经提供了 <strong>AnyIterator</strong> 和 <strong>AnySequence</strong>。我还没去看标准库的实现，有兴趣的同学可以点击<a href="https://github.com/apple/swift/tree/master/stdlib/public/core">这里</a>查看。 我这里实现了自己的 _AnyIterator 和 _AnySequence 就是为了提供一种实现类型擦除的思路。如果你在项目中频繁地使用带有关联类型或 Self 的协议，那么你也一定会遇到跟我一样的问题。这时候实现一个类型擦除的封装，将具体的类型隐藏了起来，你就不用为 Xcode 的报错而抓狂了。</p>
+<p>总结一下，要想让 Swift 模块能调用 C 程序，只需要将 C 程序代码导出为模块即可。而导出模块只需要按照<a href="https://clang.llvm.org/docs/Modules.html">Clang Module</a> 的格式提供一份模块地图。</p>
+<h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><p>在 Swift 代码中使用 C 程序代码其实是一件很简单的事情，比起用 Swift 重写一个已经存在的 C 程序库，为什么不直接在 Swift 中使用它们呢。当然在实际使用过程中也肯定会遇到一些问题，比如 C 中的指针，回调函数等等，不过这些并不是什么大的问题，不知道如何使用只是表明我们对 Swift 某些地方还不熟悉。</p>
 ]]></content>
       <categories>
         <category>Swift</category>
       </categories>
       <tags>
+        <tag>SPM</tag>
         <tag>Swift</tag>
       </tags>
   </entry>
   <entry>
     <title>Swift与函数式编程的那些事</title>
-    <url>/cko3zg8mr000d5ss6d4f60z6j/</url>
+    <url>/cko3zrgle000ch7s6a4iecbe6/</url>
     <content><![CDATA[<p>函数式编程所依赖的原理，在很多方面其实是早于编程本身出现的。因为函数式编程这种范式依赖于 Alonzo Church 在20世纪30年代发明的 <a href="https://zh.wikipedia.org/wiki/%CE%9B%E6%BC%94%E7%AE%97">λ演算</a>。<br> <span id="more"></span><br>λ 演算的一个核心思想是不可变性——某个符合所对应的值永远是不变的。所以从理论上来讲，函数式编程语言中应该是没有赋值语句的。</p>
 <p>本文是 Swift 系列文章中的第三篇，前两篇文章分别是：<a href="http://jewelz.me/cjt0zq7ce0006620o0nhutb0j/">Swift 与面向协议编程的那些事</a>，<a href="">在 Swift 中使用值类型</a>。按照计划，这篇文章主要介绍一下函数式编程思想在 Swift 中的应用。</p>
 <p>函数式编程所依赖的原理，在很多方面其实是早于编程本身出现的。因为函数式编程这种范式依赖于 Alonzo Church 在20世纪30年代发明的 <a href="https://zh.wikipedia.org/wiki/%CE%9B%E6%BC%94%E7%AE%97">λ演算</a>。 λ 演算的一个核心思想是不可变性——某个符合所对应的值永远是不变的。所以从理论上来讲，函数式编程语言中应该是没有赋值语句的。</p>
@@ -617,8 +532,93 @@
       </tags>
   </entry>
   <entry>
+    <title>从 Swift 中的序列到类型擦除</title>
+    <url>/cko3zrglf000dh7s6bd1d0xm7/</url>
+    <content><![CDATA[<p>如果有这样的一个需求，我希望能像数组一样，用 for 循环遍历一个类或结构体中的所有属性。要实现这样的需求，我们需要让自定义的类型遵守 Sequence 协议。</p>
+<span id="more"></span>
+
+<p>如果有这样的一个需求，我希望能像数组一样，用 for 循环遍历一个类或结构体中的所有属性。就像下面这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> persion <span class="operator">=</span> <span class="type">Persion</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> persion &#123;</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要实现这样的需求，我们需要让自定义的类型遵守 Sequence 协议。</p>
+<h2 id="序列"><a href="#序列" class="headerlink" title="序列"></a>序列</h2><p>Sequence 协议是集合类型结构中的基础。一个序列 (sequence) 代表的是一系列具有相同类型的值，你可以对这些值进行迭代。Sequence 协议提供了许多强大的功能，满足该协议的类型都可以直接使用这些功能。上面这样步进式的迭代元素的能力看起来十分简单，但它却是 Sequence 可以提供这些强大功能的基础。</p>
+<p>满足 Sequence 协议的要求十分简单，你需要做的所有事情就是提供一个返回迭代器 (iterator) 的 <code>makeIterator() </code> 方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Iterator</span> : <span class="type">IteratorProtocol</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; <span class="keyword">Self</span>.<span class="type">Iterator</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Sequence 协议有个关联类型 Iterator，而且它必须遵守 IteratorProtocol 协议。从这里我们可以看出 Sequence 是一个可以创建迭代器协议的类型。所以在搞清楚它的步进式的迭代元素能力之前，有必要了解一下迭代器是什么。</p>
+<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><p>序列通过创建一个迭代器来提供对元素的访问。迭代器每次产生一个序列的值，并且当遍历序列时对遍历状态进行管理。在 IteratorProtocol 协议中唯一的一个方法是 next()，这个方法需要在每次被调用时返回序列中的下一个值。当序列被耗尽时，next() 应该返回 nil，不然迭代器就会一直工作下去，直到资源被耗尽为止。</p>
+<p>IteratorProtocol 的定义非常简单：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Element</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="keyword">Self</span>.<span class="type">Element</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关联类型 Element 指定了迭代器产生的值的类型。这里<code>next()</code> 被标记了 mutating，表明了迭代器是可以存在可变的状态的。这里的 mutating 也不是必须的，如果你的迭代器返回的值并没有改变迭代器本身，那么没有 mutating 也是没有任何问题的。 不过几乎所有有意义的迭代器都会要求可变状态，这样它们才能够管理在序列中的当前位置。</p>
+<p>对 Sequence 和 IteratorProtocol 有了基础了解后，要实现开头提到的需求就很简单了。比如我想迭代输出一个 Person 实例的所有属性，我们可以这样做：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Persion</span>: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">var</span> email: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; <span class="type">MyIterator</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">MyIterator</span>(obj: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Persion 遵守了 Sequence 协议，并返回了一个自定义的迭代器。迭代器的实现也很简单：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyIterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> children: <span class="type">Mirror</span>.<span class="type">Children</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>(<span class="params">obj</span>: <span class="type">Persion</span>)</span> &#123;</span><br><span class="line">        children <span class="operator">=</span> <span class="type">Mirror</span>(reflecting: obj).children</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">String</span>? &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> child <span class="operator">=</span> children.popFirst() <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;<span class="subst">\(child.label.wrapped)</span> is <span class="subst">\(child.value)</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>迭代器中的 <code>children</code> 是 <code>AnyCollection&lt;Mirror.Child&gt;</code>  的集合类型，每次迭代返回一个值后，更新 <code>children</code> 这个状态，这样我们的迭代器就可以持续的输出正确的值了，直到输出完 <code>children</code> 中的所有值。</p>
+<p>现在可以使用 for 循环输出 Persion 中所有的属性值了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> <span class="type">Persion</span>.author &#123;</span><br><span class="line">    <span class="built_in">print</span>(item)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">// age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br></pre></td></tr></table></figure>
+
+<p>如果现在有另外一个结构体或类也需要迭代输出所以属性呢？，这很好办，让我们的结构体遵守 Sequence 协议，并返回一个我们自定义的迭代器就可以了。这种拷贝代码的方式确实能满足需求，但是如果我们利用协议拓展就能写出更易于维护的代码，类似下面这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_Iterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> children: <span class="type">Mirror</span>.<span class="type">Children</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>(<span class="params">obj</span>: <span class="keyword">Any</span>)</span> &#123;</span><br><span class="line">        children <span class="operator">=</span> <span class="type">Mirror</span>(reflecting: obj).children</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">String</span>? &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> child <span class="operator">=</span> children.popFirst() <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;<span class="subst">\(child.label.wrapped)</span> is <span class="subst">\(child.value)</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Sequencible</span>: <span class="title">Sequence</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Sequencible</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _Iterator &#123;</span><br><span class="line">        <span class="keyword">return</span> _Iterator(obj: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我定义了一个继承 Sequence 的空协议，是为了不影响 Sequence 的默认行为。现在只要我们自定义的类或结构体遵守 Sequencible 就能使用 for 循环输出其所有属性值了。就像下面这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Demo</span>: <span class="title">Sequencible</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name <span class="operator">=</span> <span class="string">&quot;Sequence&quot;</span></span><br><span class="line">    <span class="keyword">var</span> author <span class="operator">=</span> <span class="type">Persion</span>.author</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="表示相同序列的类型"><a href="#表示相同序列的类型" class="headerlink" title="表示相同序列的类型"></a>表示相同序列的类型</h2><p>现在需求又变了，我想将所有遵守了 Sequencible 协议的任何序列存到一个数组中，然后 for 循环遍历数组中的元素，因为数组中的元素都遵守了 Sequencible 协议，所以又可以使用 for 循环输出其所有属性，就像下面这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> obj <span class="keyword">in</span> array &#123;</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> obj &#123;</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么这里的 array 应该定义成什么类型呢？定义成 [Any] 类型肯定是不行的，这样的话在循环中得将 item 强转为 Sequencible，那么是否可以定义成  [Sequencible] 类型呢？答案是否定的。当这样定义时编辑器会报出这样的错误：</p>
+<blockquote>
+<p>Protocol ‘Sequencible’ can only be used as a generic constraint because it has Self or associated type requirements</p>
+</blockquote>
+<p>熟悉 Swift 协议的同学应该对这个报错比较熟了。就是说含有 Self 或者关联类型的协议，只能被当作泛型约束使用。所以像下面这样定义我们的 array 是行不通的。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> sequencibleStore: [<span class="type">Sequencible</span>] <span class="operator">=</span> [<span class="type">Persion</span>.author, <span class="type">Demo</span>()]</span><br></pre></td></tr></table></figure>
+
+<p>如果有这样一个类型，可以隐藏 Sequencible 这个具体的类型不就解决这个问题了吗？这种将指定类型移除的过程，就被称为类型擦除。</p>
+<h2 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h2><p>回想一下  Sequence 协议的内容，我们只要通过 <code>makeIterator()</code> 返回一个迭代器就可以了。那么我们可以实现一个封装类(结构体也是一样的)，里面用一个属性存储了迭代器的实现，然后在 <code>makeIterator()</code> 方法中通过存储的这个属性构造一个迭代器。类似这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> _AnyIterator(iteratorImpl)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们的这个封装可以这样定义：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnySequence</span>&lt;<span class="title">Element</span>&gt;: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> iteratorImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于刚刚上面的那个数组就可以这样初始化了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> sequencibleStore: [_AnySequence<span class="operator">&lt;</span><span class="type">String</span><span class="operator">&gt;</span>] <span class="operator">=</span> [_AnySequence(<span class="type">Persion</span>.author), _AnySequence(<span class="type">Demo</span>())]</span><br></pre></td></tr></table></figure>
+
+<p>这里的 _AnySequence 就将具体的 Sequence 类型隐藏了，调用者只知道数组中的元素是一个可以迭代输出字符串类型的序列。</p>
+<p>现在我们可以一步步来实现上面的 _AnyIterator 和 _AnySequence。_AnyIterator 的实现跟上面提到的 _AnySequence 的思路一致。我们不直接存储迭代器，而是让封装类存储迭代器的 next 函数。要做到这一点，我们必须首先将 iterator 参数复制到一个变量中，这样我们就可以调用它的 next 方法了。下面是具体实现：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnyIterator</span>&lt;<span class="title">Element</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> nextImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">_AnyIterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">init</span>&lt;<span class="type">I</span>&gt;(<span class="keyword">_</span> <span class="params">iterator</span>: <span class="type">I</span>)</span> <span class="keyword">where</span> <span class="type">Element</span> <span class="operator">==</span> <span class="type">I</span>.<span class="type">Element</span>, <span class="type">I</span>: <span class="type">IteratorProtocol</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> mutatedIterator <span class="operator">=</span> iterator</span><br><span class="line">        nextImpl <span class="operator">=</span> &#123; mutatedIterator.next() &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">return</span> nextImpl()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，在 _AnyIterator 中，迭代器的具体类型（比如上面用到的_Iterator）只有在创建实例的时候被指定。在那之后具体的类型就被隐藏了起来。我们可以使用任意类型的迭代器来创建 _AnyIterator 实例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> iterator <span class="operator">=</span> _AnyIterator(_Iterator(obj: <span class="type">Persion</span>.author))</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">let</span> item <span class="operator">=</span> iterator.next() &#123;</span><br><span class="line">    <span class="built_in">print</span>(item)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">// age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br></pre></td></tr></table></figure>
+
+<p>我们希望外面传入一个闭包也能创建一个 _AnyIterator，现在我们添加下面的代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">init</span>(<span class="keyword">_</span> <span class="params">impl</span>: <span class="keyword">@escaping</span> () -&gt; <span class="type">Element</span>?)</span> &#123;</span><br><span class="line">    nextImpl <span class="operator">=</span> impl</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加这个初始化方法其实为了方便后面实现  _AnySequence 用的。上面说过 _AnySequence 有个属性存储了迭代器的实现，所以我们的 _AnyIterator 能通过一个闭包来初始化。</p>
+<p>_AnyIterator 实现完后就可以来实现我们的 _AnySequence 了。我这里直接给出代码，同学们可以自己去实现：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnySequence</span>&lt;<span class="title">Element</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">Iterator</span> <span class="operator">=</span> _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> iteratorImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">_AnySequence</span>: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">init</span>&lt;<span class="type">S</span>&gt;(<span class="keyword">_</span> <span class="params">base</span>: <span class="type">S</span>)</span> <span class="keyword">where</span> <span class="type">Element</span> <span class="operator">==</span> <span class="type">S</span>.<span class="type">Iterator</span>.<span class="type">Element</span>, <span class="type">S</span>: <span class="type">Sequence</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> iterator <span class="operator">=</span> base.makeIterator()</span><br><span class="line">        iteratorImpl <span class="operator">=</span> &#123;</span><br><span class="line">            iterator.next()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> _AnyIterator(iteratorImpl)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> _AnySequence 的指定构造器也被定义为泛型，接受一个遵循 Sequence 协议的任何序列作为参数，并且规定了这个序列的迭代器的 next() 的返回类型要跟我们定义的这个泛型结构的 Element 类型要一致。这里的这个泛型约束其实就是我们实现类型擦除的魔法所在了。它将具体的序列的类型隐藏了起来，只要序列中的值都是相同的类型就可以当做同一种类型来使用。就像下面的例子中的 array 就可以描述为 “元素类型是 String 的任意序列的集合”。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> array <span class="operator">=</span> [_AnySequence(<span class="type">Persion</span>.author), _AnySequence(<span class="type">Demo</span>())]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> obj <span class="keyword">in</span> array &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;+-------------------------+&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> obj &#123;</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">//  age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br><span class="line"><span class="comment">// +-------------------------+</span></span><br><span class="line"><span class="comment">// name is Sequence</span></span><br><span class="line"><span class="comment">// author is Persion(name: &quot;jewelz&quot;, age: 23, email: &quot;hujewelz@gmail.com&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<p>得益于 Swift 的类型推断，这里的 array 可以不用显式地指明其类型，点击 option 键，你会发现它是 <code>[_AnySequence&lt;String&gt;]</code> 类型。也就是说只有其元素是 String 的任意序列都可以作为数组的元素。这就跟我们平时使用类似 “一个 Int 类型的数组” 的语义是一致的了。如果要向数组中插入一个新元素，可以这样创建一个序列：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> s <span class="operator">=</span> _AnySequence &#123; () -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">String</span><span class="operator">&gt;</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> _AnyIterator &#123; () -&gt; <span class="type">String</span>? <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">return</span> arc4random() <span class="operator">%</span> <span class="number">10</span> <span class="operator">==</span> <span class="number">5</span> <span class="operator">?</span> <span class="literal">nil</span> : <span class="type">String</span>(<span class="type">Int</span>(arc4random() <span class="operator">%</span> <span class="number">10</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">array.append(s)</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中通过一个闭包初始化了一个 _AnySequence，这里我就不给出自己的实现，同学们可以自己动手实现一下。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>在标准库中，其实已经提供了 <strong>AnyIterator</strong> 和 <strong>AnySequence</strong>。我还没去看标准库的实现，有兴趣的同学可以点击<a href="https://github.com/apple/swift/tree/master/stdlib/public/core">这里</a>查看。 我这里实现了自己的 _AnyIterator 和 _AnySequence 就是为了提供一种实现类型擦除的思路。如果你在项目中频繁地使用带有关联类型或 Self 的协议，那么你也一定会遇到跟我一样的问题。这时候实现一个类型擦除的封装，将具体的类型隐藏了起来，你就不用为 Xcode 的报错而抓狂了。</p>
+]]></content>
+      <categories>
+        <category>Swift</category>
+      </categories>
+      <tags>
+        <tag>Swift</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Swift与面向协议编程的那些事</title>
-    <url>/cko3zg8ms000h5ss69j2xg4xs/</url>
+    <url>/cko3zrglg000hh7s60uyj8srg/</url>
     <content><![CDATA[<p>一直想写一些 Swift 的东西，却不知道从何写起。因为想写的东西太多，然后所有的东西都混杂在一起，导致什么都写不出来。翻了翻以前在组内分享的一些东西，想想把这些内容整理下，写进博客吧。我对计划要写的东西做了个清单（最近做什么都喜欢在前一天睡觉前做个清单，这样多少改善了我的拖延症🤪）：</p>
 <span id="more"></span>
 
@@ -790,43 +790,8 @@
       </tags>
   </entry>
   <entry>
-    <title>Swift中的rethrows</title>
-    <url>/cko3zg8mt000i5ss6gsdyha4i/</url>
-    <content><![CDATA[<p>我最近在学习Swift函数式编程时，越来越觉得Swift是一门强大的语言。在 Swift 的世界中，函数不再是二等公民。<span id="more"></span> 是的，Swift 引入了大量函数式编程的特性，使得我们能够把函数当作一等公民来对待。在Swift中，适当引入函数式编程的思想和方法，常常会有奇效。</p>
-<p>然而，当我想去深入了解时，发现这里水好深，还有好多自己不知道的东西。<br>废话不多说，我们先从<code>map</code>函数说起吧。Swift中<code>map</code>是这么声明的：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">map</span>&lt;<span class="type">T</span>&gt;(<span class="meta">@noescape</span> <span class="params">transform</span>: (<span class="keyword">Self</span>.<span class="type">Generator</span>.<span class="type">Element</span>) <span class="keyword">throws</span> -&gt; <span class="type">T</span>)</span> <span class="keyword">rethrows</span> -&gt; [<span class="type">T</span>]</span><br></pre></td></tr></table></figure>
-<p>这里<code>@noescape</code>是什么东西？<code>rethrows </code>又是什么东西？查了资料才知道原来是这么回事儿：<br><code>@noescape</code>，这是一个从 Swift 1.2 引入的关键字，它是专门用于修饰函数闭包这种参数类型的，当出现这个参数时，它表示该闭包不会跳出这个函数调用的生命期：即函数调用完之后，这个闭包的生命期也结束了。以下是苹果的文档原文：</p>
-<blockquote>
-<p>A new @noescape attribute may be used on closure parameters to functions. This indicates that the parameter is only ever called (or passed as an @noescape parameter in a call), which means that it cannot outlive the lifetime of the call. This enables some minor performance optimizations, but more importantly disables the self. requirement in closure arguments.</p>
-</blockquote>
-<p>如果想了解更多关于<code>@noescape</code>，可以看看这篇文章：<a href="http://nshint.io/blog/2015/10/23/noescape-attribute/">http://nshint.io/blog/2015/10/23/noescape-attribute/</a></p>
-<p>那<code>rethrows </code>又是怎么一回事儿呢？下面我们就通过写一个我们自己的<code>map</code>来看一看<code>rethrows </code>是个什么鬼。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Array</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">mymap</span>&lt;<span class="type">T</span>&gt;(<span class="meta">@noescape</span> <span class="params">transform</span>: (<span class="type">Generator</span>.<span class="type">Element</span>) -&gt; <span class="type">T</span>)</span> -&gt; [<span class="type">T</span>] &#123;</span><br><span class="line">        <span class="keyword">var</span> ts <span class="operator">=</span> [<span class="type">T</span>]()</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> <span class="keyword">self</span> &#123;</span><br><span class="line">            ts.append(transform(e))</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ts</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">CalculationError</span>: <span class="title">ErrorType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">DivideByZero</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">squareOf</span>(<span class="params">x</span>: <span class="type">Int</span>)</span> -&gt; <span class="type">Int</span> &#123;<span class="keyword">return</span> x<span class="operator">*</span>x&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">divideTenBy</span>(<span class="params">x</span>: <span class="type">Int</span>)</span> <span class="keyword">throws</span> -&gt; <span class="type">Double</span> &#123;</span><br><span class="line">    <span class="keyword">guard</span> x <span class="operator">!=</span> <span class="number">0</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">CalculationError</span>.<span class="type">DivideByZero</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">10.0</span> <span class="operator">/</span> <span class="type">Double</span>(x)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>下面我们来调用一下<code>mymap </code>函数：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1351863-2bc93aaf0c7719b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-03-01 上午9.54.43.png"><br>可以看到当我们传人的闭包有异常抛出时，编译器就报错了。根据报错信息我们重写了个<code>map </code>函数:</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mymapThrow</span>&lt;<span class="type">T</span>&gt;(<span class="meta">@noescape</span> <span class="params">transform</span>: (<span class="type">Generator</span>.<span class="type">Element</span>) <span class="keyword">throws</span> -&gt; <span class="type">T</span>)</span> <span class="keyword">throws</span> -&gt; [<span class="type">T</span>] &#123;</span><br><span class="line">        <span class="keyword">var</span> ts <span class="operator">=</span> [<span class="type">T</span>]()</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> <span class="keyword">self</span> &#123;</span><br><span class="line">            ts.append(<span class="keyword">try</span> transform(e))</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ts</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-<p>来调用一下<code>mymapThrow </code>函数：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1351863-eb9c916287489d77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-03-01 上午10.09.11.png"><br>编译器又报错了，我们让新的<code>map</code>函数能抛出异常，然后在调用<code>mymapThrow </code>函数的地方处理异常。但是这会带来一个问题，例如<code>x2</code>这里我们传入的闭包并没有异常抛出啊，难道我们在每次调用的时候都非得写那么一大串异常处理的代码吗？例如这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> ns: [<span class="type">Double</span>]</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> ns <span class="operator">=</span> xs.mymapThrow(divideTenBy)</span><br><span class="line">    ns</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> ns2: [<span class="type">Double</span>]</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> ns2 <span class="operator">=</span> xs.mymapThrow(squareOf)</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>按 Swift 类型安全的写法，在有异常抛出的地方就一定需要使用 try 语法。我相信在平时我们传入的闭包函数没有异常的情况一定远远多于有异常的情况，难道我们非得为了代码的安全性就必须牺牲掉方便性吗？显然，Swift比我们想象的要更聪明。于是本文章的主角<code>rethrows</code>登场了。<br>我们重新写个<code>map</code>函数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">_map</span>&lt;<span class="type">T</span>&gt;(<span class="meta">@noescape</span> <span class="params">transform</span>: (<span class="type">Generator</span>.<span class="type">Element</span>) <span class="keyword">throws</span> -&gt; <span class="type">T</span>)</span> <span class="keyword">rethrows</span> -&gt; [<span class="type">T</span>] &#123;</span><br><span class="line">        <span class="keyword">var</span> ts <span class="operator">=</span> [<span class="type">T</span>]()</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> <span class="keyword">self</span> &#123;</span><br><span class="line">            ts.append(<span class="keyword">try</span> transform(e))</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ts</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>再来看一下结果：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1351863-c837b571719e6495.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-03-01 上午10.28.18.png"><br>这一下就没问题了。当传入的闭包函数没有异常时我们也不用去捕获异常，有异常时我们就去处理异常。所以<code>rethrows</code>关键字的意义就在于：</p>
-<blockquote>
-<p>这个函数如果抛出异常，仅可能是因为传递给它的闭包的调用导致了异常。如果闭包的调用没有导致异常，编译器就知道这个函数不会抛出异常。那么我们也就不用去处理异常了。</p>
-</blockquote>
-<p>哈哈，一个<code>map</code>函数就有这么多的学问，看来我还得花更多的精力去学习Swift了。</p>
-]]></content>
-      <categories>
-        <category>Swift</category>
-      </categories>
-      <tags>
-        <tag>Swift</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Swift构造器</title>
-    <url>/cko3zg8mu000m5ss6h1cs8300/</url>
+    <url>/cko3zrglh000ih7s6291sc8yt/</url>
     <content><![CDATA[<p>构造过程就是为一个实例上的每个存储属性设置初始值，并在新实例准备就绪之前执行所需的任何其他设置或初始化。</p>
 <span id="more"></span>
 
@@ -942,8 +907,43 @@
       </tags>
   </entry>
   <entry>
+    <title>Swift中的rethrows</title>
+    <url>/cko3zrgli000mh7s6g1zdbtbm/</url>
+    <content><![CDATA[<p>我最近在学习Swift函数式编程时，越来越觉得Swift是一门强大的语言。在 Swift 的世界中，函数不再是二等公民。<span id="more"></span> 是的，Swift 引入了大量函数式编程的特性，使得我们能够把函数当作一等公民来对待。在Swift中，适当引入函数式编程的思想和方法，常常会有奇效。</p>
+<p>然而，当我想去深入了解时，发现这里水好深，还有好多自己不知道的东西。<br>废话不多说，我们先从<code>map</code>函数说起吧。Swift中<code>map</code>是这么声明的：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">map</span>&lt;<span class="type">T</span>&gt;(<span class="meta">@noescape</span> <span class="params">transform</span>: (<span class="keyword">Self</span>.<span class="type">Generator</span>.<span class="type">Element</span>) <span class="keyword">throws</span> -&gt; <span class="type">T</span>)</span> <span class="keyword">rethrows</span> -&gt; [<span class="type">T</span>]</span><br></pre></td></tr></table></figure>
+<p>这里<code>@noescape</code>是什么东西？<code>rethrows </code>又是什么东西？查了资料才知道原来是这么回事儿：<br><code>@noescape</code>，这是一个从 Swift 1.2 引入的关键字，它是专门用于修饰函数闭包这种参数类型的，当出现这个参数时，它表示该闭包不会跳出这个函数调用的生命期：即函数调用完之后，这个闭包的生命期也结束了。以下是苹果的文档原文：</p>
+<blockquote>
+<p>A new @noescape attribute may be used on closure parameters to functions. This indicates that the parameter is only ever called (or passed as an @noescape parameter in a call), which means that it cannot outlive the lifetime of the call. This enables some minor performance optimizations, but more importantly disables the self. requirement in closure arguments.</p>
+</blockquote>
+<p>如果想了解更多关于<code>@noescape</code>，可以看看这篇文章：<a href="http://nshint.io/blog/2015/10/23/noescape-attribute/">http://nshint.io/blog/2015/10/23/noescape-attribute/</a></p>
+<p>那<code>rethrows </code>又是怎么一回事儿呢？下面我们就通过写一个我们自己的<code>map</code>来看一看<code>rethrows </code>是个什么鬼。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Array</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">mymap</span>&lt;<span class="type">T</span>&gt;(<span class="meta">@noescape</span> <span class="params">transform</span>: (<span class="type">Generator</span>.<span class="type">Element</span>) -&gt; <span class="type">T</span>)</span> -&gt; [<span class="type">T</span>] &#123;</span><br><span class="line">        <span class="keyword">var</span> ts <span class="operator">=</span> [<span class="type">T</span>]()</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> <span class="keyword">self</span> &#123;</span><br><span class="line">            ts.append(transform(e))</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ts</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">CalculationError</span>: <span class="title">ErrorType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">DivideByZero</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">squareOf</span>(<span class="params">x</span>: <span class="type">Int</span>)</span> -&gt; <span class="type">Int</span> &#123;<span class="keyword">return</span> x<span class="operator">*</span>x&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">divideTenBy</span>(<span class="params">x</span>: <span class="type">Int</span>)</span> <span class="keyword">throws</span> -&gt; <span class="type">Double</span> &#123;</span><br><span class="line">    <span class="keyword">guard</span> x <span class="operator">!=</span> <span class="number">0</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">CalculationError</span>.<span class="type">DivideByZero</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">10.0</span> <span class="operator">/</span> <span class="type">Double</span>(x)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>下面我们来调用一下<code>mymap </code>函数：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-2bc93aaf0c7719b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-03-01 上午9.54.43.png"><br>可以看到当我们传人的闭包有异常抛出时，编译器就报错了。根据报错信息我们重写了个<code>map </code>函数:</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mymapThrow</span>&lt;<span class="type">T</span>&gt;(<span class="meta">@noescape</span> <span class="params">transform</span>: (<span class="type">Generator</span>.<span class="type">Element</span>) <span class="keyword">throws</span> -&gt; <span class="type">T</span>)</span> <span class="keyword">throws</span> -&gt; [<span class="type">T</span>] &#123;</span><br><span class="line">        <span class="keyword">var</span> ts <span class="operator">=</span> [<span class="type">T</span>]()</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> <span class="keyword">self</span> &#123;</span><br><span class="line">            ts.append(<span class="keyword">try</span> transform(e))</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ts</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+<p>来调用一下<code>mymapThrow </code>函数：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-eb9c916287489d77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-03-01 上午10.09.11.png"><br>编译器又报错了，我们让新的<code>map</code>函数能抛出异常，然后在调用<code>mymapThrow </code>函数的地方处理异常。但是这会带来一个问题，例如<code>x2</code>这里我们传入的闭包并没有异常抛出啊，难道我们在每次调用的时候都非得写那么一大串异常处理的代码吗？例如这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> ns: [<span class="type">Double</span>]</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> ns <span class="operator">=</span> xs.mymapThrow(divideTenBy)</span><br><span class="line">    ns</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> ns2: [<span class="type">Double</span>]</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> ns2 <span class="operator">=</span> xs.mymapThrow(squareOf)</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>按 Swift 类型安全的写法，在有异常抛出的地方就一定需要使用 try 语法。我相信在平时我们传入的闭包函数没有异常的情况一定远远多于有异常的情况，难道我们非得为了代码的安全性就必须牺牲掉方便性吗？显然，Swift比我们想象的要更聪明。于是本文章的主角<code>rethrows</code>登场了。<br>我们重新写个<code>map</code>函数：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">_map</span>&lt;<span class="type">T</span>&gt;(<span class="meta">@noescape</span> <span class="params">transform</span>: (<span class="type">Generator</span>.<span class="type">Element</span>) <span class="keyword">throws</span> -&gt; <span class="type">T</span>)</span> <span class="keyword">rethrows</span> -&gt; [<span class="type">T</span>] &#123;</span><br><span class="line">        <span class="keyword">var</span> ts <span class="operator">=</span> [<span class="type">T</span>]()</span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> <span class="keyword">self</span> &#123;</span><br><span class="line">            ts.append(<span class="keyword">try</span> transform(e))</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ts</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>再来看一下结果：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1351863-c837b571719e6495.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2016-03-01 上午10.28.18.png"><br>这一下就没问题了。当传入的闭包函数没有异常时我们也不用去捕获异常，有异常时我们就去处理异常。所以<code>rethrows</code>关键字的意义就在于：</p>
+<blockquote>
+<p>这个函数如果抛出异常，仅可能是因为传递给它的闭包的调用导致了异常。如果闭包的调用没有导致异常，编译器就知道这个函数不会抛出异常。那么我们也就不用去处理异常了。</p>
+</blockquote>
+<p>哈哈，一个<code>map</code>函数就有这么多的学问，看来我还得花更多的精力去学习Swift了。</p>
+]]></content>
+      <categories>
+        <category>Swift</category>
+      </categories>
+      <tags>
+        <tag>Swift</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>iOS 应用启动流程分析-Dyld</title>
-    <url>/cko3zg8mw000n5ss64pg14tr7/</url>
+    <url>/cko3zrglk000nh7s60klzelm7/</url>
     <content><![CDATA[<p>iOS 应用程序启动过程可以以 <code>main</code> 函数为界，这里我们先不用管 <code>main() </code>函数调用后的过程，主要来分析一下 <code>mian()</code> 函数调用之前的dyld阶段。</p>
 <p>我们可以先写个简单的程序来看看系统在调用 <code>main()</code> 之前，调用了哪些函数。</p>
 <span id="more"></span>
@@ -1085,7 +1085,7 @@
   </entry>
   <entry>
     <title>iOS核心动画: Core Animation</title>
-    <url>/cko3zg8mx000r5ss6buxa6mdk/</url>
+    <url>/cko3zrgll000rh7s69q4rbcp7/</url>
     <content><![CDATA[<p>我们写的应用程序往往都不是静态的，因为它们需要适应用户的需求以及为执行各种任务而改变状态。一个好的动画清晰地向我们解释了，这些状态变化时界面正在发生什么。在了解了动画背后的基本原理后，你会发现原来实现一个动画并不那么困难。</p>
 <span id="more"></span>
 
@@ -1145,7 +1145,7 @@
   </entry>
   <entry>
     <title>iOS渲染原理</title>
-    <url>/cko3zg8mz000t5ss6cymd6l2f/</url>
+    <url>/cko3zrgln000th7s6hbq944c3/</url>
     <content><![CDATA[<p>在说清楚iOS中的界面是如何被绘制并显示在屏幕上之前，有必要了解一下iOS中的 <code>UIView</code> 和 <code>CALayer</code>。<br>在iOS当中，所有的视图都从一个叫做 <code>UIVIew</code> 的基类派生而来，<code>UIView</code> 可以处理触摸事件，可以支持基于Core Graphics绘图，可以做仿射变换（例如旋转或者缩放），或者简单的类似于滑动或者渐变的动画。</p>
 <span id="more"></span>
 
@@ -1214,7 +1214,7 @@
   </entry>
   <entry>
     <title>Xcodebuild的使用</title>
-    <url>/cko3zg8n0000y5ss6h1rm5mu6/</url>
+    <url>/cko3zrglp000yh7s67e6s1h1f/</url>
     <content><![CDATA[<p><strong>xcodebuild</strong> 用于构建 Xcode 项目中包含的一个或多个<strong>target</strong> ，或者构建一个包含在 Xcode 工作区或 Xcode 项目的 <strong>scheme</strong></p>
 <span id="more"></span>
 
@@ -1329,74 +1329,8 @@
       </tags>
   </entry>
   <entry>
-    <title>关闭主板 CFG 锁</title>
-    <url>/cko3zg8n100115ss6em3u6f8c/</url>
-    <content><![CDATA[<p>在很多新的主板中都会有 “CFG Locak” 的选项，它的作用是关闭或者开启 MSR 0xe2 寄存器。</p>
-<span id="more"></span>
-
-<p><strong>MSR 0xE2</strong> 是 Model Specific Register 的一个寄存器位数锁定，属于非标准寄存器，是用来控制 CPU 的工作环境和读取工作状态，例如电压、温度、功耗等非程序性指标。而 Mac OS 的电源管理中 CPU 的 P-State (频率) 和 C-State (睡眠) 就是放在 MSR 寄存器里的。现在世面上大多数有 UEFI 的主板厂商默认都锁定了 MSR 寄存器，也就是 BIOS 中的 CFG Lock 是 Disable 的（如果你的主板 BIOS 有这个选项的话）。</p>
-<p>如果 CFG Lock 是开启状态（即 MSR 0xE2 是被锁定的），MSR 0xE2 就是只读的，当 AppleIntelCPUPowernamegement 一旦去写入数据，马上就会内核崩溃。当我们使用黑苹果时就必须解锁 MSR 0xE2，否则就无法使用原生电源管理了。</p>
-<p>如果你的主板 BIOS 有 “CFG Lock” 选项的话，那么你只需要关闭即可，如果很不幸没有该选项就可以按照下面的方式来关闭 CFG Lock。</p>
-<h2 id="确认主板-CFG-Lock-是否上锁"><a href="#确认主板-CFG-Lock-是否上锁" class="headerlink" title="确认主板 CFG Lock 是否上锁"></a>确认主板 CFG Lock 是否上锁</h2><p>打开 Hackintool, 选则上面的 Tools（工具）选项，点击下边最左侧的 Intel 图标，输入密码，过几秒钟后就会显示大量内容，搜索 CFG 就能快速找到我们想要的内容，如果是 <code>CFG Lock............................. : 0 (MSR not locked)</code> 则表明已经解锁了 MSR，结果是 1 就表明没有解锁。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/img1.png"></p>
-<h2 id="关闭-CFG-Lock"><a href="#关闭-CFG-Lock" class="headerlink" title="关闭 CFG Lock"></a>关闭 CFG Lock</h2><p>在开始下面的工作之前，再强调一遍，如果你的主板 BIOS 有 “CFG Lock” 选项的话，那么你只需要关闭即可。</p>
-<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>在正式开始之前，你需要下载下面的这些内容：</p>
-<ul>
-<li><a href="https://github.com/acidanthera/OpenCorePkg/releases">VerifyMsrE2</a></li>
-<li><a href="https://github.com/datasone/grub-mod-setup_var/releases">Modifed GRUB Shell</a></li>
-<li><a href="https://github.com/LongSoft/UEFITool/releases">UEFITool</a> （看清楚名字千万不要下载错了）</li>
-<li><a href="https://github.com/LongSoft/Universal-IFR-Extractor/releases">Universal-IFR-Extractor</a></li>
-</ul>
-<p>然后在你的主板提供商的网站上下载对应版本的 BIOS。</p>
-<h3 id="检查你的主板是否支持关闭-CFG-Lock"><a href="#检查你的主板是否支持关闭-CFG-Lock" class="headerlink" title="检查你的主板是否支持关闭 CFG Lock"></a>检查你的主板是否支持关闭 CFG Lock</h3><p>我们从下载的 OpenCore 包中，在 <code>EFI/OC/Tools</code> 可以找到 VerifyMsrE2.efi，通过它我们可以知道主板是否支持关闭 CFG Lock。</p>
-<p>将下载好的 VerifyMsrE2.efi 拷贝到你的 <code>EFI/OC/Tools</code> 目录下。然后用 ProperTree 打开 <code>config.plis</code> , 在 <code>Misc -&gt; Tools</code> 中添加 <code>VerifyMsrE2.efi</code>。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/img3.png"></p>
-<p>重启电脑，在 OpenCore 的引导界面中选择刚刚添加的 <code>VerifyMsrE2</code>，然后你就知道你的主板是否支持关闭 CFG Lock 了。</p>
-<h3 id="手动开启"><a href="#手动开启" class="headerlink" title="手动开启"></a>手动开启</h3><h6 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h6><p>打开下载好的 UEFITool, 然后将下载好的 BIOS 文件拖到软件中，按下快捷鍵 <code>Command + F</code>，在窗口中点击 Text 选项，输入『CFG Lock』后点击 OK。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/search_cfg_lock.png" alt="Example"></p>
-<p>在最下面就会出现 <code>Unicode text &quot;CFG Lock&quot; found in PE32 image section at offset 85FD0h</code> 的信息。双击该信息，就会自动定位到包含有 CFG Lock 信息的模块, <code>PE32 image section</code>。选中 <code>PE32 image section</code>, 然后鼠标右键，选择 Extract body, 填好名称后保存到合适的位置，后缀名不要修改保持默认就好。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/cfg_lock_section_info.png"></p>
-<h6 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h6><p>在终端使用 <code>ifrextract</code> 将刚刚保存的文件转换为文本文件，命令如下:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">path/to/ifrextract path/to/youfile path/to/setup.txt</span><br></pre></td></tr></table></figure>
-
-<div class="note warning">
-            <p>上面命令中的路径请自行替换成自己实际的路径</p>
-          </div>
-
-<h6 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h6><p>打开刚刚转换成功的文本文件，然后搜索 <code>CFG Lock, VarStoreInfo (VarOffset/VarName):</code>，我搜索到的结果是 <strong>CFG Lock, VarStoreInfo (VarOffset/VarName): 0x5C1</strong>，这里的 <strong>0x5C1</strong> 就是我们要找的偏移量, 可以看到后面 <code>VarStore: 0x1</code>, 这就代表是锁住的。我们做了这么多就是为了将该地址 (0x5C1) 的数据修改为 <code>0x0</code>。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/cfg_lock_address.png"></p>
-<h6 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h6><p>将下载好的 <code>modGRUBShell.efi</code> 重命名为 <code>BOOTX64.efi</code>, 在一个空白的引导 U 盘内创建 <code>EFI</code> 文件夹，然后在 <code>EFI</code> 文件夹中创建 <code>BOOT</code> 文件夹，并将重命名的 <code>BOOTX64.efi</code> 放入其中。<br>如果没有引导 U 盘，可以把 U 盘插入电脑，然后格式化为 <code>fat32</code> 格式，命名为 <code>EFI</code> 就可以了。</p>
-<p>重启电脑，选择从 U 盘启动，这将会启动 grub 模式，然后使用如下命令来解锁 MSR 0xE2:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">setup_var 0x5C1 0x00</span><br></pre></td></tr></table></figure>
-
-<p>设置好后你可以通过 <code>setup_var 0x5C1</code>， 来查看设置的值有没有成功，如果出现 <code>offset 0x5C1 is: 0x00</code>，则表示设置成功。</p>
-<div class="note danger">
-            <p>这里的 0x5C1 是笔者的偏移量，请一定要使用自己的。</p><p>请注意，可变偏移量不仅对于每个主板都是唯一的，甚至对于其固件版本也是唯一的。未经检查，切勿尝试使用偏移量。</p>
-          </div>
-
-<h2 id="收尾"><a href="#收尾" class="headerlink" title="收尾"></a>收尾</h2><p>完成上面的工作后，你就成功的解锁了 MSR 0xE2。然后就可以将 config.plist 做如下设置：</p>
-<p><code>Kernel -&gt; Quirk</code> 选项中：</p>
-<ul>
-<li><code>AppleCpuPmCfgLock</code> 设置为 <code>False</code></li>
-<li><code>AppleXcpmCfgLock</code> 设置为 <code>False</code></li>
-</ul>
-<p><code>UEFI -&gt; Quirk</code> 选项中：</p>
-<ul>
-<li>IgnoreInvalidFlexRatio 设置为 <code>False</code></li>
-</ul>
-<p>至此关闭主板 CFG Lock 的整个工作就结束了，苹果原生电源管理也能正常工作了。</p>
-]]></content>
-      <categories>
-        <category>Hackintosh</category>
-      </categories>
-      <tags>
-        <tag>黑苹果</tag>
-        <tag>OpenCore</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>开发你的第一个 Mac 应用</title>
-    <url>/cko3zg8n300155ss650fl3kxm/</url>
+    <url>/cko3zrglq0011h7s6fz1i3vuf/</url>
     <content><![CDATA[<p>以前我们都是开发 iOS 应用，今天让我们来做点不一样的，来开始开发 Mac OS  应用。</p>
 <span id="more"></span>
 
@@ -1473,7 +1407,7 @@
   </entry>
   <entry>
     <title>使用Core Graphics绘制图形</title>
-    <url>/cko3zg8n600195ss6cjs9hzu1/</url>
+    <url>/cko3zrglr0015h7s694hghed0/</url>
     <content><![CDATA[<p>Core Graphic是iOS中一套基于C的框架，用于一切绘图操作，UIKit就是基于Core Graphic实现的，因此它可以实现比UIKit更底层的功能。</p>
 <span id="more"></span>
 
@@ -1521,8 +1455,74 @@
       </tags>
   </entry>
   <entry>
+    <title>关闭主板 CFG 锁</title>
+    <url>/cko3zrglu0019h7s6drqzgue3/</url>
+    <content><![CDATA[<p>在很多新的主板中都会有 “CFG Locak” 的选项，它的作用是关闭或者开启 MSR 0xe2 寄存器。</p>
+<span id="more"></span>
+
+<p><strong>MSR 0xE2</strong> 是 Model Specific Register 的一个寄存器位数锁定，属于非标准寄存器，是用来控制 CPU 的工作环境和读取工作状态，例如电压、温度、功耗等非程序性指标。而 Mac OS 的电源管理中 CPU 的 P-State (频率) 和 C-State (睡眠) 就是放在 MSR 寄存器里的。现在世面上大多数有 UEFI 的主板厂商默认都锁定了 MSR 寄存器，也就是 BIOS 中的 CFG Lock 是 Disable 的（如果你的主板 BIOS 有这个选项的话）。</p>
+<p>如果 CFG Lock 是开启状态（即 MSR 0xE2 是被锁定的），MSR 0xE2 就是只读的，当 AppleIntelCPUPowernamegement 一旦去写入数据，马上就会内核崩溃。当我们使用黑苹果时就必须解锁 MSR 0xE2，否则就无法使用原生电源管理了。</p>
+<p>如果你的主板 BIOS 有 “CFG Lock” 选项的话，那么你只需要关闭即可，如果很不幸没有该选项就可以按照下面的方式来关闭 CFG Lock。</p>
+<h2 id="确认主板-CFG-Lock-是否上锁"><a href="#确认主板-CFG-Lock-是否上锁" class="headerlink" title="确认主板 CFG Lock 是否上锁"></a>确认主板 CFG Lock 是否上锁</h2><p>打开 Hackintool, 选则上面的 Tools（工具）选项，点击下边最左侧的 Intel 图标，输入密码，过几秒钟后就会显示大量内容，搜索 CFG 就能快速找到我们想要的内容，如果是 <code>CFG Lock............................. : 0 (MSR not locked)</code> 则表明已经解锁了 MSR，结果是 1 就表明没有解锁。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/img1.png"></p>
+<h2 id="关闭-CFG-Lock"><a href="#关闭-CFG-Lock" class="headerlink" title="关闭 CFG Lock"></a>关闭 CFG Lock</h2><p>在开始下面的工作之前，再强调一遍，如果你的主板 BIOS 有 “CFG Lock” 选项的话，那么你只需要关闭即可。</p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>在正式开始之前，你需要下载下面的这些内容：</p>
+<ul>
+<li><a href="https://github.com/acidanthera/OpenCorePkg/releases">VerifyMsrE2</a></li>
+<li><a href="https://github.com/datasone/grub-mod-setup_var/releases">Modifed GRUB Shell</a></li>
+<li><a href="https://github.com/LongSoft/UEFITool/releases">UEFITool</a> （看清楚名字千万不要下载错了）</li>
+<li><a href="https://github.com/LongSoft/Universal-IFR-Extractor/releases">Universal-IFR-Extractor</a></li>
+</ul>
+<p>然后在你的主板提供商的网站上下载对应版本的 BIOS。</p>
+<h3 id="检查你的主板是否支持关闭-CFG-Lock"><a href="#检查你的主板是否支持关闭-CFG-Lock" class="headerlink" title="检查你的主板是否支持关闭 CFG Lock"></a>检查你的主板是否支持关闭 CFG Lock</h3><p>我们从下载的 OpenCore 包中，在 <code>EFI/OC/Tools</code> 可以找到 VerifyMsrE2.efi，通过它我们可以知道主板是否支持关闭 CFG Lock。</p>
+<p>将下载好的 VerifyMsrE2.efi 拷贝到你的 <code>EFI/OC/Tools</code> 目录下。然后用 ProperTree 打开 <code>config.plis</code> , 在 <code>Misc -&gt; Tools</code> 中添加 <code>VerifyMsrE2.efi</code>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/img3.png"></p>
+<p>重启电脑，在 OpenCore 的引导界面中选择刚刚添加的 <code>VerifyMsrE2</code>，然后你就知道你的主板是否支持关闭 CFG Lock 了。</p>
+<h3 id="手动开启"><a href="#手动开启" class="headerlink" title="手动开启"></a>手动开启</h3><h6 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h6><p>打开下载好的 UEFITool, 然后将下载好的 BIOS 文件拖到软件中，按下快捷鍵 <code>Command + F</code>，在窗口中点击 Text 选项，输入『CFG Lock』后点击 OK。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/search_cfg_lock.png" alt="Example"></p>
+<p>在最下面就会出现 <code>Unicode text &quot;CFG Lock&quot; found in PE32 image section at offset 85FD0h</code> 的信息。双击该信息，就会自动定位到包含有 CFG Lock 信息的模块, <code>PE32 image section</code>。选中 <code>PE32 image section</code>, 然后鼠标右键，选择 Extract body, 填好名称后保存到合适的位置，后缀名不要修改保持默认就好。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/cfg_lock_section_info.png"></p>
+<h6 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h6><p>在终端使用 <code>ifrextract</code> 将刚刚保存的文件转换为文本文件，命令如下:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">path/to/ifrextract path/to/youfile path/to/setup.txt</span><br></pre></td></tr></table></figure>
+
+<div class="note warning">
+            <p>上面命令中的路径请自行替换成自己实际的路径</p>
+          </div>
+
+<h6 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h6><p>打开刚刚转换成功的文本文件，然后搜索 <code>CFG Lock, VarStoreInfo (VarOffset/VarName):</code>，我搜索到的结果是 <strong>CFG Lock, VarStoreInfo (VarOffset/VarName): 0x5C1</strong>，这里的 <strong>0x5C1</strong> 就是我们要找的偏移量, 可以看到后面 <code>VarStore: 0x1</code>, 这就代表是锁住的。我们做了这么多就是为了将该地址 (0x5C1) 的数据修改为 <code>0x0</code>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/cfglock/cfg_lock_address.png"></p>
+<h6 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h6><p>将下载好的 <code>modGRUBShell.efi</code> 重命名为 <code>BOOTX64.efi</code>, 在一个空白的引导 U 盘内创建 <code>EFI</code> 文件夹，然后在 <code>EFI</code> 文件夹中创建 <code>BOOT</code> 文件夹，并将重命名的 <code>BOOTX64.efi</code> 放入其中。<br>如果没有引导 U 盘，可以把 U 盘插入电脑，然后格式化为 <code>fat32</code> 格式，命名为 <code>EFI</code> 就可以了。</p>
+<p>重启电脑，选择从 U 盘启动，这将会启动 grub 模式，然后使用如下命令来解锁 MSR 0xE2:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">setup_var 0x5C1 0x00</span><br></pre></td></tr></table></figure>
+
+<p>设置好后你可以通过 <code>setup_var 0x5C1</code>， 来查看设置的值有没有成功，如果出现 <code>offset 0x5C1 is: 0x00</code>，则表示设置成功。</p>
+<div class="note danger">
+            <p>这里的 0x5C1 是笔者的偏移量，请一定要使用自己的。</p><p>请注意，可变偏移量不仅对于每个主板都是唯一的，甚至对于其固件版本也是唯一的。未经检查，切勿尝试使用偏移量。</p>
+          </div>
+
+<h2 id="收尾"><a href="#收尾" class="headerlink" title="收尾"></a>收尾</h2><p>完成上面的工作后，你就成功的解锁了 MSR 0xE2。然后就可以将 config.plist 做如下设置：</p>
+<p><code>Kernel -&gt; Quirk</code> 选项中：</p>
+<ul>
+<li><code>AppleCpuPmCfgLock</code> 设置为 <code>False</code></li>
+<li><code>AppleXcpmCfgLock</code> 设置为 <code>False</code></li>
+</ul>
+<p><code>UEFI -&gt; Quirk</code> 选项中：</p>
+<ul>
+<li>IgnoreInvalidFlexRatio 设置为 <code>False</code></li>
+</ul>
+<p>至此关闭主板 CFG Lock 的整个工作就结束了，苹果原生电源管理也能正常工作了。</p>
+]]></content>
+      <categories>
+        <category>Hackintosh</category>
+      </categories>
+      <tags>
+        <tag>黑苹果</tag>
+        <tag>OpenCore</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用一个UIImageView实现轮播控件</title>
-    <url>/cko3zg8n7001c5ss67gz5gl3p/</url>
+    <url>/cko3zrglv001dh7s6040g0fyq/</url>
     <content><![CDATA[<p>在做iOS开发中，图片轮播是一个比较频繁的需求了。网上也有很多比较好的实现，有使用2个、3个<code>UIImageView</code>的，也有使用<code>UICollectionView</code>的。这里我要讲的是如何用一个<code>UIImageView</code>实现一个图片轮播控件，当然加载网络图片是必须的。闲话少说，直接进入正题：</p>
 <span id="more"></span>
 <p><img src="http://upload-images.jianshu.io/upload_images/1351863-f3b399cb6f10893e.gif?imageMogr2/auto-orient/strip"></p>
@@ -1548,8 +1548,78 @@
       </tags>
   </entry>
   <entry>
+    <title>初识Core Data</title>
+    <url>/cko3zrglw001hh7s65rw55p58/</url>
+    <content><![CDATA[<p>Core Data 是一个强大的对象图形化管理和对象持久化的框架，这一框架在 iOS 和 OS X 系统中已经存在很多年了。<span id="more"></span> 2005年的四月份，Apple 发布了 OS X 10.4，正是在这个版本中 Core Data 框架发布了。Core Data 可以很方便地将 <code>OC</code> 对象存储到数据库中，也可以将数据库中的数据转化为 <code>OC</code> 对象，在这个过程中不需要我们手动编写任何 <code>SQL</code> 语句，Core Data 会帮我们完成。对于不喜欢 <code>SQL</code> 语句的同学来说，使用 Core Data 倒是个不错的选择。即使你不愿使用 <code>Core Data</code> ，作为一个合格的 iOS 开发者， 你也应该熟悉 Core Data。</p>
+<h2 id="组成部分"><a href="#组成部分" class="headerlink" title="组成部分"></a>组成部分</h2><p>在 Core Data 中有几个比较重要的类：</p>
+<ul>
+<li><strong>NSManagedObjectContext</strong><br>  托管对象上下文，我们进行数据操作时，大多都是和它打交道。我们每一个托管对象都存在于一个 context 内。Core Data 支持多个 contexts，不过对于更高级的使用情况才用。</li>
+<li><strong>NSManagedObjectModel</strong><br>  托管对象模型，我们一般通过 <code>.xcdatamodeid</code>文件来加载一个托管对象模型，也可以通过代码创建。你可以把它理解为一个数据库。</li>
+<li><strong>NSPersistentStoreCoordinator</strong><br>  持久化存储协调器（persistent store coordinator），它将对象图管理部分和持久化部分捆绑在一起，当它们两者中的任何一部分需要和另一部分交流时，这便需要持久化存储协调器来调节了。</li>
+<li><strong>NSPersistentStore</strong><br>  持久化存储（persistent store），每个持久化存储协调器都有一个属于自己的持久化存储。它在文件系统中与 SQLite 数据库交互。为了支持更高级的设置，Core Data 可以将多个 stores 附属于同一个持久化存储协调器，并且除了存储 SQL 格式外，还有很多存储类型可供选择。</li>
+<li><strong>NSManagedObject</strong><br>  托管对象类（Entity），所有 Core Data 中的托管对象都必须继承该类，根据实体创建托管对象类文件。</li>
+</ul>
+<p>下图很清晰地表现了它们之间的关系：</p>
+<p><img src="https://objccn.io/images/issues/issue-4/stack-complex.png"></p>
+<p>当所有的组件都捆绑到一起的时候，我们把它称作 Core Data 堆栈，这个堆栈有两个主要部分。一部分是关于对象图管理，这正是我们需要很好掌握的那一部分，并且知道怎么使用。第二部分是关于持久化，也就是数据如何存储到磁盘中。持久化存储协调器（persistent store coordinator）刚好位于堆栈中间。这样很好的将两部分实现了分离，我们就不用关心存储的实现细节。</p>
+<h2 id="创建-Core-Data-堆栈"><a href="#创建-Core-Data-堆栈" class="headerlink" title="创建 Core Data 堆栈"></a>创建 Core Data 堆栈</h2><p>创建一个 Core Data 堆栈最方便快捷的方式是在我们创建项目时选择 <code>Use Core Data</code> 复选框，这样创建出来的工程系统会默认生成一些CoreData的代码以及一个.xcdatamodeld后缀的模型文件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/coredata/18436043320170227154154030_640.png"></p>
+<p>不过我建议不要这么做，因为 Xcode 会把自动生成的部分代码放在AppDelegate中，我们应该把这部分代码单独抽离出去，放在专门的类或模块来管理 Core Data 相关的逻辑。</p>
+<h3 id="构建模型文件"><a href="#构建模型文件" class="headerlink" title="构建模型文件"></a>构建模型文件</h3><p>使用 Core Data 的第一步是创建后缀为 <code>.xcdatamodeld</code>的模型文件，使用快捷键 Command + N，选择 Core Data -&gt; Data Model -&gt; Next，完成模型文件的创建。创建完成后，点击底部 <code>Add Entity</code> 按钮，来添加一个实体，命名为 <code>User</code>。</p>
+<p>添加 <code>User</code> 实体后，会发现一个实体对应着三部分内容：Attributes、Relationships、Fetched Properties，分别对应着属性、关联关系、获取操作。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/coredata/18436043320170227155859067_640.jpg"></p>
+<p>点击 Attributes 下面的加号按钮可以给实体添加属性。<br><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/coredata/18436043320170227160223054_640.jpg"></p>
+<h3 id="设置堆栈"><a href="#设置堆栈" class="headerlink" title="设置堆栈"></a>设置堆栈</h3><p>我们使用 <code>initWithConcurrencyType:</code> 为主队列创建一个 managed object context，在有些代码中，你可能见到 <code>[[NSManagedObjectContext alloc] init]</code>。不过最好使用 <code>initWithConcurrencyType: </code>初始化，以明确你是使用基于队列的并发模型。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="built_in">NSManagedObjectContext</span> *)managedObjectContext &#123;</span><br><span class="line">  <span class="keyword">if</span> (_managedObjectContext == <span class="literal">nil</span>) &#123;</span><br><span class="line">    _managedObjectContext = [[<span class="built_in">NSManagedObjectContext</span> alloc] initWithConcurrencyType:<span class="built_in">NSMainQueueConcurrencyType</span>];</span><br><span class="line">    _managedObjectContext.persistentStoreCoordinator = <span class="keyword">self</span>.persistentStoreCoordinator;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> _managedObjectContext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在创建 managed object context 时我们给它设置了一个持久化存储协调器</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="built_in">NSPersistentStoreCoordinator</span> *)persistentStoreCoordinator &#123;</span><br><span class="line">  <span class="keyword">if</span> (_persistentStoreCoordinator == <span class="literal">nil</span>) &#123;</span><br><span class="line">    <span class="built_in">NSURL</span> *path = [[<span class="keyword">self</span> applicationDocumentsDirectory] URLByAppendingPathComponent:<span class="string">@&quot;test.sqlite&quot;</span>];</span><br><span class="line">    _persistentStoreCoordinator = [[<span class="built_in">NSPersistentStoreCoordinator</span> alloc] initWithManagedObjectModel:<span class="keyword">self</span>.objectModel];</span><br><span class="line">    <span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">if</span> (![_persistentStoreCoordinator addPersistentStoreWithType:<span class="built_in">NSSQLiteStoreType</span> configuration:<span class="literal">nil</span> URL:path options:<span class="literal">nil</span> error:&amp;error]) &#123;</span><br><span class="line">      <span class="built_in">NSLog</span>(<span class="string">@&quot;error: %@&quot;</span>, error.localizedDescription);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> _persistentStoreCoordinator;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSManagedObjectModel</span> *)objectModel &#123;</span><br><span class="line">  <span class="keyword">if</span> (_objectModel == <span class="literal">nil</span>) &#123;</span><br><span class="line">    <span class="built_in">NSURL</span> *momdURL = [[<span class="built_in">NSBundle</span> mainBundle] URLForResource:<span class="string">@&quot;coredata&quot;</span> withExtension:<span class="string">@&quot;momd&quot;</span>];</span><br><span class="line">    _objectModel = [[<span class="built_in">NSManagedObjectModel</span> alloc] initWithContentsOfURL:momdURL];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> _objectModel;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过一个托管对象模型创建了一个持久化存储协调器，并使用 <code>addPersistentStoreWithType: configuration: URL: options: error:</code> 关联了数据库的部分，关联本地数据库后会返回一个 <code>NSPersistentStore</code> 对象，这个对象负责具体持久化存储的实现。可以多次调用该方法添加多个持久化存储对象。</p>
+<p>一个持久化存储协调器有四种可选的持久化存储方案，用得最多的是 SQLite 的方式。其中Binary和XML这两种方式，在进行数据操作时，需要将整个文件加载到内存中，这样对内存的消耗是很大的。</p>
+<ul>
+<li><strong>NSSQLiteStoreType：</strong>SQLite数据库</li>
+<li><strong>NSXMLStoreType：</strong>XML文件</li>
+<li><strong>NSBinaryStoreType：</strong>二进制文件</li>
+<li><strong>NSInMemoryStoreType：</strong>直接存储在内存中</li>
+</ul>
+<p>我在一个单独的类中，完成了以上所有操作，并添加了一个 <code>saveContext</code> 方法，方便在其他类中调用。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">DBHelper</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)sharedInstance;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>, <span class="keyword">readonly</span>) <span class="built_in">NSManagedObjectContext</span> *managedObjectContext;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>, <span class="keyword">readonly</span>) <span class="built_in">NSManagedObjectModel</span> *objectModel;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>, <span class="keyword">readonly</span>) <span class="built_in">NSPersistentStoreCoordinator</span> *persistentStoreCoordinator;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)saveContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建托管对象"><a href="#创建托管对象" class="headerlink" title="创建托管对象"></a>创建托管对象</h3><p>创建实体后，就可以根据对应的实体，生成开发中使用的基于 NSManagedObject 类的托管对象类文件。使用快捷键 Command + N，选择 Core Data -&gt; NSManagerObject subclass -&gt; Next，选择模型文件 -&gt; 选择实体，完成模型文件的创建。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/coredata/18436043320170227162725013_640.png"></p>
+<h2 id="操作数据"><a href="#操作数据" class="headerlink" title="操作数据"></a>操作数据</h2><h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><p>在模型类中可以加入一个类方法来将新的对象插入到 managed object 上下文中，并使用 <code>saveContext</code> 将数据保存到SQLite数据库中：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">User *user &#x3D; [NSEntityDescription insertNewObjectForEntityForName:@&quot;User&quot; inManagedObjectContext:[DBHelper sharedInstance].managedObjectContext];</span><br><span class="line">user.name &#x3D; @&quot;张三&quot;;</span><br><span class="line">user.age &#x3D; @22;</span><br><span class="line">[[DBHelper sharedInstance] saveContext];</span><br></pre></td></tr></table></figure>
+
+<p>Core Data 创建新对象的 API 并不是非常的直观，我们可以以一种更加优雅的方式来实现同样的功能：</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">+ (<span class="built_in">NSString</span> *)entityName&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">NSStringFromClass</span>(<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)insertNewObjectForEntity &#123;</span><br><span class="line">  <span class="keyword">return</span> [<span class="built_in">NSEntityDescription</span> insertNewObjectForEntityForName:[<span class="keyword">self</span> entityName]</span><br><span class="line">                                       inManagedObjectContext:[DBHelper sharedInstance].managedObjectContext];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)save &#123;</span><br><span class="line">  [[DBHelper sharedInstance] saveContext];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在保存一个对象就简单多了：</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">User *user = [User insertNewObjectForEntity];</span><br><span class="line">user.name = <span class="string">@&quot;李四&quot;</span>;</span><br><span class="line">user.age = @<span class="number">22</span>;</span><br><span class="line">[user save];</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h3><p>我们只需要创建一个 <code>NSFetchRequest</code>对象，然后调用 managed object context 的 <code>executeFetchRequest:</code> 方法返回查询结果集合。</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSFetchRequest</span> *request = [<span class="built_in">NSFetchRequest</span> fetchRequestWithEntityName:<span class="string">@&quot;User&quot;</span>];</span><br><span class="line">  </span><br><span class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">NSArray</span> *result = [[DBHelper sharedInstance].managedObjectContext executeFetchRequest:request error:&amp;error];</span><br><span class="line"><span class="keyword">if</span> (error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;error: %@&quot;</span>, error.localizedDescription);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line">[result enumerateObjectsUsingBlock:^(User   * _Nonnull obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;name: %@, age: %zd&quot;</span>, obj.name, obj.age.integerValue);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<p>我们通过给 <code>request</code> 设置一些条件，查询我们想要的数据：</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;name = %@&quot;</span>, <span class="string">@&quot;张三&quot;</span>];</span><br><span class="line">request.predicate = predicate;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h3><p>修改数据很简单，我们只要根据条件查询出数据后，修改对象的属性后，保存数据即可：</p>
+<figure class="highlight obj-c"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSFetchRequest</span> *request = [<span class="built_in">NSFetchRequest</span> fetchRequestWithEntityName:<span class="string">@&quot;User&quot;</span>];</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;name=%@&quot;</span>, <span class="string">@&quot;张三&quot;</span>];</span><br><span class="line">request.predicate = predicate;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">NSArray</span> *result = [[DBHelper sharedInstance].managedObjectContext executeFetchRequest:request error:&amp;error];</span><br><span class="line"><span class="keyword">if</span> (error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;error: %@&quot;</span>, error.localizedDescription);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line">[result enumerateObjectsUsingBlock:^(User   * _Nonnull obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">    obj.age = @<span class="number">33</span>;</span><br><span class="line">&#125;];</span><br><span class="line">  </span><br><span class="line">[[DBHelper sharedInstance] saveContext];</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h3><p>删除数据跟修改数据几乎一模一样，唯一的区别就是查询出数据后，调用 managed object context 的 <code>deleteObject:</code> 方法来删除数据：</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSFetchRequest</span> *request = [<span class="built_in">NSFetchRequest</span> fetchRequestWithEntityName:<span class="string">@&quot;User&quot;</span>];</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;name=%@&quot;</span>, <span class="string">@&quot;张三&quot;</span>];</span><br><span class="line">request.predicate = predicate;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">NSArray</span> *result = [[DBHelper sharedInstance].managedObjectContext executeFetchRequest:request error:&amp;error];</span><br><span class="line"> <span class="keyword">if</span> (error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;error: %@&quot;</span>, error.localizedDescription);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[result enumerateObjectsUsingBlock:^(User   * _Nonnull obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">    [[DBHelper sharedInstance].managedObjectContext deleteObject:obj];</span><br><span class="line"> &#125;];</span><br><span class="line">  </span><br><span class="line">[[DBHelper sharedInstance] saveContext];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>很多人，特别是初学者都认为 Core Data 很难，所以尽量去避免在项目中使用它。其实去了解后发现其实并不是很复杂。像上面的增删改查操作，看上去大体流程都差不多，都是一些最基础的简单操作。要想更深入地了解 Core Data 可以去网上看高级教程。</p>
+]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>Core Data</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>入坑Webpack</title>
-    <url>/cko3zg8n8001g5ss6bo9o4x6e/</url>
+    <url>/cko3zrgly001lh7s63ikj94o1/</url>
     <content><![CDATA[<p>在开始学习<code>Webpack</code>之前，请先确保安装了<a href="https://nodejs.org/en/download/">Node.js</a>,建议安装最新版的Node.js。然后就可以使用npm安装Webpack了。你可以将Webpack安装到全局，不过我们通常会把它安装到项目依赖中。</p>
 <span id="more"></span>
 
@@ -1661,78 +1731,8 @@
       </tags>
   </entry>
   <entry>
-    <title>初识Core Data</title>
-    <url>/cko3zg8na001k5ss650tb875p/</url>
-    <content><![CDATA[<p>Core Data 是一个强大的对象图形化管理和对象持久化的框架，这一框架在 iOS 和 OS X 系统中已经存在很多年了。<span id="more"></span> 2005年的四月份，Apple 发布了 OS X 10.4，正是在这个版本中 Core Data 框架发布了。Core Data 可以很方便地将 <code>OC</code> 对象存储到数据库中，也可以将数据库中的数据转化为 <code>OC</code> 对象，在这个过程中不需要我们手动编写任何 <code>SQL</code> 语句，Core Data 会帮我们完成。对于不喜欢 <code>SQL</code> 语句的同学来说，使用 Core Data 倒是个不错的选择。即使你不愿使用 <code>Core Data</code> ，作为一个合格的 iOS 开发者， 你也应该熟悉 Core Data。</p>
-<h2 id="组成部分"><a href="#组成部分" class="headerlink" title="组成部分"></a>组成部分</h2><p>在 Core Data 中有几个比较重要的类：</p>
-<ul>
-<li><strong>NSManagedObjectContext</strong><br>  托管对象上下文，我们进行数据操作时，大多都是和它打交道。我们每一个托管对象都存在于一个 context 内。Core Data 支持多个 contexts，不过对于更高级的使用情况才用。</li>
-<li><strong>NSManagedObjectModel</strong><br>  托管对象模型，我们一般通过 <code>.xcdatamodeid</code>文件来加载一个托管对象模型，也可以通过代码创建。你可以把它理解为一个数据库。</li>
-<li><strong>NSPersistentStoreCoordinator</strong><br>  持久化存储协调器（persistent store coordinator），它将对象图管理部分和持久化部分捆绑在一起，当它们两者中的任何一部分需要和另一部分交流时，这便需要持久化存储协调器来调节了。</li>
-<li><strong>NSPersistentStore</strong><br>  持久化存储（persistent store），每个持久化存储协调器都有一个属于自己的持久化存储。它在文件系统中与 SQLite 数据库交互。为了支持更高级的设置，Core Data 可以将多个 stores 附属于同一个持久化存储协调器，并且除了存储 SQL 格式外，还有很多存储类型可供选择。</li>
-<li><strong>NSManagedObject</strong><br>  托管对象类（Entity），所有 Core Data 中的托管对象都必须继承该类，根据实体创建托管对象类文件。</li>
-</ul>
-<p>下图很清晰地表现了它们之间的关系：</p>
-<p><img src="https://objccn.io/images/issues/issue-4/stack-complex.png"></p>
-<p>当所有的组件都捆绑到一起的时候，我们把它称作 Core Data 堆栈，这个堆栈有两个主要部分。一部分是关于对象图管理，这正是我们需要很好掌握的那一部分，并且知道怎么使用。第二部分是关于持久化，也就是数据如何存储到磁盘中。持久化存储协调器（persistent store coordinator）刚好位于堆栈中间。这样很好的将两部分实现了分离，我们就不用关心存储的实现细节。</p>
-<h2 id="创建-Core-Data-堆栈"><a href="#创建-Core-Data-堆栈" class="headerlink" title="创建 Core Data 堆栈"></a>创建 Core Data 堆栈</h2><p>创建一个 Core Data 堆栈最方便快捷的方式是在我们创建项目时选择 <code>Use Core Data</code> 复选框，这样创建出来的工程系统会默认生成一些CoreData的代码以及一个.xcdatamodeld后缀的模型文件。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/coredata/18436043320170227154154030_640.png"></p>
-<p>不过我建议不要这么做，因为 Xcode 会把自动生成的部分代码放在AppDelegate中，我们应该把这部分代码单独抽离出去，放在专门的类或模块来管理 Core Data 相关的逻辑。</p>
-<h3 id="构建模型文件"><a href="#构建模型文件" class="headerlink" title="构建模型文件"></a>构建模型文件</h3><p>使用 Core Data 的第一步是创建后缀为 <code>.xcdatamodeld</code>的模型文件，使用快捷键 Command + N，选择 Core Data -&gt; Data Model -&gt; Next，完成模型文件的创建。创建完成后，点击底部 <code>Add Entity</code> 按钮，来添加一个实体，命名为 <code>User</code>。</p>
-<p>添加 <code>User</code> 实体后，会发现一个实体对应着三部分内容：Attributes、Relationships、Fetched Properties，分别对应着属性、关联关系、获取操作。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/coredata/18436043320170227155859067_640.jpg"></p>
-<p>点击 Attributes 下面的加号按钮可以给实体添加属性。<br><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/coredata/18436043320170227160223054_640.jpg"></p>
-<h3 id="设置堆栈"><a href="#设置堆栈" class="headerlink" title="设置堆栈"></a>设置堆栈</h3><p>我们使用 <code>initWithConcurrencyType:</code> 为主队列创建一个 managed object context，在有些代码中，你可能见到 <code>[[NSManagedObjectContext alloc] init]</code>。不过最好使用 <code>initWithConcurrencyType: </code>初始化，以明确你是使用基于队列的并发模型。</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="built_in">NSManagedObjectContext</span> *)managedObjectContext &#123;</span><br><span class="line">  <span class="keyword">if</span> (_managedObjectContext == <span class="literal">nil</span>) &#123;</span><br><span class="line">    _managedObjectContext = [[<span class="built_in">NSManagedObjectContext</span> alloc] initWithConcurrencyType:<span class="built_in">NSMainQueueConcurrencyType</span>];</span><br><span class="line">    _managedObjectContext.persistentStoreCoordinator = <span class="keyword">self</span>.persistentStoreCoordinator;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> _managedObjectContext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在创建 managed object context 时我们给它设置了一个持久化存储协调器</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="built_in">NSPersistentStoreCoordinator</span> *)persistentStoreCoordinator &#123;</span><br><span class="line">  <span class="keyword">if</span> (_persistentStoreCoordinator == <span class="literal">nil</span>) &#123;</span><br><span class="line">    <span class="built_in">NSURL</span> *path = [[<span class="keyword">self</span> applicationDocumentsDirectory] URLByAppendingPathComponent:<span class="string">@&quot;test.sqlite&quot;</span>];</span><br><span class="line">    _persistentStoreCoordinator = [[<span class="built_in">NSPersistentStoreCoordinator</span> alloc] initWithManagedObjectModel:<span class="keyword">self</span>.objectModel];</span><br><span class="line">    <span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">if</span> (![_persistentStoreCoordinator addPersistentStoreWithType:<span class="built_in">NSSQLiteStoreType</span> configuration:<span class="literal">nil</span> URL:path options:<span class="literal">nil</span> error:&amp;error]) &#123;</span><br><span class="line">      <span class="built_in">NSLog</span>(<span class="string">@&quot;error: %@&quot;</span>, error.localizedDescription);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> _persistentStoreCoordinator;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSManagedObjectModel</span> *)objectModel &#123;</span><br><span class="line">  <span class="keyword">if</span> (_objectModel == <span class="literal">nil</span>) &#123;</span><br><span class="line">    <span class="built_in">NSURL</span> *momdURL = [[<span class="built_in">NSBundle</span> mainBundle] URLForResource:<span class="string">@&quot;coredata&quot;</span> withExtension:<span class="string">@&quot;momd&quot;</span>];</span><br><span class="line">    _objectModel = [[<span class="built_in">NSManagedObjectModel</span> alloc] initWithContentsOfURL:momdURL];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> _objectModel;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们通过一个托管对象模型创建了一个持久化存储协调器，并使用 <code>addPersistentStoreWithType: configuration: URL: options: error:</code> 关联了数据库的部分，关联本地数据库后会返回一个 <code>NSPersistentStore</code> 对象，这个对象负责具体持久化存储的实现。可以多次调用该方法添加多个持久化存储对象。</p>
-<p>一个持久化存储协调器有四种可选的持久化存储方案，用得最多的是 SQLite 的方式。其中Binary和XML这两种方式，在进行数据操作时，需要将整个文件加载到内存中，这样对内存的消耗是很大的。</p>
-<ul>
-<li><strong>NSSQLiteStoreType：</strong>SQLite数据库</li>
-<li><strong>NSXMLStoreType：</strong>XML文件</li>
-<li><strong>NSBinaryStoreType：</strong>二进制文件</li>
-<li><strong>NSInMemoryStoreType：</strong>直接存储在内存中</li>
-</ul>
-<p>我在一个单独的类中，完成了以上所有操作，并添加了一个 <code>saveContext</code> 方法，方便在其他类中调用。</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">DBHelper</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)sharedInstance;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>, <span class="keyword">readonly</span>) <span class="built_in">NSManagedObjectContext</span> *managedObjectContext;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>, <span class="keyword">readonly</span>) <span class="built_in">NSManagedObjectModel</span> *objectModel;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>, <span class="keyword">readonly</span>) <span class="built_in">NSPersistentStoreCoordinator</span> *persistentStoreCoordinator;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)saveContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="创建托管对象"><a href="#创建托管对象" class="headerlink" title="创建托管对象"></a>创建托管对象</h3><p>创建实体后，就可以根据对应的实体，生成开发中使用的基于 NSManagedObject 类的托管对象类文件。使用快捷键 Command + N，选择 Core Data -&gt; NSManagerObject subclass -&gt; Next，选择模型文件 -&gt; 选择实体，完成模型文件的创建。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/hujewelz/CDN-for-myblog/images/coredata/18436043320170227162725013_640.png"></p>
-<h2 id="操作数据"><a href="#操作数据" class="headerlink" title="操作数据"></a>操作数据</h2><h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><p>在模型类中可以加入一个类方法来将新的对象插入到 managed object 上下文中，并使用 <code>saveContext</code> 将数据保存到SQLite数据库中：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">User *user &#x3D; [NSEntityDescription insertNewObjectForEntityForName:@&quot;User&quot; inManagedObjectContext:[DBHelper sharedInstance].managedObjectContext];</span><br><span class="line">user.name &#x3D; @&quot;张三&quot;;</span><br><span class="line">user.age &#x3D; @22;</span><br><span class="line">[[DBHelper sharedInstance] saveContext];</span><br></pre></td></tr></table></figure>
-
-<p>Core Data 创建新对象的 API 并不是非常的直观，我们可以以一种更加优雅的方式来实现同样的功能：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">+ (<span class="built_in">NSString</span> *)entityName&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">NSStringFromClass</span>(<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">instancetype</span>)insertNewObjectForEntity &#123;</span><br><span class="line">  <span class="keyword">return</span> [<span class="built_in">NSEntityDescription</span> insertNewObjectForEntityForName:[<span class="keyword">self</span> entityName]</span><br><span class="line">                                       inManagedObjectContext:[DBHelper sharedInstance].managedObjectContext];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)save &#123;</span><br><span class="line">  [[DBHelper sharedInstance] saveContext];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>现在保存一个对象就简单多了：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">User *user = [User insertNewObjectForEntity];</span><br><span class="line">user.name = <span class="string">@&quot;李四&quot;</span>;</span><br><span class="line">user.age = @<span class="number">22</span>;</span><br><span class="line">[user save];</span><br></pre></td></tr></table></figure>
-
-<h3 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h3><p>我们只需要创建一个 <code>NSFetchRequest</code>对象，然后调用 managed object context 的 <code>executeFetchRequest:</code> 方法返回查询结果集合。</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSFetchRequest</span> *request = [<span class="built_in">NSFetchRequest</span> fetchRequestWithEntityName:<span class="string">@&quot;User&quot;</span>];</span><br><span class="line">  </span><br><span class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">NSArray</span> *result = [[DBHelper sharedInstance].managedObjectContext executeFetchRequest:request error:&amp;error];</span><br><span class="line"><span class="keyword">if</span> (error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;error: %@&quot;</span>, error.localizedDescription);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line">[result enumerateObjectsUsingBlock:^(User   * _Nonnull obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;name: %@, age: %zd&quot;</span>, obj.name, obj.age.integerValue);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-
-<p>我们通过给 <code>request</code> 设置一些条件，查询我们想要的数据：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;name = %@&quot;</span>, <span class="string">@&quot;张三&quot;</span>];</span><br><span class="line">request.predicate = predicate;</span><br></pre></td></tr></table></figure>
-
-<h3 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h3><p>修改数据很简单，我们只要根据条件查询出数据后，修改对象的属性后，保存数据即可：</p>
-<figure class="highlight obj-c"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSFetchRequest</span> *request = [<span class="built_in">NSFetchRequest</span> fetchRequestWithEntityName:<span class="string">@&quot;User&quot;</span>];</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;name=%@&quot;</span>, <span class="string">@&quot;张三&quot;</span>];</span><br><span class="line">request.predicate = predicate;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">NSArray</span> *result = [[DBHelper sharedInstance].managedObjectContext executeFetchRequest:request error:&amp;error];</span><br><span class="line"><span class="keyword">if</span> (error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;error: %@&quot;</span>, error.localizedDescription);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line">[result enumerateObjectsUsingBlock:^(User   * _Nonnull obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">    obj.age = @<span class="number">33</span>;</span><br><span class="line">&#125;];</span><br><span class="line">  </span><br><span class="line">[[DBHelper sharedInstance] saveContext];</span><br></pre></td></tr></table></figure>
-
-<h3 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h3><p>删除数据跟修改数据几乎一模一样，唯一的区别就是查询出数据后，调用 managed object context 的 <code>deleteObject:</code> 方法来删除数据：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSFetchRequest</span> *request = [<span class="built_in">NSFetchRequest</span> fetchRequestWithEntityName:<span class="string">@&quot;User&quot;</span>];</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;name=%@&quot;</span>, <span class="string">@&quot;张三&quot;</span>];</span><br><span class="line">request.predicate = predicate;</span><br><span class="line">  </span><br><span class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">NSArray</span> *result = [[DBHelper sharedInstance].managedObjectContext executeFetchRequest:request error:&amp;error];</span><br><span class="line"> <span class="keyword">if</span> (error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;error: %@&quot;</span>, error.localizedDescription);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[result enumerateObjectsUsingBlock:^(User   * _Nonnull obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">    [[DBHelper sharedInstance].managedObjectContext deleteObject:obj];</span><br><span class="line"> &#125;];</span><br><span class="line">  </span><br><span class="line">[[DBHelper sharedInstance] saveContext];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>很多人，特别是初学者都认为 Core Data 很难，所以尽量去避免在项目中使用它。其实去了解后发现其实并不是很复杂。像上面的增删改查操作，看上去大体流程都差不多，都是一些最基础的简单操作。要想更深入地了解 Core Data 可以去网上看高级教程。</p>
-]]></content>
-      <categories>
-        <category>iOS</category>
-      </categories>
-      <tags>
-        <tag>iOS</tag>
-        <tag>Core Data</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>如何发布自己的开源框架到CocoaPods</title>
-    <url>/cko3zg8nb001o5ss624mveq6l/</url>
+    <url>/cko3zrgm0001oh7s63sbm5r9b/</url>
     <content><![CDATA[<p>在开发过程中，经常会使用到第三框架，我们通过一个<code>pod install</code>命令，很方便的就将第三方框架加到我们自己的项目中。<br>如果我们也想将自己写的组件或库开源出去，让别人也可以通过<code>pod install</code>命令安装自己的框架该怎么做呢？</p>
 <span id="more"></span>
 <p>下面，我就教大家一步一步的将自己的pods发布到<code>CocoaPods</code> 中。如果你现在对<code>CocoaPods</code>还不太了解，推荐你看一看这篇文章：<a href="http://blog.devtang.com/2014/05/25/use-cocoapod-to-manage-ios-lib-dependency/">用CocoaPods做iOS程序的依赖管理</a></p>
@@ -1798,8 +1798,60 @@
       </tags>
   </entry>
   <entry>
+    <title>属性 -- 你真的弄明白了吗?</title>
+    <url>/cko3zrgm1001sh7s67o9vd5uz/</url>
+    <content><![CDATA[<p>“属性”（property）是 Objective-C 2.0 的一项特性，用于封装对象中的数据。Objective-C 对象通常会把其所需要的数据保存为实例变量，并通过 “存取方法”（<code>getter</code>和<code>setter</code>） 来访问。<code>getter</code>用于读取变量值，<code>setter</code>用于给属性设置值。”属性”这一特性的引入，使得这一切可以让编译器自动完成。此特性还引入了一种新的”点语法”，使开发者可以更容易地依照类对象来访问数据。</p>
+<span id="more"></span>
+
+<h2 id="自动合成"><a href="#自动合成" class="headerlink" title="自动合成"></a>自动合成</h2><p>在 Objective-C 中，你可以在类的接口定义中使用 <code>@property</code> 语法就能定义一个 “属性”。其意思是说：编译器会自动生成存取方法，并向类中添加相应的实例变量。例如下面的例子：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@interface HUPerson : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>这跟以前不使用 “属性” 写出来的代码是等效的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@interface HUPerson : NSObject &#123;</span><br><span class="line">  NSString *_name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (NSString *)name;</span><br><span class="line">- (void)setName:(NSString *)name;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>访问属性时，我们可以使用 “点语法”，编译器会把 “点语法”转换为相应的存取方法的调用，使用”点语法”的效果与直接调用存取方法相同。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">HUPerson *person &#x3D; [[HUPerson alloc] init];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 下面的调用是一样的</span><br><span class="line">person.name &#x3D; @&quot;jewelz&quot;;</span><br><span class="line">[person setName:@&quot;jewelz&quot;];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;NSString *name &#x3D; person.name;</span><br><span class="line">NSString *name &#x3D; [person name];</span><br></pre></td></tr></table></figure>
+<p>使用属性时，编译器自动生成存取方法和实例变量的过程叫做 “自动合成”（autosynthesis）。这个过程在由编译器在编译期执行，所以我们在编译器里看不到这些自动合成的代码。自动合成的示例变量名是在属性名前面加上下划线。不过我们可以使用<code>@synthesize</code>语法来指定示例变量名：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@implementation HUPerson</span><br><span class="line">@synthesize name &#x3D; _aName;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>上面的代码会将生成的实例变量命名为<code>_aName</code>，而不再使用默认的名称。不过在项目中使用这个方法修改实例变量的名称并不是个好主意。统一的代码风格对于一个大型项目来说是很有必要的，所以还是使用默认的命名吧，除非你坚持要这么做。</p>
+<p>若不想让编译器自动合成存取方法，则可以自己实现。如果你只实现了存取方法中的一个，那么另一个会由编译器帮你合成。前提是你定义的属性是可以读写的，而不是 <code>readonly</code>的。我们还有一种方式来阻止编译器自动合成存取方法，那就是使用 <code>@dynamic</code> 关键字，它会告诉编译器：不用自动给我合成存取方法也不用生成实例变量。在编译访问属性的代码时，即使编译器找不到定义的存取方法，也不会报错。例如下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@interface HUPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation HUPerson</span><br><span class="line">@dynamic name;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这时编译器不会为 <code>HUPerson</code> 自动合成存取方法或实例变量。你仍然可以正常的访问其中的属性，编译器也不会发出警告信息。如果你没有实现相应的存取方法，那么在运行时程序就会崩溃掉。</p>
+<h2 id="属性特性"><a href="#属性特性" class="headerlink" title="属性特性"></a>属性特性</h2><p>在定义属性时，我们常常会给属性指定一些特性，例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@property (nonatomic, readwrite, copy) NSString *name;</span><br></pre></td></tr></table></figure>
+<p>属性的特性有四中类型：</p>
+<h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>在默认情况下，由编译器合成的方法会通过锁机制确保其原子性。如果属性指定为 <code>nonatomic</code>，则不会使用同步锁。系统默认是 <code>atomic</code>的，不过这在一定程度上会影响系统性能，所以在iOS开发中一般指定为 <code>nonatomic</code>的。</p>
+<h4 id="读写权限"><a href="#读写权限" class="headerlink" title="读写权限"></a>读写权限</h4><ul>
+<li><p>具备 <strong>readwrite</strong>（读写） 特性的属性同时拥有 <code>getter</code> 和 <code>setter</code>方法，这是编译器自动帮我们生成的。</p>
+</li>
+<li><p>具备 <strong>readonly</strong>（只读） 特性的属性只有 <code>getter</code> 方法。这样的话我们就不能在类内部使用点语法来给变量赋值了，所以一般的做法是：在类的接口中对外公开为只读属性，然后在类的 Extension 中将其重新定义为读写属性。</p>
+<h4 id="内存管理语义"><a href="#内存管理语义" class="headerlink" title="内存管理语义"></a>内存管理语义</h4><p>编译器在合成存取方法时，要根据次特性来决定使用哪种内存管理策略，在合成设置方法时，编辑器会生成相应的代码。主要有以下几种：</p>
+</li>
+<li><p><strong>asign</strong> 设置方法只会执行针对纯类型（NSInter、CGFloat等）的简单赋值。</p>
+</li>
+<li><p><strong>strong</strong> 此特性表明该属性定义了一种 “拥有关系”。为这种属性设置值时，设置方法会先保留新值，并释放旧值，然后再将新值设置上去。</p>
+</li>
+<li><p><strong>weak</strong> 此特性表明该属性定义了一种 “非拥有关系”。为这种属性设置值时，设置方法既不保留新值，也不释放旧值，此特性与 asign 类似，不过在属性所指的对象遭到销毁时，属性值会被设置为 <code>nil</code>。</p>
+</li>
+<li><p><strong>unsafe_unretained</strong> 此特性的语言与 asign 相同，但是它使用于对象类型。它表明了一种 “非拥有关系”，不过与 weak 不同，在属性所指的对象遭到销毁时，属性值不会被设置为 <code>nil</code>。</p>
+</li>
+<li><p><strong>copy</strong> 此特性表达的所属关系与 strong 类似。为这种属性设置值时，并不保留新值，而是将其 “拷贝”。</p>
+<h4 id="方法名"><a href="#方法名" class="headerlink" title="方法名"></a>方法名</h4><p>可以通过如下特性来指定存取方法的方法名：</p>
+</li>
+<li><p><strong>getter=name</strong> 指定 <code>getter</code>的名称。一个好的实践是，当某个属性是 BOOL 类型时，我们将其获取方法加上 “is” 前缀。类似下面这样：</p>
+  <figure class="highlight plain"><figcaption><span>(nonatomic, assign, getter</span></figcaption><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><strong>setter=name</strong> 指定 <code>setter</code>的名称。这种用法不太常见。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>Objective-C</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>开启 RxSwift 之旅——开篇</title>
-    <url>/cko3zg8nc001s5ss624slhzd0/</url>
+    <url>/cko3zrgm3001wh7s69i1v55jc/</url>
     <content><![CDATA[<p>RxSwift 是 ReactiveX 在 Swift 下的实现。ReactiveX 是一个通过使用可观察序列来组合异步和基于事件的程序的库。</p>
 <span id="more"></span>
 
@@ -1871,60 +1923,8 @@
       </tags>
   </entry>
   <entry>
-    <title>属性 -- 你真的弄明白了吗?</title>
-    <url>/cko3zg8ne001w5ss62h89btlv/</url>
-    <content><![CDATA[<p>“属性”（property）是 Objective-C 2.0 的一项特性，用于封装对象中的数据。Objective-C 对象通常会把其所需要的数据保存为实例变量，并通过 “存取方法”（<code>getter</code>和<code>setter</code>） 来访问。<code>getter</code>用于读取变量值，<code>setter</code>用于给属性设置值。”属性”这一特性的引入，使得这一切可以让编译器自动完成。此特性还引入了一种新的”点语法”，使开发者可以更容易地依照类对象来访问数据。</p>
-<span id="more"></span>
-
-<h2 id="自动合成"><a href="#自动合成" class="headerlink" title="自动合成"></a>自动合成</h2><p>在 Objective-C 中，你可以在类的接口定义中使用 <code>@property</code> 语法就能定义一个 “属性”。其意思是说：编译器会自动生成存取方法，并向类中添加相应的实例变量。例如下面的例子：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@interface HUPerson : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<p>这跟以前不使用 “属性” 写出来的代码是等效的：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@interface HUPerson : NSObject &#123;</span><br><span class="line">  NSString *_name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (NSString *)name;</span><br><span class="line">- (void)setName:(NSString *)name;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<p>访问属性时，我们可以使用 “点语法”，编译器会把 “点语法”转换为相应的存取方法的调用，使用”点语法”的效果与直接调用存取方法相同。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">HUPerson *person &#x3D; [[HUPerson alloc] init];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 下面的调用是一样的</span><br><span class="line">person.name &#x3D; @&quot;jewelz&quot;;</span><br><span class="line">[person setName:@&quot;jewelz&quot;];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;NSString *name &#x3D; person.name;</span><br><span class="line">NSString *name &#x3D; [person name];</span><br></pre></td></tr></table></figure>
-<p>使用属性时，编译器自动生成存取方法和实例变量的过程叫做 “自动合成”（autosynthesis）。这个过程在由编译器在编译期执行，所以我们在编译器里看不到这些自动合成的代码。自动合成的示例变量名是在属性名前面加上下划线。不过我们可以使用<code>@synthesize</code>语法来指定示例变量名：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@implementation HUPerson</span><br><span class="line">@synthesize name &#x3D; _aName;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<p>上面的代码会将生成的实例变量命名为<code>_aName</code>，而不再使用默认的名称。不过在项目中使用这个方法修改实例变量的名称并不是个好主意。统一的代码风格对于一个大型项目来说是很有必要的，所以还是使用默认的命名吧，除非你坚持要这么做。</p>
-<p>若不想让编译器自动合成存取方法，则可以自己实现。如果你只实现了存取方法中的一个，那么另一个会由编译器帮你合成。前提是你定义的属性是可以读写的，而不是 <code>readonly</code>的。我们还有一种方式来阻止编译器自动合成存取方法，那就是使用 <code>@dynamic</code> 关键字，它会告诉编译器：不用自动给我合成存取方法也不用生成实例变量。在编译访问属性的代码时，即使编译器找不到定义的存取方法，也不会报错。例如下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@interface HUPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation HUPerson</span><br><span class="line">@dynamic name;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>这时编译器不会为 <code>HUPerson</code> 自动合成存取方法或实例变量。你仍然可以正常的访问其中的属性，编译器也不会发出警告信息。如果你没有实现相应的存取方法，那么在运行时程序就会崩溃掉。</p>
-<h2 id="属性特性"><a href="#属性特性" class="headerlink" title="属性特性"></a>属性特性</h2><p>在定义属性时，我们常常会给属性指定一些特性，例如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@property (nonatomic, readwrite, copy) NSString *name;</span><br></pre></td></tr></table></figure>
-<p>属性的特性有四中类型：</p>
-<h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>在默认情况下，由编译器合成的方法会通过锁机制确保其原子性。如果属性指定为 <code>nonatomic</code>，则不会使用同步锁。系统默认是 <code>atomic</code>的，不过这在一定程度上会影响系统性能，所以在iOS开发中一般指定为 <code>nonatomic</code>的。</p>
-<h4 id="读写权限"><a href="#读写权限" class="headerlink" title="读写权限"></a>读写权限</h4><ul>
-<li><p>具备 <strong>readwrite</strong>（读写） 特性的属性同时拥有 <code>getter</code> 和 <code>setter</code>方法，这是编译器自动帮我们生成的。</p>
-</li>
-<li><p>具备 <strong>readonly</strong>（只读） 特性的属性只有 <code>getter</code> 方法。这样的话我们就不能在类内部使用点语法来给变量赋值了，所以一般的做法是：在类的接口中对外公开为只读属性，然后在类的 Extension 中将其重新定义为读写属性。</p>
-<h4 id="内存管理语义"><a href="#内存管理语义" class="headerlink" title="内存管理语义"></a>内存管理语义</h4><p>编译器在合成存取方法时，要根据次特性来决定使用哪种内存管理策略，在合成设置方法时，编辑器会生成相应的代码。主要有以下几种：</p>
-</li>
-<li><p><strong>asign</strong> 设置方法只会执行针对纯类型（NSInter、CGFloat等）的简单赋值。</p>
-</li>
-<li><p><strong>strong</strong> 此特性表明该属性定义了一种 “拥有关系”。为这种属性设置值时，设置方法会先保留新值，并释放旧值，然后再将新值设置上去。</p>
-</li>
-<li><p><strong>weak</strong> 此特性表明该属性定义了一种 “非拥有关系”。为这种属性设置值时，设置方法既不保留新值，也不释放旧值，此特性与 asign 类似，不过在属性所指的对象遭到销毁时，属性值会被设置为 <code>nil</code>。</p>
-</li>
-<li><p><strong>unsafe_unretained</strong> 此特性的语言与 asign 相同，但是它使用于对象类型。它表明了一种 “非拥有关系”，不过与 weak 不同，在属性所指的对象遭到销毁时，属性值不会被设置为 <code>nil</code>。</p>
-</li>
-<li><p><strong>copy</strong> 此特性表达的所属关系与 strong 类似。为这种属性设置值时，并不保留新值，而是将其 “拷贝”。</p>
-<h4 id="方法名"><a href="#方法名" class="headerlink" title="方法名"></a>方法名</h4><p>可以通过如下特性来指定存取方法的方法名：</p>
-</li>
-<li><p><strong>getter=name</strong> 指定 <code>getter</code>的名称。一个好的实践是，当某个属性是 BOOL 类型时，我们将其获取方法加上 “is” 前缀。类似下面这样：</p>
-  <figure class="highlight plain"><figcaption><span>(nonatomic, assign, getter</span></figcaption><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><strong>setter=name</strong> 指定 <code>setter</code>的名称。这种用法不太常见。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>iOS</category>
-      </categories>
-      <tags>
-        <tag>Objective-C</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>快速搭建基于HLS和RTMP的视频推流</title>
-    <url>/cko3zg8nf001z5ss634tv1zdq/</url>
+    <url>/cko3zrgm4001zh7s68hn8axq8/</url>
     <content><![CDATA[<p>在视频直播越来越火热的今天，作为一个开发者有必要了解一个完整的直播流程是怎样的。在一个完整的手机机直播主要包含了以下几个环节：</p>
 <span id="more"></span>
 
@@ -2007,7 +2007,7 @@
   </entry>
   <entry>
     <title>打造一个流畅的UITableView</title>
-    <url>/cko3zg8ng00235ss674s0hlcj/</url>
+    <url>/cko3zrgm50023h7s6cgq6fk06/</url>
     <content><![CDATA[<p>Table view需要有很好的滚动性能，不然用户会在滚动过程中发现动画的瑕疵。<br>为了保证table view平滑滚动，确保你采取了以下的措施:</p>
 <span id="more"></span>
 
@@ -2069,7 +2069,7 @@
   </entry>
   <entry>
     <title>教你如何用Swift写个json转模型的开源库</title>
-    <url>/cko3zg8nh00265ss6b4luhb7u/</url>
+    <url>/cko3zrgm60026h7s6gu5gawku/</url>
     <content><![CDATA[<p>在iOS项目开发过程中，我们经常会用到将从服务器获取的 json 转 model 的操作，我们可以使用 Swift 提供的<code>setValuesForKeys</code> 或者 Objective-C 提供的<code>setValuesForKeysWithDictionary</code> 方法来完成这一操作。</p>
 <span id="more"></span>
 
@@ -2151,7 +2151,7 @@
   </entry>
   <entry>
     <title>用 Swift 写一个响应式编程库</title>
-    <url>/cko3zg8ni002b5ss69pklhb2h/</url>
+    <url>/cko3zrgm7002bh7s6ezy13gzw/</url>
     <content><![CDATA[<p>2017年又快过去了，忙了一年感觉没啥收获，感觉是不是应该写点啥，想了好久没想出要写什么。下半年因为工作的原因，狗狗也没养了，吉他上也积满了灰尘，</p>
 <span id="more"></span>
 
@@ -2258,7 +2258,7 @@
   </entry>
   <entry>
     <title>由一道Swift面试题引发的对方法调度的思考</title>
-    <url>/cko3zg8nj002e5ss6gbby4ygs/</url>
+    <url>/cko3zrgm8002eh7s6gynb9ap5/</url>
     <content><![CDATA[<p>最近在看swift面试题时，其中有一道题目让我很诧异。题目是这样的：</p>
 <p>以下代码会打印出什么？</p>
 <span id="more"></span>
@@ -2333,7 +2333,7 @@
   </entry>
   <entry>
     <title>组件生命周期管理和通信方案</title>
-    <url>/cko3zg8nk002i5ss6d63wda0g/</url>
+    <url>/cko3zrgm9002ih7s6egzuak33/</url>
     <content><![CDATA[<p>随着移动互联网的快速发展，项目的迭代速度越来越快，需求改变越来越频繁，传统开发方式的工程所面临的一些，如代码耦合严重、维护效率低、开发不够敏捷等问题就凸现了出来。于是越来越多的公司开始推行”组件化”，通过对原有业务或新业务进行组件(或模块)拆分来提高并行开发效率。</p>
 <span id="more"></span>
 
@@ -2412,7 +2412,7 @@
   </entry>
   <entry>
     <title>被误解的MVC</title>
-    <url>/cko3zg8nl002l5ss63nn9446j/</url>
+    <url>/cko3zrgma002lh7s6buygh0xh/</url>
     <content><![CDATA[<p><strong>MVC</strong>全名是Model View Controller，是模型(model)－视图(view)－控制器(controller)的缩写，一种软件设计典范，用一种业务逻辑、数据、界面显示分离的方法组织代码，将业务逻辑聚集到一个部件里面…</p>
 <span id="more"></span>
 
@@ -2435,7 +2435,7 @@
   </entry>
   <entry>
     <title>设计模式—开篇</title>
-    <url>/cko3zg8nn002q5ss6gi5rems0/</url>
+    <url>/cko3zrgmb002qh7s656x53ghm/</url>
     <content><![CDATA[<p>根据《设计模式》一书，设计模式是对定制来解决特定场景下一般设计问题的类和互相通讯对象的描述。</p>
 <span id="more"></span>
 
@@ -2500,7 +2500,7 @@
   </entry>
   <entry>
     <title>说说iOS多线程</title>
-    <url>/cko3zg8no002t5ss61a8f0dic/</url>
+    <url>/cko3zrgmc002th7s6br9d55h8/</url>
     <content><![CDATA[<p>线程和进程的区别在于,子进程和父进程有不同的代码和数据空间,而多个线程则共享数据空间,每个线程有自己的执行堆栈和程序计数器为其执行上下文.</p>
 <span id="more"></span>
 
