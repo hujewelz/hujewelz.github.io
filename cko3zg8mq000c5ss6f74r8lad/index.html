@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hujewelz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="如果有这样的一个需求，我希望能像数组一样，用 for 循环遍历一个类或结构体中的所有属性。要实现这样的需求，我们需要让自定义的类型遵守 Sequence 协议。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 Swift 中的序列到类型擦除">
+<meta property="og:url" content="https://hujewelz.github.io/cko3zg8mq000c5ss6f74r8lad/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="如果有这样的一个需求，我希望能像数组一样，用 for 循环遍历一个类或结构体中的所有属性。要实现这样的需求，我们需要让自定义的类型遵守 Sequence 协议。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-01-06T03:52:43.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="Swift">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://hujewelz.github.io/cko3zg8mq000c5ss6f74r8lad/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>从 Swift 中的序列到类型擦除 | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jewelz`s Home Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">iOS工程师一枚，热爱前端技术</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/cko3zg8mq000c5ss6f74r8lad/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="Stay hungry, Stay foolish.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从 Swift 中的序列到类型擦除
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-01-06 11:52:43" itemprop="dateCreated datePublished" datetime="2018-01-06T11:52:43+08:00">2018-01-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-25 16:08:23" itemprop="dateModified" datetime="2020-04-25T16:08:23+08:00">2020-04-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index"><span itemprop="name">Swift</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>如果有这样的一个需求，我希望能像数组一样，用 for 循环遍历一个类或结构体中的所有属性。要实现这样的需求，我们需要让自定义的类型遵守 Sequence 协议。</p>
+<span id="more"></span>
+
+<p>如果有这样的一个需求，我希望能像数组一样，用 for 循环遍历一个类或结构体中的所有属性。就像下面这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> persion <span class="operator">=</span> <span class="type">Persion</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> persion &#123;</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要实现这样的需求，我们需要让自定义的类型遵守 Sequence 协议。</p>
+<h2 id="序列"><a href="#序列" class="headerlink" title="序列"></a>序列</h2><p>Sequence 协议是集合类型结构中的基础。一个序列 (sequence) 代表的是一系列具有相同类型的值，你可以对这些值进行迭代。Sequence 协议提供了许多强大的功能，满足该协议的类型都可以直接使用这些功能。上面这样步进式的迭代元素的能力看起来十分简单，但它却是 Sequence 可以提供这些强大功能的基础。</p>
+<p>满足 Sequence 协议的要求十分简单，你需要做的所有事情就是提供一个返回迭代器 (iterator) 的 <code>makeIterator() </code> 方法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Iterator</span> : <span class="type">IteratorProtocol</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; <span class="keyword">Self</span>.<span class="type">Iterator</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Sequence 协议有个关联类型 Iterator，而且它必须遵守 IteratorProtocol 协议。从这里我们可以看出 Sequence 是一个可以创建迭代器协议的类型。所以在搞清楚它的步进式的迭代元素能力之前，有必要了解一下迭代器是什么。</p>
+<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><p>序列通过创建一个迭代器来提供对元素的访问。迭代器每次产生一个序列的值，并且当遍历序列时对遍历状态进行管理。在 IteratorProtocol 协议中唯一的一个方法是 next()，这个方法需要在每次被调用时返回序列中的下一个值。当序列被耗尽时，next() 应该返回 nil，不然迭代器就会一直工作下去，直到资源被耗尽为止。</p>
+<p>IteratorProtocol 的定义非常简单：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Element</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="keyword">Self</span>.<span class="type">Element</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关联类型 Element 指定了迭代器产生的值的类型。这里<code>next()</code> 被标记了 mutating，表明了迭代器是可以存在可变的状态的。这里的 mutating 也不是必须的，如果你的迭代器返回的值并没有改变迭代器本身，那么没有 mutating 也是没有任何问题的。 不过几乎所有有意义的迭代器都会要求可变状态，这样它们才能够管理在序列中的当前位置。</p>
+<p>对 Sequence 和 IteratorProtocol 有了基础了解后，要实现开头提到的需求就很简单了。比如我想迭代输出一个 Person 实例的所有属性，我们可以这样做：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Persion</span>: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">var</span> email: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; <span class="type">MyIterator</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">MyIterator</span>(obj: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Persion 遵守了 Sequence 协议，并返回了一个自定义的迭代器。迭代器的实现也很简单：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyIterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> children: <span class="type">Mirror</span>.<span class="type">Children</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>(<span class="params">obj</span>: <span class="type">Persion</span>)</span> &#123;</span><br><span class="line">        children <span class="operator">=</span> <span class="type">Mirror</span>(reflecting: obj).children</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">String</span>? &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> child <span class="operator">=</span> children.popFirst() <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;<span class="subst">\(child.label.wrapped)</span> is <span class="subst">\(child.value)</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>迭代器中的 <code>children</code> 是 <code>AnyCollection&lt;Mirror.Child&gt;</code>  的集合类型，每次迭代返回一个值后，更新 <code>children</code> 这个状态，这样我们的迭代器就可以持续的输出正确的值了，直到输出完 <code>children</code> 中的所有值。</p>
+<p>现在可以使用 for 循环输出 Persion 中所有的属性值了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> <span class="type">Persion</span>.author &#123;</span><br><span class="line">    <span class="built_in">print</span>(item)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">// age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br></pre></td></tr></table></figure>
+
+<p>如果现在有另外一个结构体或类也需要迭代输出所以属性呢？，这很好办，让我们的结构体遵守 Sequence 协议，并返回一个我们自定义的迭代器就可以了。这种拷贝代码的方式确实能满足需求，但是如果我们利用协议拓展就能写出更易于维护的代码，类似下面这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_Iterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> children: <span class="type">Mirror</span>.<span class="type">Children</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">init</span>(<span class="params">obj</span>: <span class="keyword">Any</span>)</span> &#123;</span><br><span class="line">        children <span class="operator">=</span> <span class="type">Mirror</span>(reflecting: obj).children</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">String</span>? &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> child <span class="operator">=</span> children.popFirst() <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;<span class="subst">\(child.label.wrapped)</span> is <span class="subst">\(child.value)</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Sequencible</span>: <span class="title">Sequence</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Sequencible</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _Iterator &#123;</span><br><span class="line">        <span class="keyword">return</span> _Iterator(obj: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我定义了一个继承 Sequence 的空协议，是为了不影响 Sequence 的默认行为。现在只要我们自定义的类或结构体遵守 Sequencible 就能使用 for 循环输出其所有属性值了。就像下面这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Demo</span>: <span class="title">Sequencible</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name <span class="operator">=</span> <span class="string">&quot;Sequence&quot;</span></span><br><span class="line">    <span class="keyword">var</span> author <span class="operator">=</span> <span class="type">Persion</span>.author</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="表示相同序列的类型"><a href="#表示相同序列的类型" class="headerlink" title="表示相同序列的类型"></a>表示相同序列的类型</h2><p>现在需求又变了，我想将所有遵守了 Sequencible 协议的任何序列存到一个数组中，然后 for 循环遍历数组中的元素，因为数组中的元素都遵守了 Sequencible 协议，所以又可以使用 for 循环输出其所有属性，就像下面这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> obj <span class="keyword">in</span> array &#123;</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> obj &#123;</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么这里的 array 应该定义成什么类型呢？定义成 [Any] 类型肯定是不行的，这样的话在循环中得将 item 强转为 Sequencible，那么是否可以定义成  [Sequencible] 类型呢？答案是否定的。当这样定义时编辑器会报出这样的错误：</p>
+<blockquote>
+<p>Protocol ‘Sequencible’ can only be used as a generic constraint because it has Self or associated type requirements</p>
+</blockquote>
+<p>熟悉 Swift 协议的同学应该对这个报错比较熟了。就是说含有 Self 或者关联类型的协议，只能被当作泛型约束使用。所以像下面这样定义我们的 array 是行不通的。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sequencibleStore: [<span class="type">Sequencible</span>] <span class="operator">=</span> [<span class="type">Persion</span>.author, <span class="type">Demo</span>()]</span><br></pre></td></tr></table></figure>
+
+<p>如果有这样一个类型，可以隐藏 Sequencible 这个具体的类型不就解决这个问题了吗？这种将指定类型移除的过程，就被称为类型擦除。</p>
+<h2 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h2><p>回想一下  Sequence 协议的内容，我们只要通过 <code>makeIterator()</code> 返回一个迭代器就可以了。那么我们可以实现一个封装类(结构体也是一样的)，里面用一个属性存储了迭代器的实现，然后在 <code>makeIterator()</code> 方法中通过存储的这个属性构造一个迭代器。类似这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> _AnyIterator(iteratorImpl)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们的这个封装可以这样定义：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnySequence</span>&lt;<span class="title">Element</span>&gt;: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> iteratorImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于刚刚上面的那个数组就可以这样初始化了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sequencibleStore: [_AnySequence<span class="operator">&lt;</span><span class="type">String</span><span class="operator">&gt;</span>] <span class="operator">=</span> [_AnySequence(<span class="type">Persion</span>.author), _AnySequence(<span class="type">Demo</span>())]</span><br></pre></td></tr></table></figure>
+
+<p>这里的 _AnySequence 就将具体的 Sequence 类型隐藏了，调用者只知道数组中的元素是一个可以迭代输出字符串类型的序列。</p>
+<p>现在我们可以一步步来实现上面的 _AnyIterator 和 _AnySequence。_AnyIterator 的实现跟上面提到的 _AnySequence 的思路一致。我们不直接存储迭代器，而是让封装类存储迭代器的 next 函数。要做到这一点，我们必须首先将 iterator 参数复制到一个变量中，这样我们就可以调用它的 next 方法了。下面是具体实现：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnyIterator</span>&lt;<span class="title">Element</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> nextImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">_AnyIterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">init</span>&lt;<span class="type">I</span>&gt;(<span class="keyword">_</span> <span class="params">iterator</span>: <span class="type">I</span>)</span> <span class="keyword">where</span> <span class="type">Element</span> <span class="operator">==</span> <span class="type">I</span>.<span class="type">Element</span>, <span class="type">I</span>: <span class="type">IteratorProtocol</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> mutatedIterator <span class="operator">=</span> iterator</span><br><span class="line">        nextImpl <span class="operator">=</span> &#123; mutatedIterator.next() &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span>()</span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">return</span> nextImpl()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，在 _AnyIterator 中，迭代器的具体类型（比如上面用到的_Iterator）只有在创建实例的时候被指定。在那之后具体的类型就被隐藏了起来。我们可以使用任意类型的迭代器来创建 _AnyIterator 实例：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> iterator <span class="operator">=</span> _AnyIterator(_Iterator(obj: <span class="type">Persion</span>.author))</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">let</span> item <span class="operator">=</span> iterator.next() &#123;</span><br><span class="line">    <span class="built_in">print</span>(item)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">// age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br></pre></td></tr></table></figure>
+
+<p>我们希望外面传入一个闭包也能创建一个 _AnyIterator，现在我们添加下面的代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">init</span>(<span class="keyword">_</span> <span class="params">impl</span>: <span class="keyword">@escaping</span> () -&gt; <span class="type">Element</span>?)</span> &#123;</span><br><span class="line">    nextImpl <span class="operator">=</span> impl</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加这个初始化方法其实为了方便后面实现  _AnySequence 用的。上面说过 _AnySequence 有个属性存储了迭代器的实现，所以我们的 _AnyIterator 能通过一个闭包来初始化。</p>
+<p>_AnyIterator 实现完后就可以来实现我们的 _AnySequence 了。我这里直接给出代码，同学们可以自己去实现：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_AnySequence</span>&lt;<span class="title">Element</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">Iterator</span> <span class="operator">=</span> _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> iteratorImpl: () -&gt; <span class="type">Element</span>?</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">_AnySequence</span>: <span class="title">Sequence</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">init</span>&lt;<span class="type">S</span>&gt;(<span class="keyword">_</span> <span class="params">base</span>: <span class="type">S</span>)</span> <span class="keyword">where</span> <span class="type">Element</span> <span class="operator">==</span> <span class="type">S</span>.<span class="type">Iterator</span>.<span class="type">Element</span>, <span class="type">S</span>: <span class="type">Sequence</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> iterator <span class="operator">=</span> base.makeIterator()</span><br><span class="line">        iteratorImpl <span class="operator">=</span> &#123;</span><br><span class="line">            iterator.next()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span>()</span> -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">Element</span><span class="operator">&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> _AnyIterator(iteratorImpl)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> _AnySequence 的指定构造器也被定义为泛型，接受一个遵循 Sequence 协议的任何序列作为参数，并且规定了这个序列的迭代器的 next() 的返回类型要跟我们定义的这个泛型结构的 Element 类型要一致。这里的这个泛型约束其实就是我们实现类型擦除的魔法所在了。它将具体的序列的类型隐藏了起来，只要序列中的值都是相同的类型就可以当做同一种类型来使用。就像下面的例子中的 array 就可以描述为 “元素类型是 String 的任意序列的集合”。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> array <span class="operator">=</span> [_AnySequence(<span class="type">Persion</span>.author), _AnySequence(<span class="type">Demo</span>())]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> obj <span class="keyword">in</span> array &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;+-------------------------+&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> obj &#123;</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// out put:</span></span><br><span class="line"><span class="comment">// name is jewelz</span></span><br><span class="line"><span class="comment">//  age is 23</span></span><br><span class="line"><span class="comment">// email is hujewelz@gmail.com</span></span><br><span class="line"><span class="comment">// +-------------------------+</span></span><br><span class="line"><span class="comment">// name is Sequence</span></span><br><span class="line"><span class="comment">// author is Persion(name: &quot;jewelz&quot;, age: 23, email: &quot;hujewelz@gmail.com&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<p>得益于 Swift 的类型推断，这里的 array 可以不用显式地指明其类型，点击 option 键，你会发现它是 <code>[_AnySequence&lt;String&gt;]</code> 类型。也就是说只有其元素是 String 的任意序列都可以作为数组的元素。这就跟我们平时使用类似 “一个 Int 类型的数组” 的语义是一致的了。如果要向数组中插入一个新元素，可以这样创建一个序列：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s <span class="operator">=</span> _AnySequence &#123; () -&gt; _AnyIterator<span class="operator">&lt;</span><span class="type">String</span><span class="operator">&gt;</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> _AnyIterator &#123; () -&gt; <span class="type">String</span>? <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">return</span> arc4random() <span class="operator">%</span> <span class="number">10</span> <span class="operator">==</span> <span class="number">5</span> <span class="operator">?</span> <span class="literal">nil</span> : <span class="type">String</span>(<span class="type">Int</span>(arc4random() <span class="operator">%</span> <span class="number">10</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">array.append(s)</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中通过一个闭包初始化了一个 _AnySequence，这里我就不给出自己的实现，同学们可以自己动手实现一下。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>在标准库中，其实已经提供了 <strong>AnyIterator</strong> 和 <strong>AnySequence</strong>。我还没去看标准库的实现，有兴趣的同学可以点击<a target="_blank" rel="noopener" href="https://github.com/apple/swift/tree/master/stdlib/public/core">这里</a>查看。 我这里实现了自己的 _AnyIterator 和 _AnySequence 就是为了提供一种实现类型擦除的思路。如果你在项目中频繁地使用带有关联类型或 Self 的协议，那么你也一定会遇到跟我一样的问题。这时候实现一个类型擦除的封装，将具体的类型隐藏了起来，你就不用为 Xcode 的报错而抓狂了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Swift/" rel="tag"># Swift</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/cko3zg8ni002b5ss69pklhb2h/" rel="prev" title="用 Swift 写一个响应式编程库">
+      <i class="fa fa-chevron-left"></i> 用 Swift 写一个响应式编程库
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/cko3zg8ms000h5ss69j2xg4xs/" rel="next" title="Swift与面向协议编程的那些事">
+      Swift与面向协议编程的那些事 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%8F%E5%88%97"><span class="nav-number">1.</span> <span class="nav-text">序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">迭代器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E7%A4%BA%E7%9B%B8%E5%90%8C%E5%BA%8F%E5%88%97%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">表示相同序列的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4"><span class="nav-number">4.</span> <span class="nav-text">类型擦除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jewelz Hu"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+  <div class="site-description" itemprop="description">Stay hungry, Stay foolish.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hujewelz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hujewelz" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hujewelz@gmail.com" title="E-Mail → mailto:hujewelz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/huluoboboo" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;huluoboboo" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

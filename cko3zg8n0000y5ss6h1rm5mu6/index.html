@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hujewelz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="xcodebuild 用于构建 Xcode 项目中包含的一个或多个target ，或者构建一个包含在 Xcode 工作区或 Xcode 项目的 scheme">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Xcodebuild的使用">
+<meta property="og:url" content="https://hujewelz.github.io/cko3zg8n0000y5ss6h1rm5mu6/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="xcodebuild 用于构建 Xcode 项目中包含的一个或多个target ，或者构建一个包含在 Xcode 工作区或 Xcode 项目的 scheme">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-01-25T10:00:00.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="Xcode">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://hujewelz.github.io/cko3zg8n0000y5ss6h1rm5mu6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Xcodebuild的使用 | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jewelz`s Home Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">iOS工程师一枚，热爱前端技术</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/cko3zg8n0000y5ss6h1rm5mu6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="Stay hungry, Stay foolish.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Xcodebuild的使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2017-01-25 18:00:00" itemprop="dateCreated datePublished" datetime="2017-01-25T18:00:00+08:00">2017-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-25 16:08:23" itemprop="dateModified" datetime="2020-04-25T16:08:23+08:00">2020-04-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>xcodebuild</strong> 用于构建 Xcode 项目中包含的一个或多个<strong>target</strong> ，或者构建一个包含在 Xcode 工作区或 Xcode 项目的 <strong>scheme</strong></p>
+<span id="more"></span>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">xcodebuild [-project projectname] [-target targetname ...] </span><br><span class="line">           [-configuration 	configurationname]</span><br><span class="line">           [-sdk [sdkfullpath | sdkname]] [buildaction ...] </span><br><span class="line">           [setting&#x3D;value ...] [-userdefault&#x3D;value ...]</span><br><span class="line">           </span><br><span class="line">xcodebuild [-project projectname] -scheme schemename </span><br><span class="line">           [-destination destinationspecifier]</span><br><span class="line">           [-destination-timeout value] [-configuration configurationname]</span><br><span class="line">           [-sdk [sdkfullpath | sdkname]] [buildaction ...] </span><br><span class="line">           [setting&#x3D;value ...] [-userdefault&#x3D;value ...]</span><br><span class="line">           </span><br><span class="line">xcodebuild -workspace workspacename -scheme schemename </span><br><span class="line">           [-destination destinationspecifier]</span><br><span class="line">           [-destination-timeout value] [-configuration configurationname]</span><br><span class="line">           [-sdk [sdkfullpath | sdkname]] [buildaction ...] </span><br><span class="line">           [setting&#x3D;value ...] [-userdefault&#x3D;value ...]</span><br><span class="line">           </span><br><span class="line">xcodebuild -version [-sdk [sdkfullpath | sdkname]] [infoitem]</span><br><span class="line">xcodebuild -showsdks</span><br><span class="line">xcodebuild -list [-project projectname | -workspace workspacename]</span><br><span class="line"></span><br><span class="line">xcodebuild -exportArchive -exportFormat format </span><br><span class="line">           -archivePath xcarchivepath </span><br><span class="line">           -exportPath destinationpath </span><br><span class="line">           [-exportProvisioningProfile profilename] </span><br><span class="line">           [-exportSigningIdentity identityname] </span><br><span class="line">           [-exportInstallerIdentity identityname]</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>要构建一个Xcode项目，请从包含项目的目录运行 <strong>xcodebuild</strong>（即包含 projectname.xcodeproj 的目录）。如果你在这目录中有多个项目，需要使用 <strong>-project</strong> 来指明应该构建哪个项目。默认情况下， <strong>xcodebuild</strong> 会使用默认的构建配置构建项目中列出的第一个 target。 target 的顺序是项目的一个属性，对于项目的所有用户都是一样的。</p>
+<p>要构建 Xcode 工作区，你必须同时传递 <strong>-workspace</strong> 和 <strong>-scheme</strong> 选项来定义构建。<strong>scheme</strong> 的参数将控制构建哪些 target 以及它们是如何构建的。不过你仍然可以将其他选项传递给 <strong>xcodebuild</strong> 来覆盖该 scheme 的一些参数。</p>
+<p>还有几个参数可以显示有关已安装的Xcode版本或本地目录中项目或工作区的信息，但不启动构建。包括 <strong>-version</strong>, <strong>-showsdks</strong> 和 <strong>-usage</strong>。</p>
+<h4 id="选项-options"><a href="#选项-options" class="headerlink" title="选项(options)"></a>选项(options)</h4><ul>
+<li><strong>-project</strong> projectname<br>  构建由 projectname 指定的项目。如果在同一个目录下有多个项目文件，该选项是必需的。</li>
+<li><strong>-target</strong> targetname<br>  构建由 targetname 指定的目标。</li>
+<li><strong>-alltargets</strong><br>  构建指定项目中的所有目标</li>
+<li><strong>-workspace</strong> workspacename<br>  构建由workspacename指定的工作空间。</li>
+<li><strong>-scheme</strong> schemename<br>  构建由 schemename 指定的方案。如果构建一个 workspace ，则为必需。</li>
+<li><strong>-destination</strong> destinationspecifier<br>  使用由 destinationpecifier 描述的目标设备。默认为与选定scheme兼容的 destination。</li>
+<li><strong>-destination-timeout</strong> timeout<br>  在搜索目标设备时使用的超时时间。默认值是30秒。</li>
+<li><strong>-configuration</strong> configurationname<br>  在构建每个 target 时使用由 configurationname 指定的构建配置。</li>
+<li><strong>-arch</strong> architecture<br>  构建每个 target 时使用的 architecture。</li>
+<li><strong>-sdk</strong> [<sdkfullpath> | <sdkname>]<br>  使用适合于该 SDK 的构建工具，针对指定的 SDK 构建 Xcode 项目或工作区。参数可以是 SDK 的绝对路径，也可以是 SDK 的名称。</li>
+<li><strong>-showsdks</strong><br>  列出 Xcode 中所有可用的 SDK，包括适合与 <code>-sdk</code> 一起使用的规范名称。不会启动构建。</li>
+<li><strong>-list</strong><br>  列出项目中的所有 target 和配置，或工作区中的 scheme。不会启动构建。</li>
+<li><strong>-derivedDataPath</strong> path<br>  在执行构建操作时覆盖用于 derived data 的文件夹。</li>
+<li><strong>-resultBundlePath</strong> path<br>  将包绑定到指定的路径，并在其中的方案上执行构建操作。</li>
+<li><strong>-exportArchive</strong><br>  指定应导出归档。 需要<code>-exportFormat</code>，<code>-archivePath</code>和<code>-exportPath</code>。 不能与构建操作一起使用。</li>
+<li><strong>-exportFormat</strong> format<br>  指定归档应该导出到的格式。有效的格式是IPA（iOS），PKG（Mac）和APP。 如果未指定xcodebuild 将尝试自动检测格式为IPA或PKG。</li>
+<li><strong>-archivePath</strong> xcarchivepath<br>  指定归档操作生成的归档的路径，或者指定归档在<code>-exportArchive</code>时被导出。</li>
+<li><strong>-exportPath</strong> destinationpath<br>  指定导出产品的目的路径，包括导出文件的名称。</li>
+<li><strong>-exportProvisioningProfile</strong> profilename<br>  指定导出归档时使用的 provisioning profile 文件。</li>
+<li><strong>-exportSigningIdentity</strong> identityname<br>  指定导出归档时使用的应用程序签名标识。如果可能的话，这可以从<code>-exportProvisioningProfile</code>中推断出来。</li>
+<li><strong>-exportInstallerIdentity</strong> identityname<br>  指定导出归档时使用的安装程序签名标识。、也可以从<code>-exportSigningIdentity</code>或<code>-exportProvisioningProfile</code>中推断出来。</li>
+<li><strong>-exportWithOriginalSigningIdentity</strong><br>  指定在导出文件时使用的用于创建归档的签名标识。</li>
+</ul>
+<h5 id="buildaction-…"><a href="#buildaction-…" class="headerlink" title="buildaction …"></a>buildaction …</h5><p>指定要在 target 上执行的构建操作（或多个操作）:</p>
+<table>
+<thead>
+<tr>
+<th>action</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>build</td>
+<td>在构建根目录（SYMROOT）中构建目标。这是默认的构建操作。</td>
+</tr>
+<tr>
+<td>analyze</td>
+<td>从构建根目录（SYMROOT）构建和分析target或scheme。需要指定一个scheme。</td>
+</tr>
+<tr>
+<td>archive</td>
+<td>从构建根目录（SYMROOT）归档一个scheme。需要指定一个scheme。</td>
+</tr>
+<tr>
+<td>test</td>
+<td>从构建根目录（SYMROOT）测试一个scheme。这需要指定一个scheme和一个目的地。</td>
+</tr>
+<tr>
+<td>installsrc</td>
+<td>将项目源复制到源根目录（SRCROOT）。</td>
+</tr>
+<tr>
+<td>install</td>
+<td>构建target并将其安装到 DSTROOT 中的目标安装目录中。</td>
+</tr>
+<tr>
+<td>clean</td>
+<td>从构建根目录（SYMROOT）中删除构建产品和中间文件。</td>
+</tr>
+</tbody></table>
+<h5 id="Destinations"><a href="#Destinations" class="headerlink" title="Destinations"></a>Destinations</h5><p><strong>-destination</strong>选项采用描述设备（或多个设备）作为目的地的目标说明符作为其参数。目标说明符是由一组逗号分隔的键值对组成的单个参数。 可以多次指定**-destination<strong>选项，以使</strong>xcodebuild**在多个目标上执行指定的操作。</p>
+<p>目标说明符可能包含平台密钥以指定其中一个受支持的目标平台。 应根据您选择的设备的平台提供附加的键</p>
+<p>某些设备可能需要一些时间才能查找。 <strong>-destination-timeout</strong> 选项可用于指定在设备被认为不可用之前等待的时间。默认为30秒。</p>
+<p>目前，xcodebuild支持这些平台：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">OS X             本地 Mac，在Xcode界面中称为My Mac，支持以下内容: </span><br><span class="line">                 arch 要使用的体系结构，x86_64（默认）或者i386。</span><br><span class="line">                 </span><br><span class="line">iOS              iOS 设备，支持以下内容：</span><br><span class="line">                 name 使用的设备的名称</span><br><span class="line">                 id   在Xcode Organizer中“设备”选项卡中的设备的标识符。</span><br><span class="line">                 </span><br><span class="line">iOS Simulator    iOS 模拟器，支持以下内容: </span><br><span class="line">                 name 在 Xcode 的界面中提供的模拟器的全名。</span><br><span class="line">                 OS   要模拟的iOS版本（如6._）或最新字符串（默认值），以指示该版本Xcode   </span><br><span class="line">                 支持的最新iOS版本。</span><br></pre></td></tr></table></figure>
+<p>e.g.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme -destination <span class="string">&#x27;platform=OS X,arch=x86_64&#x27;</span> build</span></span><br></pre></td></tr></table></figure>
+
+
+<h5 id="导出归档"><a href="#导出归档" class="headerlink" title="导出归档"></a>导出归档</h5><p><strong>-exportArchive</strong> 选项指定 <strong>xcodebuild</strong> 应该导出由 <strong>-archivePath</strong> 指定的归档并转换为 <strong>-exportFormat</strong> 指定的格式。导出的产品将放置在由 <strong>-exportPath</strong> 指定的路径中。 导出归档时重新签名是可选的。 配置文件(Provisioning Profile)可以由 <strong>-exportProvisioningProfile</strong> 指定。在某些情况下，应该在导出期间使用的应用程序签名标识可以从配置文件中确定。对于不可能的情况（包括在导出产品中没有嵌入配置文件的情况），可以使用 <strong>-exportSigningIdentity</strong> 指定应用程序签名标识。将 Mac 归档文件导出为 PKG 时，可以使用安装程序签名标识对导出的包进行签名。 这可以从应用程序签名标识中推断出来（例如，如果为应用程序签名标识指定了“Developer ID Application”，则将自动推断“Developer ID Installer”），也可以使用**-exportInstallerIdentity**明确指定它。</p>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild clean install</span></span><br></pre></td></tr></table></figure>
+<p>清理构建目录; 然后在 <strong>xcodebuild</strong> 启动的目录中构建并安装 Xcode 项目中的第一个target。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -target MyTarget OBJROOT=/Build/MyProj/Obj.root SYMROOT=/Build/MyProj/Sym.root</span></span><br></pre></td></tr></table></figure>
+<p>在 <strong>xcodebuild</strong> 开始的目录中的 Xcode 项目中构建 MyTarget，将中间文件放入<code>/Build/MyProj/Obj.root</code>目录中，并将构建的产品放入<code>/Build/MyProj/Sym.root</code>目录中。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -sdk macosx10.6</span></span><br></pre></td></tr></table></figure>
+<p>在 Mac OS X 10.6 SDK 中启动 <strong>xcodebuild</strong> 的目录中生成 Xcode 项目。可以使用**-showsdks**选项查看所有可用SDK的名称。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme</span></span><br></pre></td></tr></table></figure>
+<p>在 Xcode 工作区 MyWorkspace.xcworkspace 中构建方案 MyScheme。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme archive</span></span><br></pre></td></tr></table></figure>
+<p>在 Xcode 工作区 MyWorkspace.xcworkspace 中归档方案 MyScheme。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme -destination <span class="string">&#x27;platform=OS X,arch=x86_64&#x27;</span> <span class="built_in">test</span></span></span><br></pre></td></tr></table></figure>
+<p>在 Xcode 工作区 MyWorkspace.xcworkspace 中使用Xcode中描述为’platform=OS X,arch=x86_64’的目标测试 MyScheme 中的方案。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme -destination <span class="string">&#x27;platform=iOS Simulator,name=iPhone&#x27;</span> -destination <span class="string">&#x27;platform=iOS,name=My iPad&#x27;</span> <span class="built_in">test</span></span></span><br></pre></td></tr></table></figure>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -workspace MyWorkspace.xcworkspace -scheme MyScheme -destination generic/platform=iOS build</span></span><br></pre></td></tr></table></figure>
+<p>使用通用 iOS 设备在 Xcode 工作区 MyWorkspace.xcworkspace 中构建方案 MyScheme。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -exportArchive -exportFormat IPA -archivePath MyMobileApp.xcarchive -exportPath MyMobileApp.ipa -exportProvisioningProfile <span class="string">&#x27;MyMobileApp Distribution Profile&#x27;</span></span></span><br></pre></td></tr></table></figure>
+<p>使用 “MyMobileApp Distribution Profile” 配置文件将归档 MyMobileApp.xcarchive 作为 IPA 文件导出到MyMobileApp.ipa目录中。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> xcodebuild -exportArchive -exportFormat APP -archivePath MyMacApp.xcarchive -exportPath MyMacApp.pkg -exportSigningIdentity <span class="string">&#x27;Developer ID Application: My Team&#x27;</span></span></span><br></pre></td></tr></table></figure>
+<p>使用 “Developer ID Installer：My Team” 签名将 MyMacApp.xcarchive 作为 PKG 文件导出到MyMacApp.pkg目录中。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Xcode/" rel="tag"># Xcode</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/cko3zg8nf001z5ss634tv1zdq/" rel="prev" title="快速搭建基于HLS和RTMP的视频推流">
+      <i class="fa fa-chevron-left"></i> 快速搭建基于HLS和RTMP的视频推流
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/cko3zg8n8001g5ss6bo9o4x6e/" rel="next" title="入坑Webpack">
+      入坑Webpack <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E9%A1%B9-options"><span class="nav-number">2.</span> <span class="nav-text">选项(options)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#buildaction-%E2%80%A6"><span class="nav-number">2.1.</span> <span class="nav-text">buildaction …</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Destinations"><span class="nav-number">2.2.</span> <span class="nav-text">Destinations</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E5%BD%92%E6%A1%A3"><span class="nav-number">2.3.</span> <span class="nav-text">导出归档</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">3.</span> <span class="nav-text">例子</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jewelz Hu"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+  <div class="site-description" itemprop="description">Stay hungry, Stay foolish.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hujewelz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hujewelz" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hujewelz@gmail.com" title="E-Mail → mailto:hujewelz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/huluoboboo" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;huluoboboo" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

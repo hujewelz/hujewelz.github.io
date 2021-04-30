@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hujewelz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="“属性”（property）是 Objective-C 2.0 的一项特性，用于封装对象中的数据。Objective-C 对象通常会把其所需要的数据保存为实例变量，并通过 “存取方法”（getter和setter） 来访问。getter用于读取变量值，setter用于给属性设置值。”属性”这一特性的引入，使得这一切可以让编译器自动完成。此特性还引入了一种新的”点语法”，使开发者可以更容易地依照类对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="属性 -- 你真的弄明白了吗?">
+<meta property="og:url" content="https://hujewelz.github.io/cko3zg8ne001w5ss62h89btlv/index.html">
+<meta property="og:site_name" content="Jewelz&#96;s Home Page">
+<meta property="og:description" content="“属性”（property）是 Objective-C 2.0 的一项特性，用于封装对象中的数据。Objective-C 对象通常会把其所需要的数据保存为实例变量，并通过 “存取方法”（getter和setter） 来访问。getter用于读取变量值，setter用于给属性设置值。”属性”这一特性的引入，使得这一切可以让编译器自动完成。此特性还引入了一种新的”点语法”，使开发者可以更容易地依照类对">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2015-06-11T05:43:02.000Z">
+<meta property="article:modified_time" content="2020-04-25T08:08:23.000Z">
+<meta property="article:author" content="Jewelz Hu">
+<meta property="article:tag" content="Objective-C">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://hujewelz.github.io/cko3zg8ne001w5ss62h89btlv/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>属性 -- 你真的弄明白了吗? | Jewelz`s Home Page</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jewelz`s Home Page</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">iOS工程师一枚，热爱前端技术</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hujewelz.github.io/cko3zg8ne001w5ss62h89btlv/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Jewelz Hu">
+      <meta itemprop="description" content="Stay hungry, Stay foolish.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jewelz`s Home Page">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          属性 -- 你真的弄明白了吗?
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2015-06-11 13:43:02" itemprop="dateCreated datePublished" datetime="2015-06-11T13:43:02+08:00">2015-06-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-25 16:08:23" itemprop="dateModified" datetime="2020-04-25T16:08:23+08:00">2020-04-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>“属性”（property）是 Objective-C 2.0 的一项特性，用于封装对象中的数据。Objective-C 对象通常会把其所需要的数据保存为实例变量，并通过 “存取方法”（<code>getter</code>和<code>setter</code>） 来访问。<code>getter</code>用于读取变量值，<code>setter</code>用于给属性设置值。”属性”这一特性的引入，使得这一切可以让编译器自动完成。此特性还引入了一种新的”点语法”，使开发者可以更容易地依照类对象来访问数据。</p>
+<span id="more"></span>
+
+<h2 id="自动合成"><a href="#自动合成" class="headerlink" title="自动合成"></a>自动合成</h2><p>在 Objective-C 中，你可以在类的接口定义中使用 <code>@property</code> 语法就能定义一个 “属性”。其意思是说：编译器会自动生成存取方法，并向类中添加相应的实例变量。例如下面的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@interface HUPerson : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>这跟以前不使用 “属性” 写出来的代码是等效的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@interface HUPerson : NSObject &#123;</span><br><span class="line">  NSString *_name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (NSString *)name;</span><br><span class="line">- (void)setName:(NSString *)name;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>访问属性时，我们可以使用 “点语法”，编译器会把 “点语法”转换为相应的存取方法的调用，使用”点语法”的效果与直接调用存取方法相同。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HUPerson *person &#x3D; [[HUPerson alloc] init];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 下面的调用是一样的</span><br><span class="line">person.name &#x3D; @&quot;jewelz&quot;;</span><br><span class="line">[person setName:@&quot;jewelz&quot;];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;NSString *name &#x3D; person.name;</span><br><span class="line">NSString *name &#x3D; [person name];</span><br></pre></td></tr></table></figure>
+<p>使用属性时，编译器自动生成存取方法和实例变量的过程叫做 “自动合成”（autosynthesis）。这个过程在由编译器在编译期执行，所以我们在编译器里看不到这些自动合成的代码。自动合成的示例变量名是在属性名前面加上下划线。不过我们可以使用<code>@synthesize</code>语法来指定示例变量名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@implementation HUPerson</span><br><span class="line">@synthesize name &#x3D; _aName;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>上面的代码会将生成的实例变量命名为<code>_aName</code>，而不再使用默认的名称。不过在项目中使用这个方法修改实例变量的名称并不是个好主意。统一的代码风格对于一个大型项目来说是很有必要的，所以还是使用默认的命名吧，除非你坚持要这么做。</p>
+<p>若不想让编译器自动合成存取方法，则可以自己实现。如果你只实现了存取方法中的一个，那么另一个会由编译器帮你合成。前提是你定义的属性是可以读写的，而不是 <code>readonly</code>的。我们还有一种方式来阻止编译器自动合成存取方法，那就是使用 <code>@dynamic</code> 关键字，它会告诉编译器：不用自动给我合成存取方法也不用生成实例变量。在编译访问属性的代码时，即使编译器找不到定义的存取方法，也不会报错。例如下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@interface HUPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation HUPerson</span><br><span class="line">@dynamic name;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这时编译器不会为 <code>HUPerson</code> 自动合成存取方法或实例变量。你仍然可以正常的访问其中的属性，编译器也不会发出警告信息。如果你没有实现相应的存取方法，那么在运行时程序就会崩溃掉。</p>
+<h2 id="属性特性"><a href="#属性特性" class="headerlink" title="属性特性"></a>属性特性</h2><p>在定义属性时，我们常常会给属性指定一些特性，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, readwrite, copy) NSString *name;</span><br></pre></td></tr></table></figure>
+<p>属性的特性有四中类型：</p>
+<h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>在默认情况下，由编译器合成的方法会通过锁机制确保其原子性。如果属性指定为 <code>nonatomic</code>，则不会使用同步锁。系统默认是 <code>atomic</code>的，不过这在一定程度上会影响系统性能，所以在iOS开发中一般指定为 <code>nonatomic</code>的。</p>
+<h4 id="读写权限"><a href="#读写权限" class="headerlink" title="读写权限"></a>读写权限</h4><ul>
+<li><p>具备 <strong>readwrite</strong>（读写） 特性的属性同时拥有 <code>getter</code> 和 <code>setter</code>方法，这是编译器自动帮我们生成的。</p>
+</li>
+<li><p>具备 <strong>readonly</strong>（只读） 特性的属性只有 <code>getter</code> 方法。这样的话我们就不能在类内部使用点语法来给变量赋值了，所以一般的做法是：在类的接口中对外公开为只读属性，然后在类的 Extension 中将其重新定义为读写属性。</p>
+<h4 id="内存管理语义"><a href="#内存管理语义" class="headerlink" title="内存管理语义"></a>内存管理语义</h4><p>编译器在合成存取方法时，要根据次特性来决定使用哪种内存管理策略，在合成设置方法时，编辑器会生成相应的代码。主要有以下几种：</p>
+</li>
+<li><p><strong>asign</strong> 设置方法只会执行针对纯类型（NSInter、CGFloat等）的简单赋值。</p>
+</li>
+<li><p><strong>strong</strong> 此特性表明该属性定义了一种 “拥有关系”。为这种属性设置值时，设置方法会先保留新值，并释放旧值，然后再将新值设置上去。</p>
+</li>
+<li><p><strong>weak</strong> 此特性表明该属性定义了一种 “非拥有关系”。为这种属性设置值时，设置方法既不保留新值，也不释放旧值，此特性与 asign 类似，不过在属性所指的对象遭到销毁时，属性值会被设置为 <code>nil</code>。</p>
+</li>
+<li><p><strong>unsafe_unretained</strong> 此特性的语言与 asign 相同，但是它使用于对象类型。它表明了一种 “非拥有关系”，不过与 weak 不同，在属性所指的对象遭到销毁时，属性值不会被设置为 <code>nil</code>。</p>
+</li>
+<li><p><strong>copy</strong> 此特性表达的所属关系与 strong 类似。为这种属性设置值时，并不保留新值，而是将其 “拷贝”。</p>
+<h4 id="方法名"><a href="#方法名" class="headerlink" title="方法名"></a>方法名</h4><p>可以通过如下特性来指定存取方法的方法名：</p>
+</li>
+<li><p><strong>getter=name</strong> 指定 <code>getter</code>的名称。一个好的实践是，当某个属性是 BOOL 类型时，我们将其获取方法加上 “is” 前缀。类似下面这样：</p>
+  <figure class="highlight plain"><figcaption><span>(nonatomic, assign, getter</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><strong>setter=name</strong> 指定 <code>setter</code>的名称。这种用法不太常见。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Objective-C/" rel="tag"># Objective-C</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/cko3zg8n600195ss6cjs9hzu1/" rel="next" title="使用Core Graphics绘制图形">
+      使用Core Graphics绘制图形 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%90%88%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">自动合成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">属性特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="nav-number">2.0.1.</span> <span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E6%9D%83%E9%99%90"><span class="nav-number">2.0.2.</span> <span class="nav-text">读写权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E8%AF%AD%E4%B9%89"><span class="nav-number">2.0.3.</span> <span class="nav-text">内存管理语义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%90%8D"><span class="nav-number">2.0.4.</span> <span class="nav-text">方法名</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jewelz Hu"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Jewelz Hu</p>
+  <div class="site-description" itemprop="description">Stay hungry, Stay foolish.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hujewelz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hujewelz" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hujewelz@gmail.com" title="E-Mail → mailto:hujewelz@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/huluoboboo" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;huluoboboo" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jewelz Hu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
